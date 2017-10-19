@@ -1,0 +1,28 @@
+
+
+prepare_data.py
+  regrid cmip5 data (tas,tos,sic)
+
+execute_for_all_models.py
+  execute 'ncblendhadcrut-nc4.py' and 'ncblendmask-nc4.py' for all models and all runs available
+  ncblendhadcrut-nc4.py and ncblendmask-nc4.py are coming from Cowtan et al. http://www-users.york.ac.uk//~kdc3/papers/robust2015/methods.html
+
+collect_all_gmt_time_series.py
+  read in gmt time series created by ncblendhadcrut-nc4.py and ncblendmask-nc4.py
+  stores gmt time series in one dimarray
+  averages all runs of one model
+
+plots.py
+  creates main plots
+
+plots_reproduction.py
+  reproduces figures of Cowtan et al. and Richardson et al.
+
+txx_preprocess.py
+  uses wlcalculator to find periods for 1.5°C, 1.587°C and 1.695°C
+
+txx_diff.py
+  uses pdf_processing.py https://github.com/carlschleussner/pdf_processing to compute globally aggregated difference pdfs
+
+txx_diff_plot.py
+  plots result of txx_diff.py
