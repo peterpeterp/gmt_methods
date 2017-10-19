@@ -28,7 +28,7 @@ models.remove('bcc-csm1-1-m')
 
 gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
 
-# fig 2
+# cowtan fig 2
 plt.clf()
 plt.figure(figsize=(7,6))
 l_styles = ['-','--','-.',':']
@@ -48,7 +48,7 @@ plt.legend(loc='lower left',ncol=4,fontsize=7)
 plt.savefig('plots/cowtan_fig2_xxx.png')
 
 
-# fig 3
+# cowtan fig 3
 plt.clf()
 plt.plot(gmt['xxx','rcp85','ACCESS1-0','time'],running_mean_func(np.nanmean(gmt_['xxx','rcp85',:,'gmt',:]-gmt_['xxx','rcp85',:,'air',:],axis=0),36),label='Unmasked/absolute/variable ice',color='red',linestyle='-')
 plt.plot(gmt_['xxx','rcp85','ACCESS1-0','time'],running_mean_func(np.nanmean(gmt_['xax','rcp85',:,'gmt',:]-gmt_['xax','rcp85',:,'air',:],axis=0),36),label='Unmasked/anomaly/variable ice',color='blue',linestyle='-')
@@ -73,7 +73,7 @@ for style in gmt.style:
 			gmt[style,scenario,model,'air',:]-=np.nanmean(gmt[style,scenario,model,'air',0:240])
 			gmt[style,scenario,model,'gmt',:]-=np.nanmean(gmt[style,scenario,model,'gmt',0:240])
 
-# fig 3
+# cowtan fig 3 (anomaly to preindustrial)
 plt.clf()
 plt.plot(gmt['xxx','rcp85','ACCESS1-0','time'],running_mean_func(np.nanmean(gmt['xxx','rcp85',:,'gmt',:]-gmt['xxx','rcp85',:,'air',:],axis=0),36),label='Unmasked/absolute/variable ice',color='red',linestyle='-')
 plt.plot(gmt['xxx','rcp85','ACCESS1-0','time'],running_mean_func(np.nanmean(gmt['xax','rcp85',:,'gmt',:]-gmt['xax','rcp85',:,'air',:],axis=0),36),label='Unmasked/anomaly/variable ice',color='blue',linestyle='-')
@@ -130,90 +130,3 @@ plt.ylabel('delta T - delta T_air (deg C)')
 plt.ylim((-0.25,0.05))
 plt.xlim((1861,2016))
 plt.savefig('plots/richardson_fig1b.png')
-
-
-
-
-
-binned_gmt=da.DimArray(axes=[['rcp26','rcp45','rcp85'],['air','gmt'],[0,10,25,33,50,66,75,90,100],range(800)],dims=['scenario','variable','quantile','bins'])
-
-for scenario in gmt.scenario:
-	for air,i in zip(np.arange(0.,4.,0.005),range(800)):
-		binned=[]
-		for model in gmt.model:
-			tmp_air=gmt['xxx',scenario,model,'air',:]
-			tmp_gmt=gmt['had4',scenario,model,'gmt',:]
-			binned+=list(tmp_gmt[np.where((tmp_air>=air) &(tmp_air<air+0.05))[0]])
-		binned_gmt[scenario,'air',0,i]=air+0.025
-		for qu in binned_gmt.quantile:
-			binned_gmt[scenario,'gmt',qu,i]=np.nanpercentile(np.array(binned),qu)
-
-# FIG 1
-for scenario in gmt.scenario:
-	plt.clf()
-	for model in gmt.model:
-		plt.scatter(gmt['xxx',scenario,model,'air',:],gmt['had4',scenario,model,'gmt',:],color='gray',alpha=0.1)
-	plt.plot(binned_gmt[scenario,'air',0,:],binned_gmt[scenario,'gmt',50,:])
-	plt.fill_between(binned_gmt[scenario,'air',0,:],binned_gmt[scenario,'gmt',25,:],binned_gmt[scenario,'gmt',75,:],alpha=0.3)
-	plt.plot([-1,5],[-1,5],linestyle='--',color='k')
-	air_15=binned_gmt[scenario,'air',0,np.nanargmin(abs(np.array(binned_gmt[scenario,'gmt',50,:])-1.5))]
-	plt.plot([0,5],[1.5,1.5],color='red')
-	plt.plot([air_15,air_15],[0,5],color='red')
-	plt.ylim((0.61,2.5))
-	plt.xlim((0.61,2.5))
-	plt.xlabel('global mean air temperature anomaly')
-	plt.ylabel('global mean temperature anomaly computed as for HadCrut')
-	plt.savefig('plots/FIG1_'+scenario+'.png')
-
-
-# FIG 1
-for scenario in gmt.scenario:
-	plt.clf()
-	for model in gmt.model:
-		plt.scatter(gmt['xxx',scenario,model,'air',:],gmt['had4',scenario,model,'gmt',:],color='gray',alpha=0.1)
-	plt.plot(binned_gmt[scenario,'air',0,:],binned_gmt[scenario,'gmt',50,:])
-	plt.fill_between(binned_gmt[scenario,'air',0,:],binned_gmt[scenario,'gmt',25,:],binned_gmt[scenario,'gmt',75,:],alpha=0.3)
-	plt.plot([-1,5],[-1,5],linestyle='--',color='k')
-	plt.plot([0,5],[1.5,1.5],color='red')
-	air_15=binned_gmt[scenario,'air',0,np.nanargmin(abs(np.array(binned_gmt[scenario,'gmt',50,:])-1.5))]
-	plt.plot([air_15,air_15],[0,5],color='red')
-	air_15=binned_gmt[scenario,'air',0,np.nanargmin(abs(np.array(binned_gmt[scenario,'gmt',25,:])-1.5))]
-	plt.plot([air_15,air_15],[0,5],color='red',linestyle='--')
-	air_15=binned_gmt[scenario,'air',0,np.nanargmin(abs(np.array(binned_gmt[scenario,'gmt',75,:])-1.5))]
-	plt.plot([air_15,air_15],[0,5],color='red',linestyle='--')
-	plt.ylim((0.61,2.5))
-	plt.xlim((0.61,2.5))
-	plt.xlabel('global mean air temperature anomaly')
-	plt.ylabel('global mean temperature anomaly computed as for HadCrut')
-	plt.savefig('plots/FIG1_'+scenario+'.png')
-
-
-
-
-# gmt_air=gmt.copy()
-# for model in gmt.model:
-# 	print model
-# 	for style in gmt.style:
-# 		for scenario in gmt.scenario:
-# 			tmp=gmt_air[style,scenario,model,:,:].copy()
-# 			gmt_air[style,scenario,model,:,:]=tmp[:,np.array(tmp['air',:]).argsort()]
-
-
-
-
-
-
-
-
-# # fig 2
-# for model in gmt.model:
-# 	plt.clf()
-# 	tmp=gmt['xxx']['rcp85'][model]
-# 	plt.plot(tmp['time'].ix[:],running_mean_func(tmp['gmt'].ix[:]-tmp['air'].ix[:],12),label=model)
-# 	plt.ylim((-0.3,0.1))
-# 	plt.xlim((1850,2100))
-# 	#plt.legend()
-# 	plt.savefig('plots/fig2_xxx'+model+'.png')
-#
-
-#end
