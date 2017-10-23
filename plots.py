@@ -9,6 +9,7 @@ from scipy import stats
 import seaborn as sns
 import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import summary_table
+from statsmodels.sandbox.regression.predstd import wls_prediction_std
 
 def running_mean_func(xx,N):
 	if N==1:
@@ -176,13 +177,13 @@ plt.savefig('plots/GMT_ref.pdf')
 
 
 #linear regression and estimates
-styles=['bm_pre','bm_ar5','tas_pre','tas_ar5','b_pre','b_ar5']
+styles=['tas_pre','tas_ar5','bm_pre','bm_ar5','b_pre','b_ar5']
 gmt_lr=da.DimArray(axes=[['rcp26','rcp45','rcp85'],styles,styles,['slope','slope_err','intercept','intercept_err','1.5_low','1.5_up','1.5','1.5_err']],dims=['scenario','x','y','out'])
-gmt_qu=da.DimArray(axes=[['rcp26','rcp45','rcp85'],styles,styles,[0,5,10,16.6,25,50,75,83.3,90,95,100]],dims=['scenario','x','y','out'])
 
 for scenario in ['rcp85']:
 	for x_method in ['bm_ar5','bm_pre','tas_pre','tas_ar5','b_pre','b_ar5']:
 		plt.clf()
+
 		fig,axes=plt.subplots(nrows=2,ncols=3,figsize=(12,8))
 		ax=axes.flatten()
 		for y_method,pp in zip(['bm_pre','bm_ar5','tas_pre','tas_ar5','b_pre','b_ar5'],range(6)):
@@ -190,38 +191,32 @@ for scenario in ['rcp85']:
 			y_=np.asarray(gmt[scenario,:,y_method,:]).reshape(47*2880)
 			idx = np.isfinite(x_) & np.isfinite(y_)
 			x,y=x_[idx],y_[idx]
-			p, V = np.polyfit(x,y, 1, cov=True)
-			gmt_lr[scenario,x_method,y_method,'slope']=p[0]
-			gmt_lr[scenario,x_method,y_method,'intercept']=p[1]
-			gmt_lr[scenario,x_method,y_method,'slope_err']=V[0,0]
-			gmt_lr[scenario,x_method,y_method,'intercept_err']=V[1,1]
-			gmt_lr[scenario,x_method,y_method,'1.5_up']=(1.5-(p[1]-V[1,1]))/(p[0]-V[0,0])
-			gmt_lr[scenario,x_method,y_method,'1.5_low']=(1.5-(p[1]+V[1,1]))/(p[0]+V[0,0])
-			gmt_lr[scenario,x_method,y_method,'1.5']=(1.5-p[1])/p[0]
-			gmt_lr[scenario,x_method,y_method,'1.5_err']=gmt_lr[scenario,x_method,y_method,'1.5_up']-gmt_lr[scenario,x_method,y_method,'1.5_low']
 
+			X = sm.add_constant(x)
+			model = sm.OLS(y, X)
+			fitted = model.fit()
+			x_pred = np.arange(0,5,0.01)
+			x_pred2 = sm.add_constant(x_pred)
+			y_pred = fitted.predict(x_pred2)
+			sdev, lower, upper = wls_prediction_std(fitted, exog=x_pred2, alpha=1/3.)
 
-			tmp=np.where((y>1.45) & (y<1.55))
-			y_15=y[tmp]
-			x_15=x[tmp]
+			tmp=gmt_lr[scenario,x_method,y_method,:]
+			tmp['slope']=fitted.params[1]
+			tmp['intercept']=fitted.params[0]
+			tmp['slope_err']=V[0,0]
+			tmp['intercept_err']=V[1,1]
+			tmp['1.5_low']=x_pred[np.argmin(abs(1.5-upper))]
+			tmp['1.5_up']=x_pred[np.argmin(abs(1.5-lower))]
+			tmp['1.5']=x_pred[np.argmin(abs(1.5-y_pred))]
 
-			for qu in gmt_qu.out:
-				gmt_qu[scenario,x_method,y_method,qu]=np.nanpercentile(x_15,qu)
+			ax[pp].plot(x,y,marker='v',color='blue',linestyle='',alpha=0.02)
 
-			ax[pp].plot(x,y,marker='v',color='blue',linestyle='')
-			ax[pp].plot(x_15,y_15,marker='o',color='green',linestyle='')
-			ax[pp].plot([gmt_qu[scenario,x_method,y_method,0],gmt_qu[scenario,x_method,y_method,100]],[0.65,0.65],color='green')
-			ax[pp].fill_between([gmt_qu[scenario,x_method,y_method,25],gmt_qu[scenario,x_method,y_method,75]],[0.63,0.63],[0.67,0.67],color='green')
-			ax[pp].plot([gmt_qu[scenario,x_method,y_method,50],gmt_qu[scenario,x_method,y_method,50]],[0,1.5],color='green')
-			y50=gmt_qu[scenario,x_method,y_method,50]
-			ax[pp].text(y50,0.8,str(round(y50,3)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color='green')
-
-			ax[pp].plot(x__,p[0]*x__+p[1],color='red')
-			ax[pp].plot(x__,(p[0]+V[0,0])*x__+(p[1]+V[1,1]),color='red')
-			ax[pp].plot(x__,(p[0]-V[0,0])*x__+(p[1]-V[1,1]),color='red')
-			yy=(1.5-p[1])/p[0]
-			ax[pp].plot([yy,yy],[0,1.5],color='red',label=str(round(gmt_lr[scenario,x_method,y_method,'1.5'],4))+'+/-'+str(gmt_lr[scenario,x_method,y_method,'1.5_err']))
-			ax[pp].text(yy,1.1,str(round(yy,3)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color='red')
+			ax[pp].plot(x_pred,y_pred,color='red')
+			ax[pp].fill_between(x_pred,lower,upper,color='red',alpha=0.7)
+			ax[pp].plot([tmp['1.5'],tmp['1.5']],[0,1.5],color='red',label=str(round(gmt_lr[scenario,x_method,y_method,'1.5'],4))+' ('+str(round(tmp['1.5_low'],3))+'-'+str(round(tmp['1.5_up'],3))+')')
+			ax[pp].plot([tmp['1.5_low'],tmp['1.5_low']],[0,1.5],color='red')
+			ax[pp].plot([tmp['1.5_up'],tmp['1.5_up']],[0,1.5],color='red')
+			ax[pp].text(tmp['1.5'],1.1,str(round(tmp['1.5'],3)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color='red')
 
 			ax[pp].set_xlim((0.61,2.5))
 			ax[pp].set_ylim((0.61,2.5))
@@ -231,3 +226,34 @@ for scenario in ['rcp85']:
 			ax[pp].legend(loc='upper left')
 
 		plt.savefig('plots/linear_regression_to_'+x_method+'.png')
+
+
+conversion_table=open('conversion_table.txt','w')
+conversion_table.write('\t'.join([' ']+styles))
+for x_method in styles:
+	conversion_table.write('\n'+x_method+'\t')
+	for y_method in styles:
+		conversion_table.write(str(round(gmt_lr[scenario,x_method,y_method,'1.5'],3))+'\t')
+
+conversion_table.close()
+
+
+
+
+# quatntile stuff
+#gmt_qu=da.DimArray(axes=[['rcp26','rcp45','rcp85'],styles,styles,[0,5,10,16.6,25,50,75,83.3,90,95,100]],dims=['scenario','x','y','out'])
+
+			# tmp=np.where((y>1.45) & (y<1.55))
+			# y_15=y[tmp]
+			# x_15=x[tmp]
+			#
+			# for qu in gmt_qu.out:
+			# 	gmt_qu[scenario,x_method,y_method,qu]=np.nanpercentile(x_15,qu)
+
+
+			# ax[pp].plot(x_15,y_15,marker='o',color='green',linestyle='')
+			# ax[pp].plot([gmt_qu[scenario,x_method,y_method,0],gmt_qu[scenario,x_method,y_method,100]],[0.65,0.65],color='green')
+			# ax[pp].fill_between([gmt_qu[scenario,x_method,y_method,25],gmt_qu[scenario,x_method,y_method,75]],[0.63,0.63],[0.67,0.67],color='green')
+			# ax[pp].plot([gmt_qu[scenario,x_method,y_method,50],gmt_qu[scenario,x_method,y_method,50]],[0,1.5],color='green')
+			# y50=gmt_qu[scenario,x_method,y_method,50]
+			# ax[pp].text(y50,0.8,str(round(y50,3)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color='green')
