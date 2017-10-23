@@ -32,9 +32,9 @@ models.remove('bcc-csm1-1-m')
 gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
 
 ensemble=open('ensemble.txt','w')
-for scenario in gmt.scenario:
+for scenario in gmt_.scenario:
 	ensemble.write(scenario+':\n')
-	for model in sorted(gmt.model):
+	for model in sorted(gmt_.model):
 		if np.isfinite(np.nanmean(gmt_['had4',scenario,model,'gmt',:])):
 			ensemble.write(model+'\t')
 	ensemble.write('\n')
@@ -59,12 +59,10 @@ for style in gmt.style:
 		for model in gmt.model:
 			gmt[scenario,model,'tas',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',0:240])
 			gmt[scenario,model,'tas_ar5',:]=np.array(gmt[scenario,model,'tas',:])-np.nanmean(gmt[scenario,model,'tas',125*12:145*12])+np.nanmean(had4_gmt[125*12:145*12])
-			#print list(gmt[scenario,model,'ar5',:])[125*12:145*12]
 			gmt[scenario,model,'had4',:]=np.array(gmt_['had4',scenario,model,'gmt',:])-np.nanmean(gmt_['had4',scenario,model,'gmt',0:240])
 			gmt[scenario,model,'had4_ar5',:]=np.array(gmt_['had4',scenario,model,'gmt',:])-np.nanmean(gmt_['had4',scenario,model,'gmt',125*12:145*12])+np.nanmean(had4_gmt[125*12:145*12])
 			gmt[scenario,model,'time',:]=gmt_['had4',scenario,model,'time',:]
 
-			#print np.nanmean(had4_gmt[125*12:145*12]),np.nanmean(gmt[scenario,model,'tas',125*12:145*12]),np.nanmean(gmt[scenario,model,'tas_ar5',125*12:145*12]),np.nanmean(gmt[scenario,model,'had4',125*12:145*12]),np.nanmean(gmt[scenario,model,'had4_ar5',125*12:145*12])
 
 print np.nanmean(had4_gmt[125*12:145*12]),np.nanmean(gmt[scenario,:,'tas',125*12:145*12]),np.nanmean(gmt[scenario,:,'tas_ar5',125*12:145*12]),np.nanmean(gmt[scenario,:,'had4',125*12:145*12]),np.nanmean(gmt[scenario,:,'had4_ar5',125*12:145*12])
 
@@ -78,12 +76,6 @@ plot_dict={
 }
 
 
-
-
-
-
-
-
 # FIG 1
 #for scenario in gmt.scenario:
 for scenario in ['rcp85']:
@@ -91,14 +83,17 @@ for scenario in ['rcp85']:
 	fig,axes=plt.subplots(nrows=1,ncols=2,figsize=(12,6))
 	ax=axes.flatten()
 
-	#ax[0].grid(color='gray', linestyle='-', linewidth=1)
-	x=np.arange(0,5)
+	x__=np.arange(0,5,0.01)
 
 	for method in ['tas','had4_ar5','had4']:
-		# for model in gmt.model:
-		# 	ax[0].scatter(gmt[scenario,model,'tas_ar5',:],gmt[scenario,model,method,:],color=plot_dict[method]['l_color'],marker='1',alpha=0.2)
-		lr=stats.linregress(np.nanmean(gmt['rcp85',:,'tas_ar5',:],axis=0),np.nanmean(gmt['rcp85',:,method,:],axis=0))
-		ax[0].plot(x,lr[1]+x*lr[0],color=plot_dict[method]['color'],lw=2)
+		x_=np.asarray(gmt[scenario,:,'tas_ar5',:]).reshape(47*2880)
+		y_=np.asarray(gmt[scenario,:,method,:]).reshape(47*2880)
+		idx = np.isfinite(x_) & np.isfinite(y_)
+		x,y=x_[idx],y_[idx]
+		ax[0].scatter(x,y,color=plot_dict[method]['l_color'],marker='1',alpha=0.2)
+
+		lr=stats.linregress(x,y)
+		ax[0].plot(x__,lr[1]+x__*lr[0],color=plot_dict[method]['color'],lw=2)
 
 
 		ax[0].plot([-99,-99],[-99,-99],color=plot_dict[method]['color'],lw=2,label=plot_dict[method]['longname']+'\n$\Delta T_{alt}='+str(round(lr[0],3))+'*\Delta T_{tas}'+['-','+'][int((np.sign(lr[1])+1)/2)]+str(round(abs(lr[1]),3))+'$')
@@ -116,26 +111,23 @@ for scenario in ['rcp85']:
 	ax[0].set_ylabel('$\Delta T_{alt}~[^\circ C]$')
 	ax[0].legend(loc='upper left',fontsize=12)
 
-	#ax[1].grid(color='gray', linestyle='-', linewidth=1)
 	for method in ['had4','had4_ar5']:
-		for model in gmt.model:
-			ax[1].scatter(gmt[scenario,model,'tas_ar5',:],gmt[scenario,model,method,:]-gmt[scenario,model,'tas_ar5',:],color=plot_dict[method]['l_color'],marker='1',alpha=0.2)
-		lr=stats.linregress(np.nanmean(gmt['rcp85',:,'tas_ar5',:],axis=0),np.nanmean(gmt['rcp85',:,method,:],axis=0))
-		ax[1].plot(x,lr[1]+x*lr[0]-x,color=plot_dict[method]['color'],lw=2)
+		x_=np.asarray(gmt[scenario,:,'tas_ar5',:]).reshape(47*2880)
+		y_=np.asarray(gmt[scenario,:,method,:]).reshape(47*2880)
+		idx = np.isfinite(x_) & np.isfinite(y_)
+		x,y=x_[idx],y_[idx]
+
+		ax[0].scatter(x,y-x,color=plot_dict[method]['l_color'],marker='1',alpha=0.2)
+
+		lr=stats.linregress(x,y)
+		ax[1].plot(x__,lr[1]+x__*lr[0]-x__,color=plot_dict[method]['color'],lw=2)
 
 	ax[1].plot([-1,5],[0,0],linestyle='-',color='k',lw=2)
-	#ax[1].plot([-1,5],[1.5,1.5],linestyle='--',color='k')
 	ax[1].set_ylim((-0.5,0.5))
 	ax[1].set_xlim((0.61,2.5))
 
 	ax[1].set_xlabel('$\Delta T_{tas}~[^\circ C]$')
 	ax[1].set_ylabel('$\Delta T_{alt} -\Delta T_{tas}~[^\circ C]$')
-	#ax[1].legend(loc='upper left')
-
-	# ax[2].axis('off')
-	# ax[2].set_ylim((-0.5,0.5))
-	# ax[2].set_xlim((0.61,2.5))
-	# ax[2].legend(loc='upper left',fontsize=10)
 
 	plt.tight_layout()
 	plt.savefig('plots/FIG1_'+scenario+'.png')
