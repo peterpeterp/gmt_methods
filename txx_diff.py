@@ -107,12 +107,38 @@ for model in wlvls.model:
         print e
         print '-----------'+model
 
+
 os.chdir('../gmt/')
 with open('data/varoutdict_cmip5_'+rcp+'_TXx.pkl', 'wb') as output:
 	pickle.dump(cmip5_dict, output, pickle.HIGHEST_PROTOCOL)
 
 
+# all models merged pdf
+all_cmip5=pdf.PDF_Processing('TXx')
+all_cmip5._distributions={'global':{}}
+
+for change in [1.587,1.695,1.5,'ref','weight']:
+    tmp=np.array([np.nan])
+    for model,mod_index in zip(cmip5_dict.keys(),range(N_model)):
+        try:
+            tmp=np.concatenate((tmp,cmip5_dict[model]['TXx']._distributions['global'][str(change)]))
+        except:
+            pass
+    all_cmip5._distributions['global'][str(change)]=tmp
+
+for change in [1.587,1.695,1.5]:
+    all_cmip5.derive_pdf_difference('ref',str(change),pdf_method='python_silverman',bin_range=varin_dict['TXx']['cut_interval'],relative_diff=False)
+
+with open('data/varoutdict_cmip5_'+rcp+'_TXx_models_merged.pkl', 'wb') as output:
+	pickle.dump(all_cmip5, output, pickle.HIGHEST_PROTOCOL)
 
 
-
-#jk
+# get ensemble used# cmip5 envelopes overview
+ensemble=open('ensemble_TXx.txt','w')
+for model,mod_index in zip(cmip5_dict.keys(),range(N_model)):
+    try:
+        a=cmip5_dict[model]['TXx']._distributions['global']['pdf']['xaxis']
+        ensemble.write(model+'\n')
+    except:
+        pass
+ensemble.close()
