@@ -25,6 +25,8 @@ os.chdir('../gmt/')
 # PDF Method (currently defined: hist, python_silverman)
 pdf_method='python_silverman'
 
+levels=[1.4773,1.5,1.5874,1.7164]
+
 # variables
 varin_dict={
     'TXx':{'var_name':'tasmax','longname':'Hot extremes (TXx)','unit':'TXx [$^\circ$ C]','cut_interval':[-1.5,3.5],'nc_name':'tasmax'},
@@ -54,7 +56,7 @@ for model in wlvls.model:
     # time informations and periods
     target_periods=[]
     period_names=[]
-    for change in [1.4622,1.5,1.5874,1.701]:
+    for change in levels:
         period_names.append(str(change))
         mid_year=wlvls['rcp85',model,change]
         target_periods.append([mid_year-10,mid_year+10])
@@ -97,10 +99,10 @@ for model in wlvls.model:
         cmip5_dict[model][var].derive_time_slices(ref_period,target_periods,period_names)
         cmip5_dict[model][var].derive_distributions()
 
-        for change in [1.5,1.5874,1.701]:
+        for change in levels:
             cmip5_dict[model][var].derive_pdf_difference('ref',str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
 
-        for change in [1.5874,1.701]:
+        for change in levels[-2:]:
             cmip5_dict[model][var].derive_pdf_difference(str(1.5),str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
 
     except Exception as e:
@@ -118,7 +120,7 @@ all_cmip5=pdf.PDF_Processing('TXx')
 all_cmip5._distributions={'global':{}}
 N_model=len(cmip5_dict.keys())
 
-for change in [1.5,1.5874,1.701,'ref','weight']:
+for change in levels+['ref','weight']:
     tmp=np.array([np.nan])
     for model,mod_index in zip(cmip5_dict.keys(),range(N_model)):
         try:
@@ -127,7 +129,7 @@ for change in [1.5,1.5874,1.701,'ref','weight']:
             pass
     all_cmip5._distributions['global'][str(change)]=tmp
 
-for change in [1.5,1.5874,1.701]:
+for change in levels:
     all_cmip5.derive_pdf_difference('ref',str(change),pdf_method='python_silverman',bin_range=varin_dict['TXx']['cut_interval'],relative_diff=False)
 
 with open('data/varoutdict_cmip5_'+rcp+'_TXx_models_merged.pkl', 'wb') as output:

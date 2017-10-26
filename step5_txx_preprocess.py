@@ -18,7 +18,9 @@ models.remove('bcc-csm1-1-m')
 
 gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
 
-wlvls=da.DimArray(axes=[['rcp26','rcp45','rcp85'],models,[1.4622,1.5,1.5874,1.701]],dims=['scenario','model','level'])
+levels=[1.4773,1.5,1.5874,1.7164]
+
+wlvls=da.DimArray(axes=[['rcp26','rcp45','rcp85'],models,levels],dims=['scenario','model','level'])
 
 missing_gmt=open('data/missing_gmt_in_wlcalc.txt','w')
 
@@ -31,7 +33,7 @@ for model in gmt_.model:
 		try:
 			cmipdata = CmipData.CmipData('CMIP5',[model.lower()],[scenario])
 			cmipdata.get_cmip()
-			cmipdata.compute_period( [1986,2006], [1850,1900], [1.4622,1.5,1.5874,1.701], window=21)
+			cmipdata.compute_period( [1986,2006], [1850,1900], levels, window=21)
 			lvls=cmipdata.exceedance_tm
 			wlvls[scenario,model,:]=cmipdata.exceedance_tm
 		except Exception as e:

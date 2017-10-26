@@ -37,7 +37,7 @@ had4_gmt__=had4_gmt_-np.nanmean(had4_gmt_[125*12:145*12])+0.61
 had4_gmt=da.DimArray(axes=[np.array(gmt.time[0:1872])],dims=['time'])
 had4_gmt[:]=had4_gmt__
 
-print np.nanmean(np.array(had4_gmt_-np.nanmean(had4_gmt_[0:240]))[125*12:145*12])
+#print np.nanmean(np.array(had4_gmt_-np.nanmean(had4_gmt_[0:240]))[125*12:145*12])
 
 # FIG SI 1
 plot_dict={
