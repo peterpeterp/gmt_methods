@@ -54,7 +54,7 @@ for model in wlvls.model:
     # time informations and periods
     target_periods=[]
     period_names=[]
-    for change in [1.489,1.5,1.587,1.695]:
+    for change in [1.4622,1.5,1.5874,1.701]:
         period_names.append(str(change))
         mid_year=wlvls['rcp85',model,change]
         target_periods.append([mid_year-10,mid_year+10])
@@ -97,10 +97,10 @@ for model in wlvls.model:
         cmip5_dict[model][var].derive_time_slices(ref_period,target_periods,period_names)
         cmip5_dict[model][var].derive_distributions()
 
-        for change in [1.587,1.695,1.5]:
+        for change in [1.5,1.5874,1.701]:
             cmip5_dict[model][var].derive_pdf_difference('ref',str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
 
-        for change in [1.587,1.695]:
+        for change in [1.5874,1.701]:
             cmip5_dict[model][var].derive_pdf_difference(str(1.5),str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
 
     except Exception as e:
@@ -116,8 +116,9 @@ with open('data/varoutdict_cmip5_'+rcp+'_TXx.pkl', 'wb') as output:
 # all models merged pdf
 all_cmip5=pdf.PDF_Processing('TXx')
 all_cmip5._distributions={'global':{}}
+N_model=len(cmip5_dict.keys())
 
-for change in [1.587,1.695,1.5,'ref','weight']:
+for change in [1.5,1.5874,1.701,'ref','weight']:
     tmp=np.array([np.nan])
     for model,mod_index in zip(cmip5_dict.keys(),range(N_model)):
         try:
@@ -126,7 +127,7 @@ for change in [1.587,1.695,1.5,'ref','weight']:
             pass
     all_cmip5._distributions['global'][str(change)]=tmp
 
-for change in [1.587,1.695,1.5]:
+for change in [1.5,1.5874,1.701]:
     all_cmip5.derive_pdf_difference('ref',str(change),pdf_method='python_silverman',bin_range=varin_dict['TXx']['cut_interval'],relative_diff=False)
 
 with open('data/varoutdict_cmip5_'+rcp+'_TXx_models_merged.pkl', 'wb') as output:
