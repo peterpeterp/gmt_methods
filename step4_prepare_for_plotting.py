@@ -7,9 +7,6 @@ import itertools
 import matplotlib
 from scipy import stats
 import seaborn as sns
-import statsmodels.api as sm
-from statsmodels.stats.outliers_influence import summary_table
-from statsmodels.sandbox.regression.predstd import wls_prediction_std
 
 def running_mean_func(xx,N):
 	if N==1:
@@ -58,7 +55,6 @@ for style in gmt.style:
 			gmt[scenario,model,'b_ar5',:]=np.array(gmt_['xax',scenario,model,'gmt',:])-np.nanmean(gmt_['xax',scenario,model,'gmt',:].ix[125*12:145*12])+0.61
 
 ref_years=gmt.time[(gmt.time>1986) & (gmt.time<2006)]
-print 'warming in 1986-2006: ',np.nanmean(had4_gmt[125*12:145*12])
 print 'tas: ',np.nanmean(gmt[scenario,:,'tas_pre',ref_years])
 print 'bm: ',np.nanmean(gmt[scenario,:,'bm_pre',ref_years])
 print 'b: ',np.nanmean(gmt[scenario,:,'b_pre',ref_years])

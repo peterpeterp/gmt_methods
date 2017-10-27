@@ -11,7 +11,7 @@ runs=['r3i2p1', 'r12i1p1', 'r5i1p3', 'r6i1p1', 'r5i1p1', 'r8i1p1', 'r1i1p3', 'r1
 
 models=[]
 runs=[]
-for folder in [fl.split('/')[-1] for fl in glob.glob('data/*')]:
+for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 	models.append(folder.split('_')[0])
 	runs.append(folder.split('_')[1])
 
@@ -20,45 +20,50 @@ runs=list(set(runs))
 
 print models
 print runs
-styles=['xxx', 'mxx', 'xax', 'max', 'xxf', 'mxf', 'xaf', 'maf','had4']
+styles=['xax','had4']
 
-variables=['air','gmt','time']
+variables=['air','gmt']
 
 #gmt=da.DimArray(axes=[styles,['rcp26','rcp45','rcp85'],models,runs,variables,np.arange(0,2880)],dims=['style','model','run','scenario','variable','time'])
 
 
-gmt=da.DimArray(axes=[styles,['rcp26','rcp45','rcp85'],models,variables,np.arange(0,2880)],dims=['style','scenario','model','variable','time'])
+tmp_example=pd.read_table('data_models/ACCESS1-0_r1i1p1/had4_rcp85.txt',sep=' ',header=None)
+gmt=da.DimArray(axes=[styles,['rcp85'],models,variables,np.array(tmp_example[0])],dims=['style','scenario','model','variable','time'])
 
+print gmt.time
 
-for style in ['xxx', 'mxx', 'xax', 'max', 'xxf', 'mxf', 'xaf', 'maf','had4']:
+for style in gmt.style:
 	print style
-	for scenario in ['rcp26','rcp45','rcp85']:
+	for scenario in gmt.scenario:
 		print scenario
 		for model,mo in zip(models,range(len(models))):
-			runs=[fl.split('/')[-1] for fl in glob.glob('data/'+model+'*')]
+			runs=[fl.split('/')[-1] for fl in glob.glob('data_models/'+model+'*')]
 
-			gmt_tmp=np.zeros([len(runs),2880])*np.nan
-			air_tmp=np.zeros([len(runs),2880])*np.nan
+			gmt_tmp=da.DimArray(axes=[range(len(runs)),np.array(tmp_example[0])],dims=['run','time'])
+			air_tmp=da.DimArray(axes=[range(len(runs)),np.array(tmp_example[0])],dims=['run','time'])
 			for folder,i in zip(runs,range(len(runs))):
 				run=folder.split('_')[1]
-				if len(glob.glob('data/'+model+'_'+run+'/*'+scenario+'*.txt'))!=0:
+				if len(glob.glob('data_models/'+model+'_'+run+'/*'+scenario+'*.txt'))!=0:
+					#tmp=pd.read_table('data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',sep=' ',header=None)
 					try:
-						tmp=pd.read_table('data/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',sep=' ',header=None)
+						tmp=pd.read_table('data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',sep=' ',header=None)
 						tmp.columns=[0,1,2,3]
-						if len(tmp[0])==2880:
-							gmt_tmp[i,:]=tmp[2]
-							air_tmp[i,:]=tmp[1]
-							gmt[style][scenario][model]['time']=tmp[0]
+						time_ax=np.array(tmp[0])
+						useful_years=time_ax[(time_ax>1850) & (time_ax<2100)]
+						gmt_tmp[i,useful_years]=np.array(tmp[2])[(time_ax>1850) & (time_ax<2100)]
+						air_tmp[i,useful_years]=np.array(tmp[1])[(time_ax>1850) & (time_ax<2100)]
+						#gmt_tmp[i,:]=tmp[2]
+						#air_tmp[i,:]=tmp[1]
 					except:
 						pass
 
-			gmt[style][scenario][model]['gmt']=np.nanmean(gmt_tmp,axis=0)
-			gmt[style][scenario][model]['air']=np.nanmean(air_tmp,axis=0)
+			gmt[style][scenario][model]['gmt']=np.nanmean(np.array(gmt_tmp),axis=0)
+			gmt[style][scenario][model]['air']=np.nanmean(np.array(air_tmp),axis=0)
 
 
 
 ds=da.Dataset({'gmt':gmt})
-ds.write_nc('gmt.nc', mode='w')
+ds.write_nc('data/gmt.nc', mode='w')
 
 # gmt=da.read_nc('gmt_raw.nc')['gmt']
 #
