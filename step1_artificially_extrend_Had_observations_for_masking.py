@@ -2,13 +2,16 @@ import os,sys,glob,time,collections,gc
 import numpy as np
 from netCDF4 import Dataset,netcdftime,num2date
 
+#cdo -a remapnn,../blend-runnable/grid5x5.cdo -selyear,1850/2016 -selvar,temperature_anomaly CRUTEM.4.6.0.0.anomalies.nc CRU.nc
+#cdo -a remapnn,../blend-runnable/grid5x5.cdo -selyear,1850/2016 -selvar,sst HadSST.3.1.1.0.median.nc SST.nc
+#cdo -a remapnn,../blend-runnable/grid1x1.cdo -selyear,1850/2016 -selvar,temperature_anomaly HadCRUT.4.6.0.0.median.nc Had4.nc
 
 # CRU
 nc = Dataset('CRU.nc', "r")
 lats1 = nc.variables["lat"][:]
 lons1 = nc.variables["lon"][:]
-time = nc.variables["time"][0:1872]
-tas = nc.variables["temperature_anomaly"][0:1872,:,:]
+time = nc.variables["time"][0:2004]
+tas = nc.variables["temperature_anomaly"][0:2004,:,:]
 nc.close()
 
 coverage=np.ma.getdata(tas[0:12,:,:])*0
@@ -28,7 +31,7 @@ tas_ext=np.concatenate((tas,coverage_ext),axis=0)
 
 time_ext=time.copy()
 for year in range(2017,2101):
-	extension=time[0:12]-18610000+year*10000
+	extension=time[0:12]-18500000+year*10000
 	time_ext=np.concatenate((time_ext,extension))
 
 
@@ -65,8 +68,8 @@ print out_file
 nc = Dataset('SST.nc', "r")
 lats1 = nc.variables["lat"][:]
 lons1 = nc.variables["lon"][:]
-time = nc.variables["time"][0:1872]
-tas = nc.variables["sst"][0:1872,:,:]
+time = nc.variables["time"][0:2004]
+tas = nc.variables["sst"][0:2004,:,:]
 nc.close()
 
 coverage=np.ma.getdata(tas[0:12,:,:])*0
@@ -86,7 +89,7 @@ tas_ext=np.concatenate((tas,coverage_ext),axis=0)
 
 time_ext=time.copy()
 for year in range(2017,2101):
-	extension=time[0:12]-18610000+year*10000
+	extension=time[0:12]-18500000+year*10000
 	time_ext=np.concatenate((time_ext,extension))
 
 
@@ -123,8 +126,8 @@ print out_file
 nc = Dataset('Had4.nc', "r")
 lats1 = nc.variables["lat"][:]
 lons1 = nc.variables["lon"][:]
-time = nc.variables["time"][0:1872]
-tas = nc.variables["temperature_anomaly"][0:1872,:,:]
+time = nc.variables["time"][0:2004]
+tas = nc.variables["temperature_anomaly"][0:2004,:,:]
 nc.close()
 
 coverage=np.ma.getdata(tas[0:12,:,:])*0
@@ -145,7 +148,7 @@ tas_ext=np.concatenate((tas,coverage_ext),axis=0)
 
 time_ext=time.copy()
 for year in range(2017,2101):
-	extension=time[0:12]-18610000+year*10000
+	extension=time[0:12]-18500000+year*10000
 	time_ext=np.concatenate((time_ext,extension))
 
 

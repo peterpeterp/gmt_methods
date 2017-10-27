@@ -12,9 +12,9 @@ gmt_qu=da.read_nc('data/gmt_quantiles.nc')['gmt_qu']
 
 # FIG 1
 plot_dict={
-	'tas_pre':{'l_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$','pos':0.65},
-	'bm_pre':{'l_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{BM\_CMIP5}}$','pos':0.75},
-	'bm_ar5':{'l_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{BM\_CMIP5\_ref}}$','pos':0.85},
+	'gmt_sat':{'l_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$','pos':0.65},
+	'gmt_millar':{'l_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{rebase-2010s}}$','pos':0.75},
+	'gmt_bm':{'l_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend-mask}}$','pos':0.85},
 }
 for scenario in ['rcp85']:
 	plt.clf()
@@ -25,24 +25,24 @@ for scenario in ['rcp85']:
 	ax[0].plot([-1,5],[1.55,1.55],linestyle='--',color='k')
 	x__=np.arange(0,5,0.01)
 
-	for method in ['tas_pre','bm_pre','bm_ar5']:
+	for method in ['gmt_sat','gmt_millar','gmt_bm']:
 		tmp=plot_dict[method]
 
-		x_=np.asarray(gmt[scenario,:,'tas_ar5',:]).reshape(47*2880)
-		y_=np.asarray(gmt[scenario,:,method,:]).reshape(47*2880)
+		x_=np.asarray(gmt[scenario,:,'gmt_ar5',:]).reshape(len(gmt.model)*len(gmt.time))
+		y_=np.asarray(gmt[scenario,:,method,:]).reshape(len(gmt.model)*len(gmt.time))
 		idx = np.isfinite(x_) & np.isfinite(y_)
 		x,y=x_[idx],y_[idx]
 		ax[0].scatter(x,y,color=tmp['l_color'],marker='v',alpha=0.1)
 
 
-		yy=gmt_qu[scenario,'tas_ar5',method,1.5,50]
-		ax[0].plot([gmt_qu[scenario,'tas_ar5',method,1.5,0],gmt_qu[scenario,'tas_ar5',method,1.5,100]],[tmp['pos'],tmp['pos']],color=tmp['color'])
-		ax[0].fill_between([gmt_qu[scenario,'tas_ar5',method,1.5,25],gmt_qu[scenario,'tas_ar5',method,1.5,75]],[tmp['pos']-0.02,tmp['pos']-0.02],[tmp['pos']+0.02,tmp['pos']+0.02],color=tmp['color'])
+		yy=gmt_qu[scenario,'gmt_ar5',method,1.5,50]
+		ax[0].plot([gmt_qu[scenario,'gmt_ar5',method,1.5,0],gmt_qu[scenario,'gmt_ar5',method,1.5,100]],[tmp['pos'],tmp['pos']],color=tmp['color'])
+		ax[0].fill_between([gmt_qu[scenario,'gmt_ar5',method,1.5,25],gmt_qu[scenario,'gmt_ar5',method,1.5,75]],[tmp['pos']-0.02,tmp['pos']-0.02],[tmp['pos']+0.02,tmp['pos']+0.02],color=tmp['color'])
 		ax[0].plot([yy,yy],[tmp['pos'],1.5],color=tmp['color'],lw=2)
 		ax[0].plot([yy,yy],[tmp['pos']-0.02,tmp['pos']+0.02],color='white',lw=2)
-		ax[0].text(yy,1,str(round(yy,2)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color=tmp['color'])
+		#ax[0].text(yy,1,str(round(yy,2)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color=tmp['color'])
 		ax[0].plot([-99,-99],[-99,-99],color=tmp['color'],lw=2,label=tmp['longname']+' '+str(round(yy,2))+ \
-		' ('+str(round(gmt_qu[scenario,'tas_ar5',method,1.5,25],2))+'-'+str(round(gmt_qu[scenario,'tas_ar5',method,1.5,75],2))+')')
+		' ('+str(round(gmt_qu[scenario,'gmt_ar5',method,1.5,25],2))+'-'+str(round(gmt_qu[scenario,'gmt_ar5',method,1.5,75],2))+')')
 
 	ax[0].plot([-1,5],[-1,5],linestyle='--',color='k')
 	ax[0].set_ylim((0.61,2.3))
@@ -52,9 +52,9 @@ for scenario in ['rcp85']:
 	ax[0].set_ylabel('$\mathregular{GMT_{alt}}$ $\mathregular{[^\circ C]}$')
 	ax[0].legend(loc='upper left',fontsize=12)
 
-	for method in ['bm_pre','bm_ar5']:
-		x_=np.asarray(gmt[scenario,:,'tas_ar5',:]).reshape(47*2880)
-		y_=np.asarray(gmt[scenario,:,method,:]).reshape(47*2880)
+	for method in ['gmt_millar','gmt_bm']:
+		x_=np.asarray(gmt[scenario,:,'gmt_ar5',:]).reshape(len(gmt.model)*len(gmt.time))
+		y_=np.asarray(gmt[scenario,:,method,:]).reshape(len(gmt.model)*len(gmt.time))
 		idx = np.isfinite(x_) & np.isfinite(y_)
 		x,y=x_[idx],y_[idx]
 

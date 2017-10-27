@@ -8,17 +8,6 @@ import matplotlib
 from scipy import stats
 import seaborn as sns
 
-def running_mean_func(xx,N):
-	if N==1:
-		return xx
-	if N!=1:
-	    x=np.ma.masked_invalid(xx.copy())
-	    ru_mean=x.copy()*np.nan
-	    for t in range(int(N/2),len(x)-int(N/2)):
-	        ru_mean[t]=np.nanmean(x[t-int(N/2):t+int(N/2)])
-	    return ru_mean
-
-
 gmt_all=da.read_nc('data/gmt.nc')['gmt']
 
 models=list(gmt_all.model)
@@ -28,6 +17,7 @@ models.remove('BNU-ESM')
 models.remove('bcc-csm1-1-m')
 
 gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
+
 
 ensemble=open('ensemble.txt','w')
 for scenario in gmt_.scenario:
@@ -39,29 +29,48 @@ for scenario in gmt_.scenario:
 ensemble.close()
 
 # anomaly to preindustrial
-gmt=da.DimArray(axes=[['rcp26','rcp45','rcp85'],models,['bm_pre','bm_ar5','tas_ar5','tas_pre','b_pre','b_ar5'],np.array(gmt_['had4','rcp85','HadGEM2-ES','time',:])],dims=['scenario','model','style','time'])
+styles=['gmt_ar5','gmt_sat','gmt_millar','gmt_bm','gmt_b']
+gmt=da.DimArray(axes=[['rcp85'],models,styles,gmt_.time],dims=['scenario','model','style','time'])
+
+# read HadCRUT4
+dat=open('data/HadCRUT4_gmt.txt','r').read()
+had4=[]
+year=[]
+for line in dat.split('\n')[::2]:
+	year.append(line.split(' ')[0])
+	for anom in line.split(' ')[1:-1]:
+		if anom!='':
+			had4.append(float(anom))
+# get HadCRUT4 for 1850-2016
+had4_gmt_=np.array(had4[:-12])
+had4_gmt=da.DimArray(axes=[np.array(gmt.time[0:2004])],dims=['time'])
+had4_gmt[:]=had4_gmt_
+
+ref_preindustrial=gmt.time[(gmt.time>1850) & (gmt.time<1900)]
+ref_ar5=gmt.time[(gmt.time>1986) & (gmt.time<2006)]
+ref_millar=gmt.time[(gmt.time>2010) & (gmt.time<2019)]
+had4_gmt[:]=had4_gmt[:]-np.nanmean(had4_gmt[ref_ar5])+0.61
 
 for style in gmt.style:
 	for scenario in gmt.scenario:
 		for model in gmt.model:
 			# anomalies to preindustrial
-			gmt[scenario,model,'tas_pre',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',:].ix[0:240])
-			gmt[scenario,model,'bm_pre',:]=np.array(gmt_['had4',scenario,model,'gmt',:])-np.nanmean(gmt_['had4',scenario,model,'gmt',:].ix[0:240])
-			gmt[scenario,model,'b_pre',:]=np.array(gmt_['xax',scenario,model,'gmt',:])-np.nanmean(gmt_['xax',scenario,model,'gmt',:].ix[0:240])
+			gmt[scenario,model,'gmt_sat',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_preindustrial])
+			gmt[scenario,model,'gmt_bm',:]=np.array(gmt_['had4',scenario,model,'gmt',:])-np.nanmean(gmt_['had4',scenario,model,'gmt',ref_preindustrial])
+			gmt[scenario,model,'gmt_b',:]=np.array(gmt_['xax',scenario,model,'gmt',:])-np.nanmean(gmt_['xax',scenario,model,'gmt',ref_preindustrial])
 
 			# anomalies as in AR5
-			gmt[scenario,model,'tas_ar5',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',:].ix[125*12:145*12])+0.61
-			gmt[scenario,model,'bm_ar5',:]=np.array(gmt_['had4',scenario,model,'gmt',:])-np.nanmean(gmt_['had4',scenario,model,'gmt',:].ix[125*12:145*12])+0.61
-			gmt[scenario,model,'b_ar5',:]=np.array(gmt_['xax',scenario,model,'gmt',:])-np.nanmean(gmt_['xax',scenario,model,'gmt',:].ix[125*12:145*12])+0.61
+			gmt[scenario,model,'gmt_ar5',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_ar5])+0.61
 
-ref_years=gmt.time[(gmt.time>1986) & (gmt.time<2006)]
-print 'tas: ',np.nanmean(gmt[scenario,:,'tas_pre',ref_years])
-print 'bm: ',np.nanmean(gmt[scenario,:,'bm_pre',ref_years])
-print 'b: ',np.nanmean(gmt[scenario,:,'b_pre',ref_years])
+			# Millar like
+			gmt[scenario,model,'gmt_millar',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+0.9
 
+
+print 'tas: ',np.nanmean(gmt[scenario,:,'gmt_sat',ref_ar5])
+print 'bm: ',np.nanmean(gmt[scenario,:,'gmt_bm',ref_ar5])
+print 'b: ',np.nanmean(gmt[scenario,:,'gmt_b',ref_ar5])
 
 # quatntile stuff
-styles=['tas_pre','tas_ar5','bm_pre','bm_ar5','b_pre','b_ar5']
 gmt_qu=da.DimArray(axes=[['rcp26','rcp45','rcp85'],styles,styles,[1,1.5,2,2.5],[0,5,10,16.6,25,50,75,83.3,90,95,100]],dims=['scenario','x','y','level','out'])
 
 for scenario in ['rcp85']:
@@ -72,8 +81,8 @@ for scenario in ['rcp85']:
 			fig,axes=plt.subplots(nrows=2,ncols=4,figsize=(12,8))
 			ax=axes.flatten()
 			for y_method,pp in zip(styles,range(7)):
-				x_=np.asarray(gmt[scenario,:,x_method,:]).reshape(47*2880)
-				y_=np.asarray(gmt[scenario,:,y_method,:]).reshape(47*2880)
+				x_=np.asarray(gmt[scenario,:,x_method,:]).reshape(47*3012)
+				y_=np.asarray(gmt[scenario,:,y_method,:]).reshape(47*3012)
 				idx = np.isfinite(x_) & np.isfinite(y_)
 				x,y=x_[idx],y_[idx]
 
@@ -104,28 +113,28 @@ for scenario in ['rcp85']:
 
 # conversion table
 conversion_table=open('conversion_table.txt','w')
-conversion_table.write('\t'.join([' ']+['tas_ar5','tas_pre','bm_pre','bm_ar5']))
-for x_method in ['tas_ar5','tas_pre','bm_pre','bm_ar5']:
+conversion_table.write('\t'.join([' ']+['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']))
+for x_method in ['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']:
 	conversion_table.write('\n'+x_method+'\t')
-	for y_method in ['tas_ar5','tas_pre','bm_pre','bm_ar5']:
+	for y_method in ['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']:
 		conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],2))+'\t')
 conversion_table.close()
 
 # conversion table precise
 conversion_table=open('conversion_table_precise.txt','w')
-conversion_table.write('\t'.join([' ']+['tas_ar5','tas_pre','bm_pre','bm_ar5']))
-for x_method in ['tas_ar5','tas_pre','bm_pre','bm_ar5']:
+conversion_table.write('\t'.join([' ']+['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']))
+for x_method in ['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']:
 	conversion_table.write('\n'+x_method+'\t')
-	for y_method in ['tas_ar5','tas_pre','bm_pre','bm_ar5']:
+	for y_method in ['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']:
 		conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],4))+'\t')
 conversion_table.close()
 
 # conversion table full
 conversion_table=open('conversion_table_SI.txt','w')
 conversion_table.write('\t'.join([' ']+styles))
-for x_method in ['tas_ar5','tas_pre','bm_pre','bm_ar5','b_pre','b_ar5']:
+for x_method in styles:
 	conversion_table.write('\n'+x_method+'\t')
-	for y_method in ['tas_ar5','tas_pre','bm_pre','bm_ar5','b_pre','b_ar5']:
+	for y_method in styles:
 		if y_method==x_method:
 			conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],2))+'\t')
 		else:
