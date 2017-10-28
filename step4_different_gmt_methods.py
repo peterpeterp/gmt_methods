@@ -18,7 +18,6 @@ models.remove('bcc-csm1-1-m')
 
 gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
 
-
 ensemble=open('ensemble.txt','w')
 for scenario in gmt_.scenario:
 	ensemble.write(scenario+':\n')
@@ -28,28 +27,14 @@ for scenario in gmt_.scenario:
 	ensemble.write('\n')
 ensemble.close()
 
-# anomaly to preindustrial
+# new gmt names new dimarray
 styles=['gmt_ar5','gmt_sat','gmt_millar','gmt_bm','gmt_b']
 gmt=da.DimArray(axes=[['rcp85'],models,styles,gmt_.time],dims=['scenario','model','style','time'])
 
-# read HadCRUT4
-dat=open('data/HadCRUT4_gmt.txt','r').read()
-had4=[]
-year=[]
-for line in dat.split('\n')[::2]:
-	year.append(line.split(' ')[0])
-	for anom in line.split(' ')[1:-1]:
-		if anom!='':
-			had4.append(float(anom))
-# get HadCRUT4 for 1850-2016
-had4_gmt_=np.array(had4[:-12])
-had4_gmt=da.DimArray(axes=[np.array(gmt.time[0:2004])],dims=['time'])
-had4_gmt[:]=had4_gmt_
-
+# reference periods
 ref_preindustrial=gmt.time[(gmt.time>1850) & (gmt.time<1900)]
 ref_ar5=gmt.time[(gmt.time>1986) & (gmt.time<2006)]
 ref_millar=gmt.time[(gmt.time>2010) & (gmt.time<2019)]
-had4_gmt[:]=had4_gmt[:]-np.nanmean(had4_gmt[ref_ar5])+0.61
 
 for style in gmt.style:
 	for scenario in gmt.scenario:
@@ -63,7 +48,7 @@ for style in gmt.style:
 			gmt[scenario,model,'gmt_ar5',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_ar5])+0.61
 
 			# Millar like
-			gmt[scenario,model,'gmt_millar',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+0.9
+			gmt[scenario,model,'gmt_millar',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+0.93
 
 
 print 'tas: ',np.nanmean(gmt[scenario,:,'gmt_sat',ref_ar5])

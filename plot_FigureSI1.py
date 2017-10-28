@@ -35,8 +35,8 @@ for line in dat.split('\n')[::2]:
 			had4.append(float(anom))
 # get HadCRUT4 for 1850-2016
 had4_gmt_=np.array(had4[:-12])
-had4_gmt=da.DimArray(axes=[np.array(gmt.time[0:2004])],dims=['time'])
-had4_gmt[:]=had4_gmt_
+had4_gmt=da.DimArray(axes=[np.array(gmt.time)],dims=['time'])
+had4_gmt[1850:2017]=had4_gmt_
 ref_ar5=gmt.time[(gmt.time>1986) & (gmt.time<2006)]
 had4_gmt[:]=had4_gmt[:]-np.nanmean(had4_gmt[ref_ar5])+0.61
 #print np.nanmean(np.array(had4_gmt_-np.nanmean(had4_gmt_[0:240]))[136*12:145*12])
@@ -52,37 +52,28 @@ plt.clf()
 fig,axes=plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 ax=axes.flatten()
 
-all_hist=time_ax[time_ax<2017]
-before_1996=time_ax[time_ax<1996]
-after_1996=time_ax[time_ax>1996]
-before_1986=time_ax[time_ax<1986]
-after_1986=time_ax[(time_ax>1986) & (time_ax<2017)]
 
-ax[0].plot(time_ax[all_hist],running_mean_func(had4_gmt,12),'gray',lw=2,alpha=0.6,label='HadCRUT4')
+ax[0].plot(time_ax,running_mean_func(had4_gmt,12),'gray',lw=2,alpha=0.6,label='HadCRUT4')
 for method in ['gmt_sat','gmt_bm']:
-	ax[0].plot(time_ax[all_hist],running_mean_func(np.nanmean(gmt['rcp85',:,method,all_hist],axis=0),12),label=plot_dict[method]['longname'],color=plot_dict[method]['color'])
+	ax[0].plot(time_ax,running_mean_func(np.nanmean(gmt['rcp85',:,method,:],axis=0),12),label=plot_dict[method]['longname'],color=plot_dict[method]['color'])
 for method in ['gmt_ar5']:
-	ax[0].plot(time_ax.ix[146*12:2004],running_mean_func(np.nanmean(gmt['rcp85',:,method,:],axis=0)[146*12:2004],12),color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'],label=plot_dict[method]['longname'])
-# for method in ['gmt_millar']:
-# 	ax[0].plot(time_ax.ix[165*12:2004],running_mean_func(np.nanmean(gmt['rcp85',:,method,:],axis=0)[165*12:2004],12),color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'])
+	ax[0].plot(time_ax[1986:],running_mean_func(np.nanmean(gmt['rcp85',:,method,1986:],axis=0),12),color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'],label=plot_dict[method]['longname'])
+for method in ['gmt_millar']:
+	ax[0].plot(time_ax[2010:],running_mean_func(np.nanmean(gmt['rcp85',:,method,2010:],axis=0),12),color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'],label=plot_dict[method]['longname'])
 
-
-ax[0].set_ylim((-0.4,1.3))
-ax[0].set_xlim((1850,2016))
-#ax[0].plot([1996,1996],[-0.4,1.5],color='k')
+ax[0].set_ylim((-0.4,1.55))
+ax[0].set_xlim((1850,2035))
 ax[0].set_ylabel('$\mathregular{GMT}$ $\mathregular{[^\circ C]}$')
 ax[0].legend(loc='upper left',fontsize=10)
 
 for method in ['gmt_sat','gmt_bm']:
-	ax[1].plot(time_ax[all_hist],running_mean_func(np.nanmean(gmt['rcp85',:,method,all_hist]-had4_gmt,axis=0),60),label=plot_dict[method]['longname'],color=plot_dict[method]['color'])
+	ax[1].plot(time_ax,running_mean_func(np.nanmean(gmt['rcp85',:,method,:]-had4_gmt,axis=0),60),label=plot_dict[method]['longname'],color=plot_dict[method]['color'])
 for method in ['gmt_ar5']:
-	ax[1].plot(time_ax.ix[136*12:2004],running_mean_func(np.nanmean(gmt['rcp85',:,method,all_hist]-had4_gmt,axis=0),60)[136*12:2004],color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'],label=plot_dict[method]['longname'])
-# for method in ['gmt_millar']:
-# 	ax[1].plot(time_ax.ix[160*12:2004],running_mean_func(np.nanmean(gmt['rcp85',:,method,all_hist]-had4_gmt,axis=0),60)[160*12:2004],color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'])
+	ax[1].plot(time_ax[1986:],running_mean_func(np.nanmean(gmt['rcp85',:,method,1986:]-had4_gmt[1986:],axis=0),60),color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'],label=plot_dict[method]['longname'])
+for method in ['gmt_millar']:
+	ax[1].plot(time_ax[2006:],running_mean_func(np.nanmean(gmt['rcp85',:,method,2006:]-had4_gmt[2006:],axis=0),60),color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'])
 
-#ax[1].set_ylim((-0.2,0.2))
-ax[1].plot([1860,2020],[0,0],color='k')
-#ax[1].plot([1996,1996],[-0.2,0.2],color='k')
+ax[1].plot([1860,2035],[0,0],color='k')
 ax[1].set_xlim((1850,2016))
 ax[1].set_ylabel('$\mathregular{GMT-GMT_{obs}}$ $\mathregular{[^\circ C]}$')
 plt.tight_layout()
