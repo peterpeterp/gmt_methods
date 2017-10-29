@@ -43,7 +43,7 @@ for model in gmt_.model:
 			print e
 			missing_gmt.write(model+scenario+'\n')
 
-os.chdir('../../')
+os.chdir('../../gmt/')
 
 missing_gmt.close()
 
