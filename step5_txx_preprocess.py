@@ -18,13 +18,14 @@ models.remove('bcc-csm1-1-m')
 
 gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
 
-levels=[1.4773,1.5,1.5874,1.7164]
+levels=[1.468,1.5,1.6445,1.6584]
 
 wlvls=da.DimArray(axes=[['rcp26','rcp45','rcp85'],models,levels],dims=['scenario','model','level'])
 
 missing_gmt=open('data/missing_gmt_in_wlcalc.txt','w')
 
 os.chdir('../wlcalculator/app/')
+sys.path.append('../wlcalculator/app/')
 import wacalc.CmipData as CmipData; reload(CmipData)
 
 

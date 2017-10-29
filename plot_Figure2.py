@@ -59,6 +59,7 @@ for time_slice in [3,1,2]:
 ax[0].plot([0,0],[0,1],color='k')
 ax[0].set_ylim((0,0.02))
 ax[0].set_xlim((-0.8,3))
+ax[0].text(-0.1, 1.02, 'a', transform=ax[0].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
 ax[0].set_ylabel('land fraction')
 ax[0].set_xlabel('$\mathregular{TXx}$ $\mathregular{[^\circ C]}$')
 ax[0].legend(loc='upper right',fontsize=10)

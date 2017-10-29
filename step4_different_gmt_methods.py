@@ -102,7 +102,10 @@ conversion_table.write('\t'.join([' ']+['gmt_ar5','gmt_sat','gmt_millar','gmt_bm
 for x_method in ['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']:
 	conversion_table.write('\n'+x_method+'\t')
 	for y_method in ['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']:
-		conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],2))+'\t')
+		if y_method==x_method:
+			conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],2))+'\t')
+		else:
+			conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],2))+' ('+str(round(gmt_qu[scenario,x_method,y_method,1.5,25],2))+'-'+str(round(gmt_qu[scenario,x_method,y_method,1.5,75],2))+')\t')
 conversion_table.close()
 
 # conversion table precise

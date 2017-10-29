@@ -63,6 +63,7 @@ for method in ['gmt_millar']:
 
 ax[0].set_ylim((-0.4,1.55))
 ax[0].set_xlim((1850,2035))
+ax[0].text(-0.1, 1.02, 'a', transform=ax[0].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
 ax[0].set_ylabel('$\mathregular{GMT}$ $\mathregular{[^\circ C]}$')
 ax[0].legend(loc='upper left',fontsize=10)
 
@@ -75,6 +76,8 @@ for method in ['gmt_millar']:
 
 ax[1].plot([1860,2035],[0,0],color='k')
 ax[1].set_xlim((1850,2016))
+ax[1].set_ylim((-0.2,0.3))
+ax[1].text(-0.1, 1.02, 'b', transform=ax[1].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
 ax[1].set_ylabel('$\mathregular{GMT-GMT_{obs}}$ $\mathregular{[^\circ C]}$')
 plt.tight_layout()
 plt.savefig('plots/GMT_ref.png')

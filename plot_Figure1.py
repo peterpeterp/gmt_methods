@@ -13,8 +13,8 @@ gmt_qu=da.read_nc('data/gmt_quantiles.nc')['gmt_qu']
 # FIG 1
 plot_dict={
 	'gmt_sat':{'l_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$','pos':0.65},
-	'gmt_millar':{'l_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{rebase-2010s}}$','pos':0.75},
-	'gmt_bm':{'l_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend-mask}}$','pos':0.85},
+	'gmt_millar':{'l_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{rebase-2010s}}$','pos':0.85},
+	'gmt_bm':{'l_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend-mask}}$','pos':0.75},
 }
 for scenario in ['rcp85']:
 	plt.clf()
@@ -27,7 +27,6 @@ for scenario in ['rcp85']:
 
 	for method in ['gmt_sat','gmt_millar','gmt_bm']:
 		tmp=plot_dict[method]
-
 		x_=np.asarray(gmt[scenario,:,'gmt_ar5',:]).reshape(len(gmt.model)*len(gmt.time))
 		y_=np.asarray(gmt[scenario,:,method,:]).reshape(len(gmt.model)*len(gmt.time))
 		idx = np.isfinite(x_) & np.isfinite(y_)
@@ -35,6 +34,8 @@ for scenario in ['rcp85']:
 		ax[0].scatter(x,y,color=tmp['l_color'],marker='v',alpha=0.1)
 
 
+	for method in ['gmt_millar','gmt_bm','gmt_sat']:
+		tmp=plot_dict[method]
 		yy=gmt_qu[scenario,'gmt_ar5',method,1.5,50]
 		ax[0].plot([gmt_qu[scenario,'gmt_ar5',method,1.5,0],gmt_qu[scenario,'gmt_ar5',method,1.5,100]],[tmp['pos'],tmp['pos']],color=tmp['color'])
 		ax[0].fill_between([gmt_qu[scenario,'gmt_ar5',method,1.5,25],gmt_qu[scenario,'gmt_ar5',method,1.5,75]],[tmp['pos']-0.02,tmp['pos']-0.02],[tmp['pos']+0.02,tmp['pos']+0.02],color=tmp['color'])
@@ -47,12 +48,12 @@ for scenario in ['rcp85']:
 	ax[0].plot([-1,5],[-1,5],linestyle='--',color='k')
 	ax[0].set_ylim((0.61,2.3))
 	ax[0].set_xlim((0.61,2.3))
-
+	ax[0].text(-0.1, 1.02, 'a', transform=ax[0].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
 	ax[0].set_xlabel('$\mathregular{GMT_{AR5}}$ $\mathregular{[^\circ C]}$')
 	ax[0].set_ylabel('$\mathregular{GMT_{alt}}$ $\mathregular{[^\circ C]}$')
 	ax[0].legend(loc='upper left',fontsize=12)
 
-	for method in ['gmt_millar','gmt_bm']:
+	for method in ['gmt_bm']:
 		x_=np.asarray(gmt[scenario,:,'gmt_ar5',:]).reshape(len(gmt.model)*len(gmt.time))
 		y_=np.asarray(gmt[scenario,:,method,:]).reshape(len(gmt.model)*len(gmt.time))
 		idx = np.isfinite(x_) & np.isfinite(y_)
@@ -71,6 +72,7 @@ for scenario in ['rcp85']:
 	ax[1].plot([-1,5],[0,0],linestyle='-',color='k',lw=2)
 	ax[1].set_ylim((-0.8,0.4))
 	ax[1].set_xlim((0.61,2.7))
+	ax[1].text(-0.1, 1.02, 'b', transform=ax[1].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
 
 	ax[1].set_xlabel('$\mathregular{GMT_{AR5}}$ $\mathregular{[^\circ C]}$')
 	ax[1].set_ylabel('$\mathregular{GMT_{alt} -GMT_{AR5}}$ $\mathregular{[^\circ C]}$')

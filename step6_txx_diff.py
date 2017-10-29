@@ -25,7 +25,7 @@ os.chdir('../gmt/')
 # PDF Method (currently defined: hist, python_silverman)
 pdf_method='python_silverman'
 
-levels=[1.4773,1.5,1.5874,1.7164]
+levels=[1.468,1.5,1.6445,1.6584]
 
 # variables
 varin_dict={
@@ -69,7 +69,7 @@ for model in wlvls.model:
         # combine datasets
         var_name=varin_dict[var]['nc_name']
 
-        nc_rcp85=Dataset('../gmt/data/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_rcp85_r1i1p1_2006-2100.YEARMAX.nc')
+        nc_rcp85=Dataset('/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_rcp85_r1i1p1_2006-2100.YEARMAX.nc')
         lat=nc_rcp85.variables['lat'][:]
         lon=nc_rcp85.variables['lon'][:]
 
@@ -81,7 +81,7 @@ for model in wlvls.model:
             var_in-=273.15
         input_rcp85=da.DimArray(var_in[:,:,:].squeeze(), axes=[year, lat, lon],dims=['year', 'lat', 'lon'] )
 
-        nc_hist=Dataset('../gmt/data/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_historical_r1i1p1_1901-2005.YEARMAX.nc')
+        nc_hist=Dataset('/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_historical_r1i1p1_1901-2005.YEARMAX.nc')
         datevar = []
         datevar.append(num2date(nc_hist.variables['time'][:],units = nc_hist.variables['time'].units,calendar = nc_hist.variables['time'].calendar))
         year=np.array([int(str(date).split("-")[0])	for date in datevar[0][:]])
