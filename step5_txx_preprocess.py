@@ -9,7 +9,7 @@ from scipy import stats
 
 
 
-gmt_all=da.read_nc('gmt/data/gmt.nc')['gmt']
+gmt_all=da.read_nc('data/gmt.nc')['gmt']
 models=list(gmt_all.model)
 models.remove('CESM1-CAM5')
 models.remove('MIROC5')
@@ -22,9 +22,10 @@ levels=[1.468,1.5,1.6445,1.6584]
 
 wlvls=da.DimArray(axes=[['rcp26','rcp45','rcp85'],models,levels],dims=['scenario','model','level'])
 
-missing_gmt=open('gmt/data/missing_gmt_in_wlcalc.txt','w')
+missing_gmt=open('data/missing_gmt_in_wlcalc.txt','w')
 
-os.chdir('wlcalculator/app/')
+os.chdir('/p/projects/tumble/carls/shared_folder/wlcalculator/app/')
+sys.path.append('/p/projects/tumble/carls/shared_folder/wlcalculator/app/')
 os.system('ls')
 import wacalc.CmipData as CmipData; reload(CmipData)
 
@@ -42,15 +43,15 @@ for model in gmt_.model:
 			print e
 			missing_gmt.write(model+scenario+'\n')
 
-os.chdir('../../gmt/')
+os.chdir('../../')
 
 missing_gmt.close()
 
 ds=da.Dataset({'wlvls':wlvls})
-ds.write_nc('gmt/data/wlvls.nc', mode='w')
+ds.write_nc('data/wlvls.nc', mode='w')
 
 
-# for folder in [fl.split('/')[-1] for fl in glob.glob('gmt/data/*')]:
+# for folder in [fl.split('/')[-1] for fl in glob.glob('data/*')]:
 # 	model=folder.split('_')[0]
 # 	run=folder.split('_')[1]
 # 	for scenario in ['rcp26','rcp45','rcp85']:
