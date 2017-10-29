@@ -15,6 +15,7 @@ from matplotlib import rc
 rc('text', usetex=True)
 
 os.chdir('../pdf_processing/')
+sys.path.append('/p/projects/tumble/carls/shared_folder/pdf_processing/')
 import pdf_processing as pdf; reload(pdf)
 os.chdir('../gmt/')
 
