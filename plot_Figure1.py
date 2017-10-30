@@ -38,12 +38,12 @@ for scenario in ['rcp85']:
 		tmp=plot_dict[method]
 		yy=gmt_qu[scenario,'gmt_ar5',method,1.5,50]
 		ax[0].plot([gmt_qu[scenario,'gmt_ar5',method,1.5,0],gmt_qu[scenario,'gmt_ar5',method,1.5,100]],[tmp['pos'],tmp['pos']],color=tmp['color'])
-		ax[0].fill_between([gmt_qu[scenario,'gmt_ar5',method,1.5,25],gmt_qu[scenario,'gmt_ar5',method,1.5,75]],[tmp['pos']-0.02,tmp['pos']-0.02],[tmp['pos']+0.02,tmp['pos']+0.02],color=tmp['color'])
+		ax[0].fill_between([gmt_qu[scenario,'gmt_ar5',method,1.5,1/6.*100],gmt_qu[scenario,'gmt_ar5',method,1.5,5/6.*100]],[tmp['pos']-0.02,tmp['pos']-0.02],[tmp['pos']+0.02,tmp['pos']+0.02],color=tmp['color'])
 		ax[0].plot([yy,yy],[tmp['pos'],1.5],color=tmp['color'],lw=2)
 		ax[0].plot([yy,yy],[tmp['pos']-0.02,tmp['pos']+0.02],color='white',lw=2)
 		#ax[0].text(yy,1,str(round(yy,2)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color=tmp['color'])
 		ax[0].plot([-99,-99],[-99,-99],color=tmp['color'],lw=2,label=tmp['longname']+' '+str(round(yy,2))+ \
-		' ('+str(round(gmt_qu[scenario,'gmt_ar5',method,1.5,25],2))+'-'+str(round(gmt_qu[scenario,'gmt_ar5',method,1.5,75],2))+')')
+		' ('+str(round(gmt_qu[scenario,'gmt_ar5',method,1.5,1/6.*100],2))+'-'+str(round(gmt_qu[scenario,'gmt_ar5',method,1.5,5/6.*100],2))+')')
 
 	ax[0].plot([-1,5],[-1,5],linestyle='--',color='k')
 	ax[0].set_ylim((0.61,2.3))
@@ -63,7 +63,7 @@ for scenario in ['rcp85']:
 
 		for level in gmt_qu.level:
 			tmp=y[(x>level-0.05) & (x<level+0.05)]-x[(x>level-0.05) & (x<level+0.05)]
-			tmp=np.nanpercentile(tmp,[0,25,50,75,100])
+			tmp=np.nanpercentile(tmp,[0,1/6.*100,50,5/6.*100,100])
 			ax[1].plot([level,level],tmp[[0,4]],color=plot_dict[method]['color'],lw=2)
 			ax[1].plot([level-0.02,level+0.02],[tmp[2],tmp[2]],color='white',lw=2)
 			ax[1].fill_between([level-0.02,level+0.02],[tmp[1],tmp[1]],[tmp[3],tmp[3]],color=plot_dict[method]['color'])
@@ -75,7 +75,7 @@ for scenario in ['rcp85']:
 	ax[1].text(-0.1, 1.02, 'b', transform=ax[1].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
 
 	ax[1].set_xlabel('$\mathregular{GMT_{AR5}}$ $\mathregular{[^\circ C]}$')
-	ax[1].set_ylabel('$\mathregular{GMT_{alt} -GMT_{AR5}}$ $\mathregular{[^\circ C]}$')
+	ax[1].set_ylabel('$\mathregular{GMT_{blend-mask} -GMT_{AR5}}$ $\mathregular{[^\circ C]}$')
 
 	plt.tight_layout()
 	plt.savefig('plots/FIG1_'+scenario+'_qu.png')

@@ -44,7 +44,7 @@ had4_gmt[:]=had4_gmt[:]-np.nanmean(had4_gmt[ref_ar5])+0.61
 # FIG SI 1
 plot_dict={
 	'gmt_sat':{'l_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$','pos':0.65,'lsty':'-'},
-	'gmt_ar5':{'l_color':'xyan','color':'darkcyan','longname':'$\mathregular{GMT_{AR5}}$','pos':0.65,'lsty':'--'},
+	'gmt_ar5':{'l_color':'lawngreen','color':sns.color_palette()[1],'longname':'$\mathregular{GMT_{AR5}}$','pos':0.65,'lsty':'-'},
 	'gmt_millar':{'l_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{rebase-2010s}}$','pos':0.75,'lsty':'-'},
 	'gmt_bm':{'l_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend-mask}}$','pos':0.85,'lsty':'-'},
 }
