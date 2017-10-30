@@ -41,6 +41,11 @@ ref_ar5=gmt.time[(gmt.time>1986) & (gmt.time<2006)]
 had4_gmt[:]=had4_gmt[:]-np.nanmean(had4_gmt[ref_ar5])+0.61
 #print np.nanmean(np.array(had4_gmt_-np.nanmean(had4_gmt_[0:240]))[136*12:145*12])
 
+print 'hadcrut4',np.nanmean(had4_gmt[2010:2020])
+print 'blend-mask',np.nanmean(gmt['rcp85',:,'gmt_bm',2010:2020])-0.93
+print 'millar',np.nanmean(gmt['rcp85',:,'gmt_millar',2010:2020])
+print 'blend-mask',np.nanmean(gmt['rcp85',:,'gmt_bm',2015:2016])-0.93
+
 # FIG SI 1
 plot_dict={
 	'gmt_sat':{'l_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$','pos':0.65,'lsty':'-'},

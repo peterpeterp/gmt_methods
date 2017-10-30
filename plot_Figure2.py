@@ -26,18 +26,13 @@ with open('data/varoutdict_cmip5_rcp85_TXx.pkl', 'rb') as input:
 with open('data/varoutdict_cmip5_rcp85_TXx_models_merged.pkl', 'rb') as input:
     all_cmip5 = pickle.load(input)
 
-slr=pd.read_csv('data/slr_2100_temperature_levels_1p5_1p64.csv')
+slr=pd.read_csv('data/slr_2100_temperature_levels_1p5_1p65.csv')
 
-# plot_dict={
-# 	1:{'pos':2,'wlvl':1.7,'name':'1.701_ref','light_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{BM\_CMIP5}}$'},
-# 	2:{'pos':1,'wlvl':1.59,'name':'1.5874_ref','light_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{BM\_CMIP5\_ref}}$'},
-# 	3:{'pos':0,'wlvl':1.5,'name':'1.5_ref','light_color':'cyan','color':'darkcyan','longname':'$\mathregular{GMT_{AR5}}$'},
-# 	4:{'pos':-1,'wlvl':1.46,'name':'1.4622_ref','light_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$'},
-# }
+
 plot_dict={
 	'gmt_sat':{'wlvl':1.4622,'name':'1.4468_ref','light_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$','pos':3,'lsty':'-'},
 	'gmt_ar5':{'wlvl':1.5,'name':'1.5_ref','light_color':'lawngreen','color':sns.color_palette()[1],'longname':'$\mathregular{GMT_{AR5}}$','pos':0,'lsty':'--'},
-	'gmt_millar':{'wlvl':1.64,'name':'1.6445_ref','light_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{rebase-2010s}}$','pos':1,'lsty':'-'},
+	'gmt_millar':{'wlvl':1.65,'name':'1.6445_ref','light_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{rebase-2010s}}$','pos':1,'lsty':'-'},
 	'gmt_bm':{'wlvl':1.7,'name':'1.6584_ref','light_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend-mask}}$','pos':2,'lsty':'-'},
 }
 
@@ -59,7 +54,7 @@ for time_slice in ['gmt_ar5','gmt_millar']:
     ax[0].fill_between(cmip5_dict['ACCESS1-0']['TXx']._distributions['global']['pdf']['xaxis'],upper,lower,color=plot_dict[time_slice]['light_color'],alpha=0.25)
 
 for time_slice in ['gmt_ar5','gmt_millar']:
-    ax[0].plot(all_cmip5._distributions['global']['pdf']['xaxis'],cmip5_dict[model]['TXx']._distributions['global']['pdf'][plot_dict[time_slice]['name']],linewidth=1.5,color=plot_dict[time_slice]['color'],label=plot_dict[time_slice]['longname'])
+    ax[0].plot(all_cmip5._distributions['global']['pdf']['xaxis'],all_cmip5._distributions['global']['pdf'][plot_dict[time_slice]['name']],linewidth=1.5,color=plot_dict[time_slice]['color'],label=plot_dict[time_slice]['longname'])
 
 ax[0].plot([0,0],[0,1],color='k')
 ax[0].set_ylim((0,0.02))
@@ -92,6 +87,12 @@ ax[1].set_title('Sea level rise in 2100')
 plt.tight_layout()
 plt.savefig('plots/Figure2.png',dpi=300)
 plt.savefig('plots/Figure2.pdf')
+
+# numbers
+gmt_ar5_txx=all_cmip5._distributions['global']['pdf']['1.5_ref']
+gmt_millar_txx=all_cmip5._distributions['global']['pdf']['1._ref']
+
+
 
 
 # #SLR check

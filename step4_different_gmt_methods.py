@@ -34,7 +34,7 @@ gmt=da.DimArray(axes=[['rcp85'],models,styles,gmt_.time],dims=['scenario','model
 # reference periods
 ref_preindustrial=gmt.time[(gmt.time>1850) & (gmt.time<1900)]
 ref_ar5=gmt.time[(gmt.time>1986) & (gmt.time<2006)]
-ref_millar=gmt.time[(gmt.time>2010) & (gmt.time<2019)]
+ref_millar=gmt.time[(gmt.time>2010) & (gmt.time<2020)]
 
 for style in gmt.style:
 	for scenario in gmt.scenario:

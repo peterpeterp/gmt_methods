@@ -26,7 +26,7 @@ os.chdir('../gmt/')
 # PDF Method (currently defined: hist, python_silverman)
 pdf_method='python_silverman'
 
-levels=[1.468,1.5,1.6445,1.6584]
+levels=[1.468,1.5,1.6529,1.6584]
 
 # variables
 varin_dict={
@@ -115,6 +115,12 @@ os.chdir('../gmt/')
 with open('data/varoutdict_cmip5_'+rcp+'_TXx.pkl', 'wb') as output:
 	pickle.dump(cmip5_dict, output, pickle.HIGHEST_PROTOCOL)
 
+# os.chdir('../pdf_processing/')
+# import pdf_processing as pdf; reload(pdf)
+# os.chdir('../gmt/')
+#
+# with open('data/varoutdict_cmip5_rcp85_TXx.pkl', 'rb') as input:
+#     cmip5_dict = pickle.load(input)
 
 # all models merged pdf
 all_cmip5=pdf.PDF_Processing('TXx')
@@ -125,15 +131,16 @@ for change in levels+['ref','weight']:
     tmp=np.array([np.nan])
     for model,mod_index in zip(cmip5_dict.keys(),range(N_model)):
         try:
-            tmp=np.concatenate((tmp,cmip5_dict[model]['TXx']._distributions['global'][str(change)]))
+            if np.isfinite(np.nanmean(cmip5_dict[model]['TXx']._distributions['global'][str(change)])):
+                tmp=np.concatenate((tmp,cmip5_dict[model]['TXx']._distributions['global'][str(change)]))
         except:
             pass
-    all_cmip5._distributions['global'][str(change)]=tmp
+    all_cmip5._distributions['global'][str(change)]=tmp[1:]
 
 for change in levels:
     all_cmip5.derive_pdf_difference('ref',str(change),pdf_method='python_silverman',bin_range=varin_dict['TXx']['cut_interval'],relative_diff=False)
 
-with open('data/varoutdict_cmip5_'+rcp+'_TXx_models_merged.pkl', 'wb') as output:
+with open('data/varoutdict_cmip5_'+'rcp85'+'_TXx_models_merged.pkl', 'wb') as output:
 	pickle.dump(all_cmip5, output, pickle.HIGHEST_PROTOCOL)
 
 
