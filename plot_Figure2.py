@@ -26,13 +26,13 @@ with open('data/varoutdict_cmip5_rcp85_TXx.pkl', 'rb') as input:
 with open('data/varoutdict_cmip5_rcp85_TXx_models_merged.pkl', 'rb') as input:
     all_cmip5 = pickle.load(input)
 
-slr=pd.read_csv('data/slr_2100_temperature_levels_1p5_1p65.csv')
+slr=pd.read_csv('data/slr_2100_temperature_levels_1p5_1p65_ref1986_2005.csv')
 
 
 plot_dict={
 	'gmt_sat':{'wlvl':1.4622,'name':'1.4468_ref','light_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$','pos':3,'lsty':'-'},
 	'gmt_ar5':{'wlvl':1.5,'name':'1.5_ref','light_color':'lawngreen','color':sns.color_palette()[1],'longname':'$\mathregular{GMT_{AR5}}$','pos':0,'lsty':'--'},
-	'gmt_millar':{'wlvl':1.65,'name':'1.6529_ref','light_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{rebase-2010s}}$','pos':1,'lsty':'-'},
+	'gmt_millar':{'wlvl':1.65,'name':'1.6529_ref','light_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{M17}}$','pos':1,'lsty':'-'},
 	'gmt_bm':{'wlvl':1.7,'name':'1.6584_ref','light_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend-mask}}$','pos':2,'lsty':'-'},
 }
 

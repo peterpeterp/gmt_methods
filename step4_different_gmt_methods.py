@@ -28,7 +28,7 @@ for scenario in gmt_.scenario:
 ensemble.close()
 
 # new gmt names new dimarray
-styles=['gmt_ar5','gmt_sat','gmt_millar','gmt_bm','gmt_b']
+styles=['gmt_ar5','gmt_sat','gmt_millar','gmt_bm','gmt_b','gmt_1','gmt_1.1']
 gmt=da.DimArray(axes=[['rcp85'],models,styles,gmt_.time],dims=['scenario','model','style','time'])
 
 # reference periods
@@ -49,11 +49,16 @@ for style in gmt.style:
 
 			# Millar like
 			gmt[scenario,model,'gmt_millar',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+0.93
+			gmt[scenario,model,'gmt_1',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+1
+			gmt[scenario,model,'gmt_1.1',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+1.1
 
+print '2010-2019'
+for style in gmt.style:
+	print style,np.nanmean(gmt['rcp85',:,style,2010:2020])
 
-print 'tas: ',np.nanmean(gmt[scenario,:,'gmt_sat',ref_ar5])
-print 'bm: ',np.nanmean(gmt[scenario,:,'gmt_bm',ref_ar5])
-print 'b: ',np.nanmean(gmt[scenario,:,'gmt_b',ref_ar5])
+print '1986-2005'
+for style in gmt.style:
+	print style,np.nanmean(gmt['rcp85',:,style,1986:2006])
 
 # quatntile stuff
 gmt_qu=da.DimArray(axes=[['rcp26','rcp45','rcp85'],styles,styles,[1,1.5,2,2.5],[0,5,10,1/6.*100,25,50,75,5/6.*100,90,95,100]],dims=['scenario','x','y','level','out'])
@@ -61,8 +66,7 @@ gmt_qu=da.DimArray(axes=[['rcp26','rcp45','rcp85'],styles,styles,[1,1.5,2,2.5],[
 for scenario in ['rcp85']:
 	for level in gmt_qu.level:
 		for x_method in styles:
-			plt.clf()
-
+			plt.close('all')
 			fig,axes=plt.subplots(nrows=2,ncols=4,figsize=(12,8))
 			ax=axes.flatten()
 			for y_method,pp in zip(styles,range(7)):
@@ -85,7 +89,11 @@ for scenario in ['rcp85']:
 				ax[pp].fill_between([gmt_qu[scenario,x_method,y_method,level,25],gmt_qu[scenario,x_method,y_method,level,75]],[0.63,0.63],[0.67,0.67],color='green')
 				ax[pp].plot([gmt_qu[scenario,x_method,y_method,level,50],gmt_qu[scenario,x_method,y_method,level,50]],[0,1.5],color='green')
 				y50=gmt_qu[scenario,x_method,y_method,level,50]
-				ax[pp].text(y50,0.9,str(round(y50,3)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color='green')
+				ax[pp].text(y50,0.8,str(round(y50,3)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color='green')
+				low=gmt_qu[scenario,x_method,y_method,level,1/6.*100]
+				ax[pp].text(low,1.1,str(round(low,3)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color='green')
+				up=gmt_qu[scenario,x_method,y_method,level,5/6.*100]
+				ax[pp].text(up,1.1,str(round(up,3)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color='green')
 
 				ax[pp].set_xlim((0.61,2.5))
 				ax[pp].set_ylim((0.61,2.5))
