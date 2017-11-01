@@ -26,7 +26,7 @@ with open('data/varoutdict_cmip5_rcp85_TXx.pkl', 'rb') as input:
 with open('data/varoutdict_cmip5_rcp85_TXx_models_merged.pkl', 'rb') as input:
     all_cmip5 = pickle.load(input)
 
-slr=pd.read_csv('data/slr_2100_temperature_levels_1p5_1p65_ref1986_2005.csv')
+slr=pd.read_csv('data/slr_2100_temperature_levels_1p5_1p66_ref1986_2005.csv')
 
 
 plot_dict={
