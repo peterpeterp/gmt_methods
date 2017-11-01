@@ -29,37 +29,45 @@ ensemble.close()
 
 # new gmt names new dimarray
 styles=['gmt_ar5','gmt_sat','gmt_millar','gmt_bm','gmt_b','gmt_1','gmt_1.1']
-gmt=da.DimArray(axes=[['rcp85'],models,styles,gmt_.time],dims=['scenario','model','style','time'])
+gmt__=da.DimArray(axes=[['rcp85'],models,styles,gmt_.time],dims=['scenario','model','style','time'])
 
 # reference periods
-ref_preindustrial=gmt.time[(gmt.time>1850) & (gmt.time<1900)]
-ref_ar5=gmt.time[(gmt.time>1986) & (gmt.time<2006)]
-ref_millar=gmt.time[(gmt.time>2010) & (gmt.time<2020)]
+ref_preindustrial=gmt__.time[(gmt__.time>1850) & (gmt__.time<1900)]
+ref_ar5=gmt__.time[(gmt__.time>1986) & (gmt__.time<2006)]
+ref_millar=gmt__.time[(gmt__.time>2010) & (gmt__.time<2020)]
 
-for style in gmt.style:
-	for scenario in gmt.scenario:
-		for model in gmt.model:
+for style in gmt__.style:
+	for scenario in gmt__.scenario:
+		for model in gmt__.model:
 			# anomalies to preindustrial
-			gmt[scenario,model,'gmt_sat',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_preindustrial])
-			gmt[scenario,model,'gmt_bm',:]=np.array(gmt_['had4',scenario,model,'gmt',:])-np.nanmean(gmt_['had4',scenario,model,'gmt',ref_preindustrial])
-			gmt[scenario,model,'gmt_b',:]=np.array(gmt_['xax',scenario,model,'gmt',:])-np.nanmean(gmt_['xax',scenario,model,'gmt',ref_preindustrial])
+			gmt__[scenario,model,'gmt_sat',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_preindustrial])
+			gmt__[scenario,model,'gmt_bm',:]=np.array(gmt_['had4',scenario,model,'gmt',:])-np.nanmean(gmt_['had4',scenario,model,'gmt',ref_preindustrial])
+			gmt__[scenario,model,'gmt_b',:]=np.array(gmt_['xax',scenario,model,'gmt',:])-np.nanmean(gmt_['xax',scenario,model,'gmt',ref_preindustrial])
 
 			# anomalies as in AR5
-			gmt[scenario,model,'gmt_ar5',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_ar5])+0.61
+			gmt__[scenario,model,'gmt_ar5',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_ar5])+0.61
 
 			# Millar like
-			gmt[scenario,model,'gmt_millar',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+0.93
-			gmt[scenario,model,'gmt_1',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+1
-			gmt[scenario,model,'gmt_1.1',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+1.1
+			gmt__[scenario,model,'gmt_millar',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+0.93
+			gmt__[scenario,model,'gmt_1',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+1
+			gmt__[scenario,model,'gmt_1.1',:]=np.array(gmt_['xax',scenario,model,'air',:])-np.nanmean(gmt_['xax',scenario,model,'air',ref_millar])+1.1
 
 print '2010-2019'
-for style in gmt.style:
-	print style,np.nanmean(gmt['rcp85',:,style,2010:2020])
+for style in gmt__.style:
+	print style,np.nanmean(gmt__['rcp85',:,style,2010:2020])
 
 print '1986-2005'
-for style in gmt.style:
-	print style,np.nanmean(gmt['rcp85',:,style,1986:2006])
+for style in gmt__.style:
+	print style,np.nanmean(gmt__['rcp85',:,style,1986:2006])
 
+# yearly values
+gmt=da.DimArray(axes=[['rcp85'],models,styles,np.arange(1850,2100,1)],dims=['scenario','model','style','time'])
+for model in gmt.model:
+	for style in gmt.style:
+		for year in gmt.time:
+			gmt['rcp85',model,style,year]=np.nanmean(gmt__['rcp85',model,style,year:year+1])
+
+print 'done'
 # quatntile stuff
 gmt_qu=da.DimArray(axes=[['rcp26','rcp45','rcp85'],styles,styles,[1,1.5,2,2.5],[0,5,10,1/6.*100,25,50,75,5/6.*100,90,95,100]],dims=['scenario','x','y','level','out'])
 
@@ -70,8 +78,8 @@ for scenario in ['rcp85']:
 			fig,axes=plt.subplots(nrows=2,ncols=4,figsize=(12,8))
 			ax=axes.flatten()
 			for y_method,pp in zip(styles,range(7)):
-				x_=np.asarray(gmt[scenario,:,x_method,:]).reshape(47*3012)
-				y_=np.asarray(gmt[scenario,:,y_method,:]).reshape(47*3012)
+				x_=np.asarray(gmt[scenario,:,x_method,:]).reshape(len(gmt.model)*len(gmt.time))
+				y_=np.asarray(gmt[scenario,:,y_method,:]).reshape(len(gmt.model)*len(gmt.time))
 				idx = np.isfinite(x_) & np.isfinite(y_)
 				x,y=x_[idx],y_[idx]
 

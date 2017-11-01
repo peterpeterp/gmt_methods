@@ -17,7 +17,7 @@ plot_dict={
 	'gmt_bm':{'l_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend-mask}}$','pos':0.75},
 }
 for scenario in ['rcp85']:
-	plt.clf()
+	plt.close()
 	fig,axes=plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 	ax=axes.flatten()
 	ax[0].fill_between([-1,5],[1.55,1.55],[1.45,1.45],color='white')
@@ -31,7 +31,7 @@ for scenario in ['rcp85']:
 		y_=np.asarray(gmt[scenario,:,method,:]).reshape(len(gmt.model)*len(gmt.time))
 		idx = np.isfinite(x_) & np.isfinite(y_)
 		x,y=x_[idx],y_[idx]
-		ax[0].scatter(x,y,color=tmp['l_color'],marker='v',alpha=0.1)
+		ax[0].scatter(x,y,color=tmp['l_color'],marker='v',alpha=0.3)
 
 
 	for method in ['gmt_millar','gmt_bm','gmt_sat']:
@@ -59,7 +59,7 @@ for scenario in ['rcp85']:
 		idx = np.isfinite(x_) & np.isfinite(y_)
 		x,y=x_[idx],y_[idx]
 
-		ax[1].scatter(x,y-x,color=plot_dict[method]['l_color'],marker='v',alpha=0.1)
+		ax[1].scatter(x,y-x,color=plot_dict[method]['l_color'],marker='v',alpha=0.3)
 
 		for level in gmt_qu.level:
 			tmp=y[(x>level-0.05) & (x<level+0.05)]-x[(x>level-0.05) & (x<level+0.05)]
