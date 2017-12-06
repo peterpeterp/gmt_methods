@@ -23,8 +23,8 @@ for i,t in zip(range(len(ref_period)),ref_period):
 coverage[coverage>10]=np.nan
 
 coverage=np.ma.masked_invalid(coverage)
-coverage_ext=tas[0:1008,:,:].copy()
-for i,m in zip(range(1008),range(12)*85):
+coverage_ext=tas[0:1032,:,:].copy()
+for i,m in zip(range(1032),range(12)*86):
 	coverage_ext[i,:,:]=coverage[m,:,:]
 
 tas_ext=np.concatenate((tas,coverage_ext),axis=0)
@@ -80,8 +80,8 @@ for i,t in zip(range(len(ref_period)),ref_period):
 coverage[coverage>10]=np.nan
 
 coverage=np.ma.masked_invalid(coverage)
-coverage_ext=tas[0:1008,:,:].copy()
-for i,m in zip(range(1008),range(12)*85):
+coverage_ext=tas[0:1032,:,:].copy()
+for i,m in zip(range(1032),range(12)*86):
 	coverage_ext[i,:,:]=coverage[m,:,:]
 
 tas_ext=np.concatenate((tas,coverage_ext),axis=0)
@@ -138,8 +138,8 @@ for i,t in zip(range(len(ref_period)),ref_period):
 coverage[coverage>10]=np.nan
 
 coverage=np.ma.masked_invalid(coverage)
-coverage_ext=tas[0:1008,:,:].copy()
-for i,m in zip(range(1008),range(12)*85):
+coverage_ext=tas[0:1032,:,:].copy()
+for i,m in zip(range(1032),range(12)*86):
 	coverage_ext[i,:,:]=coverage[m,:,:]
 
 
