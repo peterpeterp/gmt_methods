@@ -11,7 +11,7 @@ else:
 	style='had4'
 
 
-print [fl.split('/')[-1] for fl in glob.glob('data_models/*')]
+print [fl.split('/')[-1] for fl in glob.glob('data_models/*')],len([fl.split('/')[-1] for fl in glob.glob('data_models/*')])
 folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][job_id]
 print folder
 model=folder.split('_')[0]
