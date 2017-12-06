@@ -22,7 +22,7 @@ styles=['xax','had4']
 variables=['air','gmt']
 
 
-tmp_example=pd.read_table('data_models/ACCESS1-0_r1i1p1/had4_rcp85.txt',sep=' ',header=None)
+tmp_example=pd.read_table('data_models/ACCESS1-0_r1i1p1/had4_rcp85_old_mask.txt',sep=' ',header=None)
 gmt=da.DimArray(axes=[styles,['rcp85'],model_runs,variables,np.array(tmp_example[0])],dims=['style','scenario','model_run','variable','time'])
 
 for style in gmt.style:
@@ -33,7 +33,7 @@ for style in gmt.style:
 			if len(glob.glob('data_models/'+model_run+'/*'+scenario+'*.txt'))!=0:
 				#tmp=pd.read_table('data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',sep=' ',header=None)
 				try:
-					tmp=pd.read_table('data_models/'+model_run+'/'+style+'_'+scenario+'.txt',sep=' ',header=None)
+					tmp=pd.read_table('data_models/'+model_run+'/'+style+'_'+scenario+'_old_mask.txt',sep=' ',header=None)
 					tmp.columns=['time','air','gmt','diff']
 					time_ax=np.array(tmp['time'])
 					useful_years=time_ax[(time_ax>1850) & (time_ax<2100)]
@@ -44,4 +44,4 @@ for style in gmt.style:
 
 
 ds=da.Dataset({'gmt':gmt})
-ds.write_nc('data/gmt_all.nc', mode='w')
+ds.write_nc('data/gmt_all_old_mask.nc', mode='w')
