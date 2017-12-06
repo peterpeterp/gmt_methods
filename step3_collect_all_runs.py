@@ -7,15 +7,15 @@ import pandas as pd
 
 models=[]
 runs=[]
-model_run=[]
+model_runs=[]
 for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 	models.append(folder.split('_')[0])
 	runs.append(folder.split('_')[1])
-	model_run.append(folder)
+	model_runs.append(folder)
 
 models=list(set(models))
 runs=list(set(runs))
-model_run=list(set(model_run))
+model_runs=list(set(model_run))
 
 styles=['xax','had4']
 
