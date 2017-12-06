@@ -4,7 +4,7 @@ from subprocess import Popen
 overwrite=True
 
 job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
-if job_id>=90:
+if job_id>=190:
 	style='xax'
 	job_id-=90
 else:
