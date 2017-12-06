@@ -3,7 +3,7 @@ from subprocess import Popen
 
 overwrite=True
 
-folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][sys.argv[1]]
+folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][int(os.environ.get('SLURM_ARRAY_TASK_ID'))]
 model=folder.split('_')[0]
 run=folder.split('_')[1]
 if len(glob.glob('sftof/'+model+'.nc'))!=0:
