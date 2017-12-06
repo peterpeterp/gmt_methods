@@ -29,3 +29,8 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 
 
 # python blend-runnable/ncblendhadcrut-nc4.py data_models/ACCESS1-0_r1i1p1/tas_rcp85.nc data_models/ACCESS1-0_r1i1p1/tos_rcp85.nc data_models/ACCESS1-0_r1i1p1/sic_rcp85.nc sftof/ACCESS1-0.nc data/CRU_extended.nc data/SST_extended.nc > test.txt
+
+
+# python blend-runnable/ncblendhadcrut-nc4.py data_models/NorESM1-M_r1i1p1/tas_rcp85_manual.nc data_models/NorESM1-M_r1i1p1/tos_rcp85_manual.nc data_models/NorESM1-M_r1i1p1/sic_rcp85_manual.nc sftof/MPI-ESM-LR.nc blend-runnable/CRU.nc blend-runnable/SST.nc > data_models/NorESM1-M_r1i1p1/had4_rcp85_manual.txt
+
+# python blend-runnable/ncblendhadcrut-nc4.py data_models/NorESM1-M_r1i1p1/tas_rcp85.nc data_models/NorESM1-M_r1i1p1/tos_rcp85.nc data_models/NorESM1-M_r1i1p1/sic_rcp85.nc sftof/MPI-ESM-LR.nc data/CRU_extended.nc data/SST_extended.nc > data_models/NorESM1-M_r1i1p1/had4_rcp85_check.txt
