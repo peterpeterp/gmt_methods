@@ -42,7 +42,7 @@ for scenario in ['rcp85']:
 
 for model in set(models):
 	if model not in [mm.split('/')[-1].split('.')[0] for mm in glob.glob('sftof/*')]:
-		missing['sftof'].write(model+'\n')
+		missing_input['sftof'].write(model+'\n')
 
 for scenario in ['rcp85']:
 	for var in missing_result.keys():
