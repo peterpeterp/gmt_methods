@@ -50,7 +50,7 @@ for scenario in ['rcp85']:
 		for line in combi.splitlines()[0:-1]:
 			model=line.split(' ')[0]
 			run=line.split(' ')[1]
-			if out not in [mm.split('/')[-1].split('_')[0] for mm in glob.glob('data_models/'+model+'_'+run+'/*')]:
+			if var not in [mm.split('/')[-1].split('_')[0] for mm in glob.glob('data_models/'+model+'_'+run+'/*')]:
 				missing_result[var].write(model+' '+run+'\n')
 
 
