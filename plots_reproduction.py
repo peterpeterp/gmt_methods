@@ -29,13 +29,12 @@ models.remove('bcc-csm1-1-m')
 gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
 
 # cowtan fig 2
-plt.clf()
+plt.close()
 plt.figure(figsize=(7,6))
 l_styles = ['-','--','-.',':']
 m_styles = ['','.','o','^','*']
 colormap = matplotlib.cm.get_cmap('Spectral')
 colormap = [colormap(i/float(len(gmt_.model)/3)) for i in range(len(gmt_.model)/3)]
-plt.clf()
 for model,(marker,linestyle,color) in zip(sorted(gmt_.model),itertools.product(m_styles,l_styles, colormap)):
 	print model
 	tmp=gmt_['xxx']['rcp85'][model]
@@ -49,7 +48,7 @@ plt.savefig('plots/cowtan_fig2_xxx.png')
 
 
 # cowtan fig 3
-plt.clf()
+plt.close()
 plt.plot(gmt['xxx','rcp85','ACCESS1-0','time'],running_mean_func(np.nanmean(gmt_['xxx','rcp85',:,'gmt',:]-gmt_['xxx','rcp85',:,'air',:],axis=0),36),label='Unmasked/absolute/variable ice',color='red',linestyle='-')
 plt.plot(gmt_['xxx','rcp85','ACCESS1-0','time'],running_mean_func(np.nanmean(gmt_['xax','rcp85',:,'gmt',:]-gmt_['xax','rcp85',:,'air',:],axis=0),36),label='Unmasked/anomaly/variable ice',color='blue',linestyle='-')
 plt.plot(gmt_['xxx','rcp85','ACCESS1-0','time'],running_mean_func(np.nanmean(gmt_['mxx','rcp85',:,'gmt',:]-gmt_['mxx','rcp85',:,'air',:],axis=0),36),label='Masked/absolute/variable ice',color='red',linestyle='--')
@@ -74,7 +73,7 @@ for style in gmt.style:
 			gmt[style,scenario,model,'gmt',:]-=np.nanmean(gmt[style,scenario,model,'gmt',0:240])
 
 # cowtan fig 3 (anomaly to preindustrial)
-plt.clf()
+plt.close()
 plt.plot(gmt['xxx','rcp85','ACCESS1-0','time'],running_mean_func(np.nanmean(gmt['xxx','rcp85',:,'gmt',:]-gmt['xxx','rcp85',:,'air',:],axis=0),36),label='Unmasked/absolute/variable ice',color='red',linestyle='-')
 plt.plot(gmt['xxx','rcp85','ACCESS1-0','time'],running_mean_func(np.nanmean(gmt['xax','rcp85',:,'gmt',:]-gmt['xax','rcp85',:,'air',:],axis=0),36),label='Unmasked/anomaly/variable ice',color='blue',linestyle='-')
 plt.plot(gmt['xxx','rcp85','ACCESS1-0','time'],running_mean_func(np.nanmean(gmt['mxx','rcp85',:,'gmt',:]-gmt['mxx','rcp85',:,'air',:],axis=0),36),label='Masked/absolute/variable ice',color='red',linestyle='--')
@@ -99,7 +98,7 @@ for line in dat.split('\n')[::2]:
 had4=np.array(had4[11*12:-12])
 
 # richardson 1a
-plt.clf()
+plt.close()
 plt.figure(figsize=(6,7))
 y=running_mean_func(had4-np.nanmean(had4[0:240]),24)
 plt.plot(gmt['xxx','rcp85','ACCESS1-0','time'][0:1871],y,lw=3,color='gray',alpha=0.5)
@@ -117,7 +116,7 @@ plt.xlim((1861,2016))
 plt.savefig('plots/richardson_fig1a.png')
 
 # richardson 1b
-plt.clf()
+plt.close()
 plt.figure(figsize=(6,6.5))
 air=running_mean_func(np.nanmean(gmt['xax','rcp85',:,'air',:],axis=0),12)
 ma=running_mean_func(np.nanmean(gmt['had4','rcp85',:,'gmt',:],axis=0),12)
