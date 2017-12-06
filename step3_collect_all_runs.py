@@ -23,7 +23,7 @@ variables=['air','gmt']
 
 
 tmp_example=pd.read_table('data_models/ACCESS1-0_r1i1p1/had4_rcp85.txt',sep=' ',header=None)
-gmt=da.DimArray(axes=[styles,['rcp85'],model_run,variables,np.array(tmp_example[0])],dims=['style','scenario','model_run','variable','time'])
+gmt=da.DimArray(axes=[styles,['rcp85'],model_runs,variables,np.array(tmp_example[0])],dims=['style','scenario','model_run','variable','time'])
 
 for style in gmt.style:
 	print style
