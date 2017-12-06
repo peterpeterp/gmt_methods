@@ -29,11 +29,18 @@ for i,m in zip(range(1032),range(12)*86):
 
 tas_ext=np.concatenate((tas,coverage_ext),axis=0)
 
+tas_ext=np.concatenate((tas[0:132,:,:].copy(),tas_ext),axis=0)
+
+
 time_ext=time.copy()
 for year in range(2015,2101):
 	extension=time[0:12]-18610000+year*10000
 	time_ext=np.concatenate((time_ext,extension))
 
+#extend backwards
+for year in np.arange(1860,1849,-1):
+	extension=time[0:12]-18610000+year*10000
+	time_ext=np.concatenate((extension,time_ext))
 
 nc_in = Dataset('blend-runnable/CRU.nc', "r")
 
@@ -83,14 +90,19 @@ coverage=np.ma.masked_invalid(coverage)
 coverage_ext=tas[0:1032,:,:].copy()
 for i,m in zip(range(1032),range(12)*86):
 	coverage_ext[i,:,:]=coverage[m,:,:]
-
 tas_ext=np.concatenate((tas,coverage_ext),axis=0)
+
+tas_ext=np.concatenate((tas[0:132,:,:].copy(),tas_ext),axis=0)
 
 time_ext=time.copy()
 for year in range(2015,2101):
 	extension=time[0:12]-18610000+year*10000
 	time_ext=np.concatenate((time_ext,extension))
 
+#extend backwards
+for year in np.arange(1860,1849,-1):
+	extension=time[0:12]-18610000+year*10000
+	time_ext=np.concatenate((extension,time_ext))
 
 nc_in = Dataset('blend-runnable/SST.nc', "r")
 
@@ -142,14 +154,19 @@ coverage_ext=tas[0:1032,:,:].copy()
 for i,m in zip(range(1032),range(12)*86):
 	coverage_ext[i,:,:]=coverage[m,:,:]
 
-
 tas_ext=np.concatenate((tas,coverage_ext),axis=0)
+
+tas_ext=np.concatenate((tas[0:132,:,:].copy(),tas_ext),axis=0)
 
 time_ext=time.copy()
 for year in range(2015,2101):
 	extension=time[0:12]-18610000+year*10000
 	time_ext=np.concatenate((time_ext,extension))
 
+#extend backwards
+for year in np.arange(1860,1849,-1):
+	extension=time[0:12]-18610000+year*10000
+	time_ext=np.concatenate((extension,time_ext))
 
 nc_in = Dataset('blend-runnable/Had4.nc', "r")
 
