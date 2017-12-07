@@ -31,7 +31,7 @@ elif model in [ff.split('/')[-1] for ff in glob.glob('/p/projects/ipcc_pcmdi/ipc
 	lf[np.isfinite(lf)==False]=0
 
 	nc_in = Dataset(in_file, "r")
-	out_file='sftof/sftof_fx_ACCESS1-0_historical_r0i0p0_from_sftlft.nc'
+	out_file='sftof/sftof_'+model+'_from_sftlft.nc'
 	os.system('rm '+out_file)
 	nc_out=Dataset(out_file,"w")
 	for dname, the_dim in nc_in.dimensions.iteritems():
