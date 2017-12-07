@@ -6,14 +6,12 @@ import pandas as pd
 
 from netCDF4 import Dataset,netcdftime,num2date
 
-
 overwrite=True
 
 try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
 except:
 	job_id=1
-
 
 folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][job_id]
 print folder
