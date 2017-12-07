@@ -63,7 +63,7 @@ for var in ['tas','tos','sic']:
 		nc_out=Dataset('data_models/'+model+'_'+run+'/'+var+'_rcp85_merged.nc',"w")
 		for dname, the_dim in nc_in.dimensions.iteritems():
 			if dname=='time':	nc_out.createDimension(dname, len(time_ext))
-			nc_out.createDimension(dname, len(the_dim) if not the_dim.isunlimited() else None)
+			else:	nc_out.createDimension(dname, len(the_dim) if not the_dim.isunlimited() else None)
 		for v_name, varin in nc_in.variables.iteritems():
 			outVar = nc_out.createVariable(v_name, varin.datatype, varin.dimensions)
 			outVar.setncatts({k: varin.getncattr(k) for k in varin.ncattrs()})
