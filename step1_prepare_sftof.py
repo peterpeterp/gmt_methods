@@ -1,5 +1,6 @@
 import os,glob,sys
 from subprocess import Popen
+import dimarray as da
 
 try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
