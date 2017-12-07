@@ -8,8 +8,6 @@ from netCDF4 import Dataset,netcdftime,num2date
 
 # CRU
 nc = Dataset('CRU.nc', "r")
-lats1 = nc.variables["lat"][:]
-lons1 = nc.variables["lon"][:]
 time = nc.variables["time"][0:2004]
 tas = nc.variables["temperature_anomaly"][0:2004,:,:]
 nc.close()
@@ -52,7 +50,7 @@ for v_name, varin in nc_in.variables.iteritems():
 	# Copy variable attributes
 	outVar.setncatts({k: varin.getncattr(k) for k in varin.ncattrs()})
 
-	if v_name=='time':	outVar[:] = time
+	if v_name=='time':	outVar[:] = time_ext
 	elif v_name=='temperature_anomaly':	outVar[:] = tas_ext
 
 	else:	outVar[:] = varin[:]
@@ -66,8 +64,6 @@ print out_file
 
 #SST
 nc = Dataset('SST.nc', "r")
-lats1 = nc.variables["lat"][:]
-lons1 = nc.variables["lon"][:]
 time = nc.variables["time"][0:2004]
 tas = nc.variables["sst"][0:2004,:,:]
 nc.close()
@@ -110,7 +106,7 @@ for v_name, varin in nc_in.variables.iteritems():
 	# Copy variable attributes
 	outVar.setncatts({k: varin.getncattr(k) for k in varin.ncattrs()})
 
-	if v_name=='time':	outVar[:] = time
+	if v_name=='time':	outVar[:] = time_ext
 	elif v_name=='sst':	outVar[:] = tas_ext
 
 	else:	outVar[:] = varin[:]
@@ -124,8 +120,6 @@ print out_file
 
 #Had4
 nc = Dataset('Had4.nc', "r")
-lats1 = nc.variables["lat"][:]
-lons1 = nc.variables["lon"][:]
 time = nc.variables["time"][0:2004]
 tas = nc.variables["temperature_anomaly"][0:2004,:,:]
 nc.close()
@@ -169,7 +163,7 @@ for v_name, varin in nc_in.variables.iteritems():
 	# Copy variable attributes
 	outVar.setncatts({k: varin.getncattr(k) for k in varin.ncattrs()})
 
-	if v_name=='time':	outVar[:] = time
+	if v_name=='time':	outVar[:] = time_ext
 	elif v_name=='temperature_anomaly':	outVar[:] = tas_ext
 
 	else:	outVar[:] = varin[:]

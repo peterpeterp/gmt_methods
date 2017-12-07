@@ -191,14 +191,14 @@ for model_run,(marker,linestyle,color) in zip(sorted(gmt.model_run),itertools.pr
 		perc_diff=(gmt[style,'rcp85',model_run,var,1861:2015].values-np.array(tmp[var]))
 		if np.nanmean(np.abs(perc_diff))>0.01:
 			print model_run , np.nanmean(np.abs(perc_diff))
-			y_p=gmt[style,'rcp85',model_run,var,1861:2015].values
+			y_p=gmt[style,'rcp85',model_run,var,:].values
 			t_p=gmt.time
 			y_c=np.array(tmp[var])
 			t_c=np.array(tmp['time'])
 
-			print t_p
-			print t_c
+			print y_p
+			print y_c
 
-
+model_run='HadGEM2-ES_r4i1p1'
 
 #Masked
