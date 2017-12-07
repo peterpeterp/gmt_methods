@@ -21,28 +21,28 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 		if model==file_name.split('_')[-3]:
 			Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'.nc',shell=True).wait()
 
-	# elif model in [ff.split('/')[-1] for ff in glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/fx/sftlf/*')]:
-	# 	in_file=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/fx/sftlf/'+model+'/*/*')[0]
-    #
-	# 	lf=da.read_nc(in_file)['sftlf']
-	# 	lf[lf>0]=np.nan
-	# 	lf[lf==0]=100
-	# 	lf[np.isfinite(lf)==False]=0
-    #
-	# 	nc_in = Dataset(in_file, "r")
-	# 	out_file='sftof/sftof_'+model+'_from_sftlft.nc'
-	# 	os.system('rm '+out_file)
-	# 	nc_out=Dataset(out_file,"w")
-	# 	for dname, the_dim in nc_in.dimensions.iteritems():
-	# 		nc_out.createDimension(dname, len(the_dim) if not the_dim.isunlimited() else None)
-	# 	for v_name, varin in nc_in.variables.iteritems():
-	# 		if v_name=='sftlf':
-	# 			v_name='sftof'
-	# 		outVar = nc_out.createVariable(v_name, varin.datatype, varin.dimensions)
-	# 		outVar.setncatts({k: varin.getncattr(k) for k in varin.ncattrs()})
-	# 		if v_name=='sftof':	outVar[:] = lf.values
-	# 		else:	outVar[:] = varin[:]
-	# 	nc_out.close()
-	# 	nc_in.close()
-    #
-	# 	Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+out_file+' sftof/'+model+'.nc',shell=True).wait()
+		elif model in [ff.split('/')[-1] for ff in glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/fx/sftlf/*')]:
+			in_file=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/fx/sftlf/'+model+'/*/*')[0]
+
+			lf=da.read_nc(in_file)['sftlf']
+			lf[lf>0]=np.nan
+			lf[lf==0]=100
+			lf[np.isfinite(lf)==False]=0
+
+			nc_in = Dataset(in_file, "r")
+			out_file='sftof/sftof_'+model+'_from_sftlft.nc'
+			os.system('rm '+out_file)
+			nc_out=Dataset(out_file,"w")
+			for dname, the_dim in nc_in.dimensions.iteritems():
+				nc_out.createDimension(dname, len(the_dim) if not the_dim.isunlimited() else None)
+			for v_name, varin in nc_in.variables.iteritems():
+				if v_name=='sftlf':
+					v_name='sftof'
+				outVar = nc_out.createVariable(v_name, varin.datatype, varin.dimensions)
+				outVar.setncatts({k: varin.getncattr(k) for k in varin.ncattrs()})
+				if v_name=='sftof':	outVar[:] = lf.values
+				else:	outVar[:] = varin[:]
+			nc_out.close()
+			nc_in.close()
+
+			Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+out_file+' sftof/'+model+'.nc',shell=True).wait()
