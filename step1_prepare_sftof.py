@@ -1,6 +1,8 @@
 import os,glob,sys
 from subprocess import Popen
 import dimarray as da
+import numpy as np
+from netCDF4 import Dataset,netcdftime,num2date
 
 try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
