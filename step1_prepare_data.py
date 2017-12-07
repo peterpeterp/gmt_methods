@@ -18,7 +18,6 @@ os.chdir('data_models/'+model+'_'+run+'/')
 
 variable={'tas':'Amon','sic':'OImon','tos':'Omon'}
 
-os.chdir('data_models/')
 for scenario,selyear in zip(['rcp85','historical'],['1850/2005','2006/2100']):
 	for var,group in zip(variable.keys(),variable.values()):
 		print scenario,var,group
