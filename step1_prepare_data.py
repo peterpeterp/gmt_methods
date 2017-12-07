@@ -32,5 +32,5 @@ for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
 			Popen(command+'tmp_m_'+var+'.nc',shell=True).wait()
 
 			Popen('cdo selyear,'+selyear+' tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
-			Popen('cdo remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
+			Popen('cdo -O remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
 			Popen('rm tmp_s_'+var+'.nc tmp_m_'+var+'.nc',shell=True).wait()
