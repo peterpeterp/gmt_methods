@@ -31,7 +31,7 @@ for var in ['tas','tos','sic']:
 	hist=da.read_nc('data_models/'+model+'_'+run+'/'+var+'_historical.nc')
 	if hist.time[0]>18500116:
 		# extend using example time axis
-		time_extension=full_time[full_time<hist.time[0]]
+		time_extension=example_time[example_time<hist.time[0]]
 		time_ext=np.concatenate((time_extension,hist.time))
 		hist_ext=np.concatenate((np.zeros([len(time_extension),len(hist.lat),len(hist.lon)])*np.nan,hist[var].values))
 
