@@ -41,7 +41,7 @@ for var in ['tas','tos','sic']:
 		time_extension=example_time[example_time<hist.time[0]]
 		time_ext=np.concatenate((time_extension,hist.time))
 		hist_ext=np.concatenate((np.zeros([len(time_extension),len(hist.lat),len(hist.lon)])*np.nan,hist[var].values))
-		print len(time_extension)
+		print len(time_extension)		
 	else:
 		time_ext=hist.time
 		hist_ext=hist[var].values
