@@ -37,7 +37,7 @@ for style in gmt.style:
 					tmp.columns=['time','air','gmt','diff']
 					time_ax=np.array(tmp['time'])
 					useful_years=time_ax[(time_ax>1850) & (time_ax<2100)]
-					print useful_years
+					print model_run, useful_years
 					gmt[style,scenario,model_run,'air',useful_years]=np.array(tmp['air'])[(time_ax>1850) & (time_ax<2100)]
 					gmt[style,scenario,model_run,'gmt',useful_years]=np.array(tmp['gmt'])[(time_ax>1850) & (time_ax<2100)]
 				except:
