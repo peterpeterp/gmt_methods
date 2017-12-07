@@ -19,6 +19,7 @@ model=folder.split('_')[0]
 run=folder.split('_')[1]
 
 for var in ['tas','tos','sic']:
+	print var
 
 	# clean files as example
 	example_future=da.read_nc('data_models/ACCESS1-0_r1i1p1/'+var+'_rcp85.nc')
@@ -34,11 +35,19 @@ for var in ['tas','tos','sic']:
 		time_extension=example_time[example_time<hist.time[0]]
 		time_ext=np.concatenate((time_extension,hist.time))
 		hist_ext=np.concatenate((np.zeros([len(time_extension),len(hist.lat),len(hist.lon)])*np.nan,hist[var].values))
+		print len(time_extension)
+	else:
+		time_ext=hist.time
+		hist_ext=hist[var].values
 
+	print len(hist.time)
+	print len(time_ext)
 	# combine with future file
 	future=da.read_nc('data_models/'+model+'_'+run+'/'+var+'_rcp85.nc')
-	time_ext=np.concatenate((future.time,time_ext))
+	time_ext=np.concatenate((time_ext,future.time))
 	data_ext=np.concatenate((hist_ext,future[var].values))
+	print len(future.time)
+	print len(time_ext)
 
 	# check if time axis is complete
 	if np.max(np.abs(time_ext-example_time))<3:
