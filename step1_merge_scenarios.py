@@ -60,6 +60,8 @@ for var in ['tas','tos','sic']:
 		for v_name, varin in nc_in.variables.iteritems():
 			outVar = nc_out.createVariable(v_name, varin.datatype, varin.dimensions)
 			outVar.setncatts({k: varin.getncattr(k) for k in varin.ncattrs()})
+			if v_name=='time':	outVar[:] = time_ext
+			if v_name=='time_bnds':	outVar[:] = example_time_bnds
 			if v_name==var:	outVar[:] = data_ext
 			else:	outVar[:] = varin[:]
 		nc_out.close()
