@@ -18,7 +18,7 @@ os.chdir('data_models/'+model+'_'+run+'/')
 
 variable={'tas':'Amon','sic':'OImon','tos':'Omon'}
 
-for scenario,selyear in zip(['rcp85','historical'],['1850/2005','2006/2100']):
+for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
 	for var,group in zip(variable.keys(),variable.values()):
 		print scenario,var,group
 		print model,run
@@ -35,4 +35,4 @@ for scenario,selyear in zip(['rcp85','historical'],['1850/2005','2006/2100']):
 			Popen('cdo remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
 			#Popen('rm tmp_s_'+var+'.nc tmp_m_'+var+'.nc',shell=True).wait()
 
-			asads
+			asdasd
