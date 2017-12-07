@@ -26,9 +26,9 @@ for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
 		command='cdo -a mergetime '
 		scenario_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/'+scenario+'/'+group+'/'+var+'/'+model+'/'+run+'/*')
 		if len(scenario_files)!=0 and (os.path.isfile(var+'_'+scenario+'.nc')==False or overwrite):
-			for file in scenario_files:
-				print file
-				command+=file+' '
+			for file_name in scenario_files:
+				print file_name
+				command+=file_name+' '
 			Popen(command+'tmp_m_'+var+'.nc',shell=True).wait()
 
 			Popen('cdo selyear,'+selyear+' tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
