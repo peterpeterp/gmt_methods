@@ -15,7 +15,7 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 	model=folder.split('_')[0]
 
 
-	if model in [ff.split('_')[-3] for ff in glob.glob('../sftof/sftof_fx_*_historical_r0i0p0.nc')]:
+	if model in [ff.split('_')[-2] for ff in glob.glob('../sftof/sftof_fx_*_historical_r0i0p0.nc')]:
 		Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file+' sftof/'+file.split('_')[2]+'.nc',shell=True).wait()
 
 	# elif model in [ff.split('/')[-1] for ff in glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/fx/sftlf/*')]:
