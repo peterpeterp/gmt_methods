@@ -9,6 +9,12 @@ from netCDF4 import Dataset,netcdftime,num2date
 overwrite=True
 
 try:
+	os.chdir('/p/projects/tumble/carls/shared_folder/gmt')
+except:
+	os.chdir('/Users/peterpfleiderer/Documents/Projects/gmt')
+
+
+try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
 except:
 	job_id=1
