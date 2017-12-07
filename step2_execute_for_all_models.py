@@ -17,8 +17,6 @@ print folder
 model=folder.split('_')[0]
 run=folder.split('_')[1]
 
-
-asdas
 if len(glob.glob('sftof/'+model+'.nc'))!=0:
 	sftof=glob.glob('sftof/'+model+'.nc')[0]
 	scenario = 'rcp85'
