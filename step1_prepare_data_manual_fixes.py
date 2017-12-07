@@ -3,8 +3,6 @@ from subprocess import Popen
 
 variable={'tas':'Amon','sic':'OImon','tos':'Omon'}
 
-
-
 model='EC-EARTH'
 run='r6i1p1'
 os.chdir('data_models/'+model+'_'+run+'/')
@@ -17,7 +15,7 @@ for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
 			command='cdo -a mergetime '
 			scenario_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/'+scenario+'/'+group+'/'+var+'/'+model+'/'+run+'/*')
 			for file_name in scenario_files:
-				if '205101-210012.nc' not in file_name.split('_'):
+				if '205101-210012.nc' not in file_name.split('_') and '200601-205012.nc' not in file_name.split('_'):
 					print file_name
 					command+=file_name+' '
 			Popen(command+'tmp_m_'+var+'.nc',shell=True).wait()
