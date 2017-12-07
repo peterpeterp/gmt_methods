@@ -9,7 +9,13 @@ except:
 folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][job_id]
 print folder
 model=folder.split('_')[0]
-run=folder.split('_')[1]
+
+if model in
+
+
+for file in glob.glob('sftof/sftof_fx_*.nc'):
+        Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file+' sftof/'+file.split('_')[2]+'.nc',shell=True).wait()
+
 
 for model in [file.split('/')[-1] for file in glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/fx/sftlf/*')]:
 
