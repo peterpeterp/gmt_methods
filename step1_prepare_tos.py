@@ -6,7 +6,7 @@ variable={'tas':'Amon','sic':'OImon','tos':'Omon'}
 
 overwrite=True
 
-os.chdir('data/')
+os.chdir('data_models/')
 scenario='rcp85'
 var='tos'
 group='Omon'

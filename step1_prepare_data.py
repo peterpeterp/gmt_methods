@@ -6,7 +6,7 @@ variable={'tas':'Amon','sic':'OImon','tos':'Omon'}
 
 overwrite=True
 
-os.chdir('data/')
+os.chdir('data_models/')
 for scenario in ['rcp85']:
 	for var,group in zip(variable.keys(),variable.values()):
 		print scenario,var,group

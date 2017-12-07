@@ -6,7 +6,7 @@ variable={'sic':'OImon'}
 
 overwrite=True
 
-os.chdir('data/')
+os.chdir('data_models/')
 scenario='rcp85'
 var='sic'
 group='OImon'
