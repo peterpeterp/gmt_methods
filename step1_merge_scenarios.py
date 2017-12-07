@@ -44,8 +44,8 @@ for var in ['tas','tos','sic']:
 	if np.max(np.abs(time_ext-example_time))<3:
 
 		# write file
-		nc_in = Dataset(example_file, "r")
-		nc_out=Dataset(raw_file,"w")
+		nc_in = Dataset('data_models/ACCESS1-0_r1i1p1/'+var+'_rcp85.nc', "r")
+		nc_out=Dataset('data_models/'+model+'_'+run+'/'+var+'_rcp85_merged.nc',"w")
 		for dname, the_dim in nc_in.dimensions.iteritems():
 			nc_out.createDimension(dname, len(the_dim) if not the_dim.isunlimited() else None)
 		for v_name, varin in nc_in.variables.iteritems():
