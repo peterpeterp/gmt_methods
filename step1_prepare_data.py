@@ -126,14 +126,14 @@ for var in ['tas','tos','sic']:
 	print var
 
 	# clean files as example
-	example_future=da.read_nc('data_models/ACCESS1-0_r1i1p1/'+var+'_rcp85.nc')
-	example_hist=da.read_nc('data_models/ACCESS1-0_r1i1p1/'+var+'_historical.nc')
+	example_future=da.read_nc('../ACCESS1-0_r1i1p1/'+var+'_rcp85.nc')
+	example_hist=da.read_nc('../ACCESS1-0_r1i1p1/'+var+'_historical.nc')
 
 	example_time=np.concatenate((example_hist['time'].values,example_future['time'].values))
 	example_time_bnds=np.concatenate((example_hist['time_bnds'].values,example_future['time_bnds'].values))
 
 	# check historical file
-	hist=da.read_nc('data_models/'+model+'_'+run+'/'+var+'_historical.nc')
+	hist=da.read_nc(var+'_historical.nc')
 	if hist.time[0]>18500116:
 		# extend using example time axis
 		time_extension=example_time[example_time<hist.time[0]]
@@ -147,7 +147,7 @@ for var in ['tas','tos','sic']:
 	print len(hist.time)
 	print len(time_ext)
 	# combine with future file
-	future=da.read_nc('data_models/'+model+'_'+run+'/'+var+'_rcp85.nc')
+	future=da.read_nc(var+'_rcp85.nc')
 	time_ext=np.concatenate((time_ext,future.time))
 	data_ext=np.concatenate((hist_ext,future[var].values))
 	print len(future.time)
@@ -157,8 +157,8 @@ for var in ['tas','tos','sic']:
 	if np.max(np.abs(time_ext-example_time))<3:
 
 		# write file
-		nc_in = Dataset('data_models/ACCESS1-0_r1i1p1/'+var+'_rcp85.nc', "r")
-		nc_out=Dataset('data_models/'+model+'_'+run+'/'+var+'_rcp85_merged.nc',"w")
+		nc_in = Dataset('../ACCESS1-0_r1i1p1/'+var+'_rcp85.nc', "r")
+		nc_out=Dataset(var+'_rcp85_merged.nc',"w")
 		for dname, the_dim in nc_in.dimensions.iteritems():
 			if dname=='time':	nc_out.createDimension(dname, len(time_ext))
 			else:	nc_out.createDimension(dname, len(the_dim) if not the_dim.isunlimited() else None)
