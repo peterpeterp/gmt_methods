@@ -12,25 +12,30 @@ else:
 
 scenario = 'rcp85'
 
+sftof_replace_dict={'HadGEM2-AO':'HadGEM2-ES','GISS-E2-R-CC':'GISS-E2-R','GISS-E2-H-CC':'GISS-E2-H'}
+
 print [fl.split('/')[-1] for fl in glob.glob('data_models/*')],len([fl.split('/')[-1] for fl in glob.glob('data_models/*')])
 folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][job_id]
 print folder
 model=folder.split('_')[0]
 run=folder.split('_')[1]
 
-if len(glob.glob('sftof/'+model+'.nc'))!=0:
+if model in sftof_replace_dict.keys():
+	sftof=glob.glob('sftof/'+sftof_replace_dict[model]+'.nc')[0]
+else:
 	sftof=glob.glob('sftof/'+model+'.nc')[0]
-	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_merged.nc'
-	tos='data_models/'+model+'_'+run+'/tos_'+scenario+'_merged.nc'
-	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'_merged.nc'
 
-	if style=='xax':
-		if os.path.isfile(style+'_'+scenario+'_old_mask.txt')==False or overwrite:
-			Popen('python blend-runnable/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',shell=True).wait()
+tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_merged.nc'
+tos='data_models/'+model+'_'+run+'/tos_'+scenario+'_merged.nc'
+sic='data_models/'+model+'_'+run+'/sic_'+scenario+'_merged.nc'
 
-	if style=='had4':
-		if os.path.isfile('had4_'+scenario+'_old_mask.txt')==False or overwrite:
-			Popen('python blend-runnable/ncblendhadcrut-nc4.py '+tas+' '+tos+' '+sic+' '+sftof+'  data/CRU_extended.nc data/SST_extended.nc > data_models/'+model+'_'+run+'/had4_'+scenario+'.txt',shell=True).wait()
+if style=='xax':
+	if os.path.isfile(style+'_'+scenario+'_old_mask.txt')==False or overwrite:
+		Popen('python blend-runnable/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',shell=True).wait()
+
+if style=='had4':
+	if os.path.isfile('had4_'+scenario+'_old_mask.txt')==False or overwrite:
+		Popen('python blend-runnable/ncblendhadcrut-nc4.py '+tas+' '+tos+' '+sic+' '+sftof+'  data/CRU_extended.nc data/SST_extended.nc > data_models/'+model+'_'+run+'/had4_'+scenario+'.txt',shell=True).wait()
 
 
 
