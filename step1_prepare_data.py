@@ -1,5 +1,12 @@
 import os,glob,sys
 from subprocess import Popen
+
+try:
+	os.chdir('/p/projects/tumble/carls/shared_folder/gmt')
+except:
+	os.chdir('/Users/peterpfleiderer/Documents/Projects/gmt')
+
+
 try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
 except:
@@ -13,9 +20,9 @@ model=folder.split('_')[0]
 run=folder.split('_')[1]
 model_run=model+'_'+run
 
-# fixing
-if 'Had' not in model.split('GEM'):
-	asdasdas
+# # fixing
+# if 'Had' not in model.split('GEM'):
+# 	asdasdas
 
 
 #Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
@@ -35,10 +42,9 @@ def normal_procedure(model,run,scenario,selyear,group,var,overwrite):
 		Popen('cdo selyear,'+selyear+' tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 		Popen('cdo -O remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
 		Popen('rm tmp_s_'+var+'.nc tmp_m_'+var+'.nc',shell=True).wait()
-
-
-
-
+	if len(scenario_files)==0:
+		os.chdir('/p/projects/tumble/carls/shared_folder/gmt')
+		os.system('rm -rf data_models/'+model+'_'+run+'/')
 
 if model_run=='EC-EARTH_r6i1p1':
 	for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
@@ -81,12 +87,26 @@ elif model=='HadGEM2-AO':
 			else:
 				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
 
-elif 'Had' in model.split('GEM'):
+elif model_run in ['HadGEM2-CC_r1i1p1']:
 	for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
 		for var,group in zip(variable.keys(),variable.values()):
 			if var=='tas' and scenario=='rcp85':
 				selyear='2005/2100'
 			normal_procedure(model,run,scenario,selyear,group,var,overwrite)
+
+elif model_run in ['HadGEM2-ES_r2i1p1','HadGEM2-ES_r1i1p1','HadGEM2-ES_r3i1p1']:
+	for scenario,selyear in zip(['rcp85','historical'],['2005/2100','1850/2005']):
+		for var,group in zip(variable.keys(),variable.values()):
+			normal_procedure(model,run,scenario,selyear,group,var,overwrite)
+
+elif model_run in ['HadGEM2-ES_r2i1p1',]:
+	for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
+		for var,group in zip(variable.keys(),variable.values()):
+			if var=='tas' and scenario=='rcp85':
+				selyear='2005/2100'
+			normal_procedure(model,run,scenario,selyear,group,var,overwrite)
+
+
 
 
 # all clean files
