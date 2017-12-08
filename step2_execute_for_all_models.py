@@ -20,6 +20,10 @@ print folder
 model=folder.split('_')[0]
 run=folder.split('_')[1]
 
+# fixing
+if 'Had' not in model.split('GEM'):
+	asdasdas
+
 if model in sftof_replace_dict.keys():
 	sftof=glob.glob('sftof/'+sftof_replace_dict[model]+'.nc')[0]
 else:
