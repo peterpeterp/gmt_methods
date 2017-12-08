@@ -57,7 +57,7 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 		info=open('delete_here','w')
 		info.write('bla')
 		info.close()
-# 
+#
 # for scenario in ['rcp85']:
 # 	for var,group in zip(variable.keys(),variable.values()):
 # 		print scenario,var,group
@@ -78,13 +78,13 @@ for var in ['tas','tos','sic']:
 	example_time=example['time'].values
 	example_time_bnds=example['time_bnds'].values
 
-	# check historical file
+	# check file
 	data=da.read_nc(var+'_rcp85.nc')
 	if data.time[0]>18500116:
 		# extend using example time axis
 		time_extension=example_time[example_time<data.time[0]]
 		time_ext=np.concatenate((time_extension,data.time))
-		data_ext=np.concatenate((np.zeros([len(time_extension),len(hist.lat),len(hist.lon)])*np.nan,data[var].values))
+		data_ext=np.concatenate((np.zeros([len(time_extension),len(data.lat),len(data.lon)])*np.nan,data[var].values))
 		print len(time_extension)
 
 		# check if time axis is complete
