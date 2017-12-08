@@ -24,7 +24,6 @@ model_run=model+'_'+run
 # if 'Had' not in model.split('GEM'):
 # 	asdasdas
 
-
 #Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
 os.chdir('data_models/'+model+'_'+run+'/')
 
@@ -43,8 +42,9 @@ def normal_procedure(model,run,scenario,selyear,group,var,overwrite):
 		Popen('cdo -O remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
 		Popen('rm tmp_s_'+var+'.nc tmp_m_'+var+'.nc',shell=True).wait()
 	if len(scenario_files)==0:
-		os.chdir('/p/projects/tumble/carls/shared_folder/gmt')
-		os.system('rm -rf data_models/'+model+'_'+run+'/')
+		info=open('delete_here','w')
+		info.write('bla')
+		info.close()
 
 if model_run=='EC-EARTH_r6i1p1':
 	for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
