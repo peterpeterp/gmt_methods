@@ -25,9 +25,9 @@ model=folder.split('_')[0]
 run=folder.split('_')[1]
 
 
-# fixing
-if 'Had' not in model.split('GEM'):
-	asdasdas
+# # fixing
+# if 'Had' not in model.split('GEM'):
+# 	asdasdas
 
 for var in ['tas','tos','sic']:
 	print var

@@ -87,17 +87,15 @@ elif model=='HadGEM2-AO':
 			else:
 				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
 
-elif model_run in ['HadGEM2-CC_r1i1p1']:
-	for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
-		for var,group in zip(variable.keys(),variable.values()):
-			if var=='tas' and scenario=='rcp85':
-				selyear='2005/2100'
-			normal_procedure(model,run,scenario,selyear,group,var,overwrite)
-
-elif model_run in ['HadGEM2-ES_r2i1p1','HadGEM2-ES_r1i1p1','HadGEM2-ES_r3i1p1']:
-	for scenario,selyear in zip(['rcp85','historical'],['2005/2100','1850/2005']):
-		for var,group in zip(variable.keys(),variable.values()):
-			normal_procedure(model,run,scenario,selyear,group,var,overwrite)
+elif 'Had' in model.split('GEM'):
+	for var,group in zip(variable.keys(),variable.values()):
+		scenario_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/'+group+'/'+var+'/'+model+'/'+run+'/*')
+		if '200512.nc' in [ff.split('-')[-1] for ff in scenario_files]:
+			for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
+				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
+		if '200512.nc' not in [ff.split('-')[-1] for ff in scenario_files]:
+			for scenario,selyear in zip(['rcp85','historical'],['2005/2100','1850/2005']):
+				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
 
 
 
