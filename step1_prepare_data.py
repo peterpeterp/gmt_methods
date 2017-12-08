@@ -20,7 +20,7 @@ variable={'tas':'Amon','sic':'OImon','tos':'Omon'}
 
 
 
-if model_run=='EC-EARTH_r6i1p1'
+if model_run=='EC-EARTH_r6i1p1':
 	for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
 		for var,group in zip(variable.keys(),variable.values()):
 			if scenario=='rcp85' and var=='tas':
