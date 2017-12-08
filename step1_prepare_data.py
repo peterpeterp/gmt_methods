@@ -13,9 +13,12 @@ model=folder.split('_')[0]
 run=folder.split('_')[1]
 model_run=model+'_'+run
 
+if 'Had' not in model.split('GEM'):
+	asdasdas
+
+
 #Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
 os.chdir('data_models/'+model+'_'+run+'/')
-
 
 variable={'tas':'Amon','sic':'OImon','tos':'Omon'}
 
@@ -78,8 +81,10 @@ elif model=='HadGEM2-AO':
 				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
 
 elif 'Had' in model.split('GEM'):
-	for scenario,selyear in zip(['rcp85','historical'],['2005/2100','1850/2005']):
+	for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
 		for var,group in zip(variable.keys(),variable.values()):
+			if var=='tas' and scenario=='rcp85':
+				selyear='2005/2100'
 			normal_procedure(model,run,scenario,selyear,group,var,overwrite)
 
 
