@@ -29,9 +29,20 @@ if model in sftof_replace_dict.keys():
 else:
 	sftof=glob.glob('sftof/'+model+'.nc')[0]
 
-tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_merged.nc'
-tos='data_models/'+model+'_'+run+'/tos_'+scenario+'_merged.nc'
-sic='data_models/'+model+'_'+run+'/sic_'+scenario+'_merged.nc'
+if os.path.isfile('data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc'):
+	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc'
+else:
+	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'.nc'
+
+if os.path.isfile('data_models/'+model+'_'+run+'/tos_'+scenario+'_extended.nc'):
+	tos='data_models/'+model+'_'+run+'/tos_'+scenario+'_extended.nc'
+else:
+	tos='data_models/'+model+'_'+run+'/tos_'+scenario+'.nc'
+
+if os.path.isfile('data_models/'+model+'_'+run+'/sic_'+scenario+'_extended.nc'):
+	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'_extended.nc'
+else:
+	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'.nc'
 
 if style=='xax':
 	if os.path.isfile(style+'_'+scenario+'_old_mask.txt')==False or overwrite:
