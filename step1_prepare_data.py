@@ -27,6 +27,11 @@ model_run=model+'_'+run
 #Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
 os.chdir('data_models/'+model+'_'+run+'/')
 
+
+# ++++++++++++++++++++++++++++++
+# + get files
+# ++++++++++++++++++++++++++++++
+
 variable={'tas':'Amon','sic':'OImon','tos':'Omon'}
 
 def normal_procedure(model,run,scenario,selyear,group,var,overwrite):
@@ -106,3 +111,59 @@ else:
 			print scenario,var,group
 			print model,run
 			normal_procedure(model,run,scenario,selyear,group,var,overwrite)
+
+
+
+# ++++++++++++++++++++++++++++++
+# + merge scenarios
+# ++++++++++++++++++++++++++++++
+
+for var in ['tas','tos','sic']:
+	print var
+
+	# clean files as example
+	example_future=da.read_nc('data_models/ACCESS1-0_r1i1p1/'+var+'_rcp85.nc')
+	example_hist=da.read_nc('data_models/ACCESS1-0_r1i1p1/'+var+'_historical.nc')
+
+	example_time=np.concatenate((example_hist['time'].values,example_future['time'].values))
+	example_time_bnds=np.concatenate((example_hist['time_bnds'].values,example_future['time_bnds'].values))
+
+	# check historical file
+	hist=da.read_nc('data_models/'+model+'_'+run+'/'+var+'_historical.nc')
+	if hist.time[0]>18500116:
+		# extend using example time axis
+		time_extension=example_time[example_time<hist.time[0]]
+		time_ext=np.concatenate((time_extension,hist.time))
+		hist_ext=np.concatenate((np.zeros([len(time_extension),len(hist.lat),len(hist.lon)])*np.nan,hist[var].values))
+		print len(time_extension)
+	else:
+		time_ext=hist.time
+		hist_ext=hist[var].values
+
+	print len(hist.time)
+	print len(time_ext)
+	# combine with future file
+	future=da.read_nc('data_models/'+model+'_'+run+'/'+var+'_rcp85.nc')
+	time_ext=np.concatenate((time_ext,future.time))
+	data_ext=np.concatenate((hist_ext,future[var].values))
+	print len(future.time)
+	print len(time_ext)
+
+	# check if time axis is complete
+	if np.max(np.abs(time_ext-example_time))<3:
+
+		# write file
+		nc_in = Dataset('data_models/ACCESS1-0_r1i1p1/'+var+'_rcp85.nc', "r")
+		nc_out=Dataset('data_models/'+model+'_'+run+'/'+var+'_rcp85_merged.nc',"w")
+		for dname, the_dim in nc_in.dimensions.iteritems():
+			if dname=='time':	nc_out.createDimension(dname, len(time_ext))
+			else:	nc_out.createDimension(dname, len(the_dim) if not the_dim.isunlimited() else None)
+		for v_name, varin in nc_in.variables.iteritems():
+			outVar = nc_out.createVariable(v_name, varin.datatype, varin.dimensions)
+			outVar.setncatts({k: varin.getncattr(k) for k in varin.ncattrs()})
+			if v_name=='time':	outVar[:] = time_ext
+			elif v_name=='time_bnds':	outVar[:] = example_time_bnds
+			elif v_name==var:	outVar[:] = data_ext
+			else:	outVar[:] = varin[:]
+		nc_out.close()
+		nc_in.close()
