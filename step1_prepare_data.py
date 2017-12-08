@@ -11,6 +11,7 @@ folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][job_id]
 print folder
 model=folder.split('_')[0]
 run=folder.split('_')[1]
+model_run=model+'_'+run
 
 Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
 os.chdir('data_models/'+model+'_'+run+'/')
