@@ -4,6 +4,7 @@ import numpy as np
 from netCDF4 import Dataset,netcdftime,num2date
 import dimarray as da
 import pandas as pd
+import collections
 
 try:
 	os.chdir('/p/projects/tumble/carls/shared_folder/gmt')
@@ -31,6 +32,7 @@ if 'Had' not in model.split('GEM'):
 #Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
 os.chdir('data_models/'+model+'_'+run+'/')
 
+os.system('export SKIP_SAME_TIME=1')
 
 # ++++++++++++++++++++++++++++++
 # + get files
@@ -96,16 +98,18 @@ elif model=='HadGEM2-AO':
 			else:
 				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
 
-elif 'Had' in model.split('GEM'):
-	for var,group in zip(variable.keys(),variable.values()):
-		hist_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/'+group+'/'+var+'/'+model+'/'+run+'/*')
-		if '200512.nc' in [ff.split('-')[-1] for ff in hist_files]:
-			for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
-				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
-		if '200512.nc' not in [ff.split('-')[-1] for ff in hist_files]:
-			for scenario,selyear in zip(['rcp85','historical'],['2005/2100','1850/2005']):
-				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
-
+# elif 'Had' in model.split('GEM'):
+# 	for var,group in zip(variable.keys(),variable.values()):
+# 		hist_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/'+group+'/'+var+'/'+model+'/'+run+'/*')
+# 		if '200512.nc' in [ff.split('-')[-1] for ff in hist_files]:
+# 			print '2005/12 in hist'
+# 			for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
+# 				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
+# 		if '200512.nc' not in [ff.split('-')[-1] for ff in hist_files]:
+# 			print '2005/12 in future'
+# 			for scenario,selyear in zip(['rcp85','historical'],['2005/2100','1850/2005']):
+# 				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
+#
 
 
 # all clean files
