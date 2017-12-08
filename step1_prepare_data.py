@@ -55,11 +55,11 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 		info.write('bla')
 		info.close()
 
-# for scenario in ['rcp85']:
-# 	for var,group in zip(variable.keys(),variable.values()):
-# 		print scenario,var,group
-# 		print model,run
-# 		normal_procedure(model,run,scenario,group,var,overwrite)
+for scenario in ['rcp85']:
+	for var,group in zip(variable.keys(),variable.values()):
+		print scenario,var,group
+		print model,run
+		normal_procedure(model,run,scenario,group,var,overwrite)
 
 
 # ++++++++++++++++++++++++++++++
@@ -71,7 +71,7 @@ for var in ['tas','tos','sic']:
 
 	# check file
 	data=da.read_nc(var+'_rcp85.nc')
-	if data.time[0]>18500116:
+	if data.time[0]>18500117:
 
 		# clean files as example
 		example=da.read_nc('../ACCESS1-0_r1i1p1/'+var+'_rcp85.nc')
