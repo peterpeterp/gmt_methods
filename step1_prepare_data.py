@@ -1,5 +1,9 @@
 import os,glob,sys
 from subprocess import Popen
+import numpy as np
+from netCDF4 import Dataset,netcdftime,num2date
+import dimarray as da
+import pandas as pd
 
 try:
 	os.chdir('/p/projects/tumble/carls/shared_folder/gmt')
