@@ -57,12 +57,12 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 		info=open('delete_here','w')
 		info.write('bla')
 		info.close()
-#
-# for scenario in ['rcp85']:
-# 	for var,group in zip(variable.keys(),variable.values()):
-# 		print scenario,var,group
-# 		print model,run
-# 		normal_procedure(model,run,scenario,group,var,overwrite)
+
+for scenario in ['rcp85']:
+	for var,group in zip(variable.keys(),variable.values()):
+		print scenario,var,group
+		print model,run
+		normal_procedure(model,run,scenario,group,var,overwrite)
 
 
 # ++++++++++++++++++++++++++++++
