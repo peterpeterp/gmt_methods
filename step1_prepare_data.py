@@ -14,7 +14,7 @@ except:
 try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
 except:
-	job_id=1
+	job_id=47
 
 overwrite=True
 
@@ -98,11 +98,11 @@ elif model=='HadGEM2-AO':
 
 elif 'Had' in model.split('GEM'):
 	for var,group in zip(variable.keys(),variable.values()):
-		scenario_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/'+group+'/'+var+'/'+model+'/'+run+'/*')
-		if '200512.nc' in [ff.split('-')[-1] for ff in scenario_files]:
+		hist_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/'+group+'/'+var+'/'+model+'/'+run+'/*')
+		if '200512.nc' in [ff.split('-')[-1] for ff in hist_files]:
 			for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
 				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
-		if '200512.nc' not in [ff.split('-')[-1] for ff in scenario_files]:
+		if '200512.nc' not in [ff.split('-')[-1] for ff in hist_files]:
 			for scenario,selyear in zip(['rcp85','historical'],['2005/2100','1850/2005']):
 				normal_procedure(model,run,scenario,selyear,group,var,overwrite)
 
