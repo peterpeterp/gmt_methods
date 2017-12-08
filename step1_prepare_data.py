@@ -57,14 +57,13 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 		info=open('delete_here','w')
 		info.write('bla')
 		info.close()
+# 
+# for scenario in ['rcp85']:
+# 	for var,group in zip(variable.keys(),variable.values()):
+# 		print scenario,var,group
+# 		print model,run
+# 		normal_procedure(model,run,scenario,group,var,overwrite)
 
-for scenario in ['rcp85']:
-	for var,group in zip(variable.keys(),variable.values()):
-		print scenario,var,group
-		print model,run
-		normal_procedure(model,run,scenario,group,var,overwrite)
-
-asdas
 
 # ++++++++++++++++++++++++++++++
 # + merge scenarios
@@ -74,48 +73,35 @@ for var in ['tas','tos','sic']:
 	print var
 
 	# clean files as example
-	example_future=da.read_nc('../ACCESS1-0_r1i1p1/'+var+'_rcp85.nc')
-	example_hist=da.read_nc('../ACCESS1-0_r1i1p1/'+var+'_historical.nc')
+	example=da.read_nc('../ACCESS1-0_r1i1p1/'+var+'_rcp85.nc')
 
-	example_time=np.concatenate((example_hist['time'].values,example_future['time'].values))
-	example_time_bnds=np.concatenate((example_hist['time_bnds'].values,example_future['time_bnds'].values))
+	example_time=example['time'].values
+	example_time_bnds=example['time_bnds'].values
 
 	# check historical file
-	hist=da.read_nc(var+'_historical.nc')
-	if hist.time[0]>18500116:
+	data=da.read_nc(var+'_rcp85.nc')
+	if data.time[0]>18500116:
 		# extend using example time axis
-		time_extension=example_time[example_time<hist.time[0]]
-		time_ext=np.concatenate((time_extension,hist.time))
-		hist_ext=np.concatenate((np.zeros([len(time_extension),len(hist.lat),len(hist.lon)])*np.nan,hist[var].values))
+		time_extension=example_time[example_time<data.time[0]]
+		time_ext=np.concatenate((time_extension,data.time))
+		data_ext=np.concatenate((np.zeros([len(time_extension),len(hist.lat),len(hist.lon)])*np.nan,data[var].values))
 		print len(time_extension)
-	else:
-		time_ext=hist.time
-		hist_ext=hist[var].values
 
-	print len(hist.time)
-	print len(time_ext)
-	# combine with future file
-	future=da.read_nc(var+'_rcp85.nc')
-	time_ext=np.concatenate((time_ext,future.time))
-	data_ext=np.concatenate((hist_ext,future[var].values))
-	print len(future.time)
-	print len(time_ext)
+		# check if time axis is complete
+		if np.max(np.abs(time_ext-example_time))<3:
 
-	# check if time axis is complete
-	if np.max(np.abs(time_ext-example_time))<3:
-
-		# write file
-		nc_in = Dataset('../ACCESS1-0_r1i1p1/'+var+'_rcp85.nc', "r")
-		nc_out=Dataset(var+'_rcp85_merged.nc',"w")
-		for dname, the_dim in nc_in.dimensions.iteritems():
-			if dname=='time':	nc_out.createDimension(dname, len(time_ext))
-			else:	nc_out.createDimension(dname, len(the_dim) if not the_dim.isunlimited() else None)
-		for v_name, varin in nc_in.variables.iteritems():
-			outVar = nc_out.createVariable(v_name, varin.datatype, varin.dimensions)
-			outVar.setncatts({k: varin.getncattr(k) for k in varin.ncattrs()})
-			if v_name=='time':	outVar[:] = time_ext
-			elif v_name=='time_bnds':	outVar[:] = example_time_bnds
-			elif v_name==var:	outVar[:] = data_ext
-			else:	outVar[:] = varin[:]
-		nc_out.close()
-		nc_in.close()
+			# write file
+			nc_in = Dataset('../ACCESS1-0_r1i1p1/'+var+'_rcp85.nc', "r")
+			nc_out=Dataset(var+'_rcp85_extended.nc',"w")
+			for dname, the_dim in nc_in.dimensions.iteritems():
+				if dname=='time':	nc_out.createDimension(dname, len(time_ext))
+				else:	nc_out.createDimension(dname, len(the_dim) if not the_dim.isunlimited() else None)
+			for v_name, varin in nc_in.variables.iteritems():
+				outVar = nc_out.createVariable(v_name, varin.datatype, varin.dimensions)
+				outVar.setncatts({k: varin.getncattr(k) for k in varin.ncattrs()})
+				if v_name=='time':	outVar[:] = time_ext
+				elif v_name=='time_bnds':	outVar[:] = example_time_bnds
+				elif v_name==var:	outVar[:] = data_ext
+				else:	outVar[:] = varin[:]
+			nc_out.close()
+			nc_in.close()
