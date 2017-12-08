@@ -6,7 +6,7 @@ from subprocess import Popen
 model_runs=[fl.split('/')[-1] for fl in glob.glob('data_models/*')]
 model_run_list=open('model_run_list.txt','w')
 for model_run,i in zip(model_runs,range(len(model_runs))):
-	model_run_list.write(i+'\t'+model_run+'\n')
+	model_run_list.write(str(i)+'\t'+model_run+'\n')
 model_run_list.close()
 # combi=open('model-run-combinations_rcp85.txt','w')
 # models=[]
