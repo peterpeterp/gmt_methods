@@ -99,14 +99,6 @@ elif model_run in ['HadGEM2-ES_r2i1p1','HadGEM2-ES_r1i1p1','HadGEM2-ES_r3i1p1']:
 		for var,group in zip(variable.keys(),variable.values()):
 			normal_procedure(model,run,scenario,selyear,group,var,overwrite)
 
-elif model_run in ['HadGEM2-ES_r2i1p1',]:
-	for scenario,selyear in zip(['rcp85','historical'],['2006/2100','1850/2005']):
-		for var,group in zip(variable.keys(),variable.values()):
-			if var=='tas' and scenario=='rcp85':
-				selyear='2005/2100'
-			normal_procedure(model,run,scenario,selyear,group,var,overwrite)
-
-
 
 
 # all clean files
