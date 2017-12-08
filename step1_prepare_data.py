@@ -70,17 +70,17 @@ for scenario in ['rcp85']:
 # ++++++++++++++++++++++++++++++
 
 for var in ['tas','tos','sic']:
-	print var
-
-	# clean files as example
-	example=da.read_nc('../ACCESS1-0_r1i1p1/'+var+'_rcp85.nc')
-
-	example_time=example['time'].values
-	example_time_bnds=example['time_bnds'].values
+	print 'checking',var
 
 	# check file
 	data=da.read_nc(var+'_rcp85.nc')
 	if data.time[0]>18500116:
+
+		# clean files as example
+		example=da.read_nc('../ACCESS1-0_r1i1p1/'+var+'_rcp85.nc')
+		example_time=example['time'].values
+		example_time_bnds=example['time_bnds'].values
+
 		# extend using example time axis
 		time_extension=example_time[example_time<data.time[0]]
 		time_ext=np.concatenate((time_extension,data.time))
