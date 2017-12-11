@@ -12,7 +12,7 @@ try:
 		style='had4'
 except:
 	job_id=10
-	style='xax'
+	style='xxx'
 
 scenario = 'rcp85'
 
@@ -48,6 +48,11 @@ else:
 if style=='xax':
 	if os.path.isfile(style+'_'+scenario+'_old_mask.txt')==False or overwrite:
 		Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',shell=True).wait()
+
+if style=='xxx':
+	if os.path.isfile(style+'_'+scenario+'_old_mask.txt')==False or overwrite:
+		Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',shell=True).wait()
+
 
 if style=='had4':
 	if os.path.isfile('had4_'+scenario+'_old_mask.txt')==False or overwrite:
