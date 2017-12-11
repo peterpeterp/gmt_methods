@@ -87,6 +87,7 @@ year=numpy.array([int(tt/10000) for tt in time])
 month_decimal=(numpy.arange(12)+0.5)/12
 month=numpy.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
 dates=year+month
+print >> sys.stderr, dates
 
 # force missing cells to be open water/land and scale if stored as percentage
 sic[sic<  0.0] = 0.0
