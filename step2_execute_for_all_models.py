@@ -3,12 +3,16 @@ from subprocess import Popen
 
 overwrite=True
 
-job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
-if job_id>=90:
+try:
+	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
+	if job_id>=90:
+		style='xax'
+		job_id-=90
+	else:
+		style='had4'
+except:
+	job_id=79
 	style='xax'
-	job_id-=90
-else:
-	style='had4'
 
 scenario = 'rcp85'
 
@@ -26,17 +30,17 @@ if model in sftof_replace_dict.keys():
 else:
 	sftof=glob.glob('sftof/'+model+'.nc')[0]
 
-if os.path.isfile('data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc'):
+if os.path.isfile('data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc') and style=='had4':
 	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc'
 else:
 	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'.nc'
 
-if os.path.isfile('data_models/'+model+'_'+run+'/tos_'+scenario+'_extended.nc'):
+if os.path.isfile('data_models/'+model+'_'+run+'/tos_'+scenario+'_extended.nc') and style=='had4':
 	tos='data_models/'+model+'_'+run+'/tos_'+scenario+'_extended.nc'
 else:
 	tos='data_models/'+model+'_'+run+'/tos_'+scenario+'.nc'
 
-if os.path.isfile('data_models/'+model+'_'+run+'/sic_'+scenario+'_extended.nc'):
+if os.path.isfile('data_models/'+model+'_'+run+'/sic_'+scenario+'_extended.nc') and style=='had4':
 	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'_extended.nc'
 else:
 	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'.nc'
