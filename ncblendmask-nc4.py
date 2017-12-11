@@ -59,6 +59,7 @@ print >> sys.stderr, nc.variables.keys()
 lats3 = nc.variables["lat"][:]
 lons3 = nc.variables["lon"][:]
 sic = numpy.ma.filled(nc.variables["sic"][:,:,:],-1.0e30)
+y0 = int(nc.variables["time"][:][0]/10000)
 time = nc.variables["time"][:]
 year=numpy.array([int(tt/10000) for tt in time])
 month_decimal=(numpy.arange(12)+0.5)/12
