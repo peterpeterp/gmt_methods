@@ -97,6 +97,16 @@ if 'm' in options:
   lats5 = nc.variables["lat"][:]
   lons5 = nc.variables["lon"][:]
   cvgmsk = numpy.ma.filled(nc.variables["temperature_anomaly"][:,:,:],-1.0e30)
+  time = nc.variables["time"][:]
+  month=numpy.array([int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
+  if month[0]!=0:
+      first_time_step=numpy.where(month==0)[0][0]
+      sic=sic[first_time_step:,:,:]
+      time=time[first_time_step:]
+  year=numpy.array([int(tt/10000) for tt in time])
+  month_decimal=(numpy.arange(12)+0.5)/12
+  month=numpy.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
+  dates_mask=year+month
   nc.close()
 
 
@@ -111,11 +121,11 @@ print >> sys.stderr, sic.shape
 
 # this fucked up everything!!!!
 # dates
-# dates = (numpy.arange(tas.shape[0])+0.5)/12.0 + y0
-# print >> sys.stderr, dates
-if dates_sic[0]==dates_tos[0] and dates_tos[0]==dates_tas[0]:
-    dates=dates_tas
+dates = (numpy.arange(tas.shape[0])+0.5)/12.0 + y0
 print >> sys.stderr, dates
+# if dates_sic[0]==dates_tos[0] and dates_tos[0]==dates_tas[0] and dates_tas[0]=dates_mask[0]:
+#     dates=dates_tas
+# print >> sys.stderr, dates
 
 # force missing cells to be open water/land and scale if stored as percentage
 sic[sic<  0.0] = 0.0
