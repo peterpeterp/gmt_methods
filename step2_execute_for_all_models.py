@@ -33,17 +33,17 @@ else:
 if os.path.isfile('data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc') and style=='had4':
 	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc'
 else:
-	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'.nc'
+	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_cut.nc'
 
 if os.path.isfile('data_models/'+model+'_'+run+'/tos_'+scenario+'_extended.nc') and style=='had4':
 	tos='data_models/'+model+'_'+run+'/tos_'+scenario+'_extended.nc'
 else:
-	tos='data_models/'+model+'_'+run+'/tos_'+scenario+'.nc'
+	tos='data_models/'+model+'_'+run+'/tos_'+scenario+'_cut.nc'
 
 if os.path.isfile('data_models/'+model+'_'+run+'/sic_'+scenario+'_extended.nc') and style=='had4':
 	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'_extended.nc'
 else:
-	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'.nc'
+	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'_cut.nc'
 
 if style=='xax':
 	if os.path.isfile(style+'_'+scenario+'_old_mask.txt')==False or overwrite:
