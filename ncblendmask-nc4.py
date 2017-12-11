@@ -96,11 +96,13 @@ print >> sys.stderr, sic.shape
 
 # this fucked up everything!!!!
 # dates
-dates = (numpy.arange(tas.shape[0])+0.5)/12.0 + y0
-print >> sys.stderr, dates
+# dates = (numpy.arange(tas.shape[0])+0.5)/12.0 + y0
+# print >> sys.stderr, dates
 if dates_sic[0]==dates_tos[0] and dates_tos[0]==dates_tas[0]:
     dates=dates_tas
+    month_offset=numpy.array([int((tt-int(tt/10000)*10000)/100)-1 for tt in time])[0]
 print >> sys.stderr, dates
+print >> sys.stderr, month_offset
 
 # force missing cells to be open water/land and scale if stored as percentage
 sic[sic<  0.0] = 0.0
@@ -117,7 +119,9 @@ print >> sys.stderr, "sftof ", numpy.min(sftof), numpy.max(sftof), numpy.mean(sf
 # optional fixed ice mode
 if 'f' in options:
   # mask all cells with any ice post 1961
-  for m0 in range(0,len(dates),12):
+  # !!! this is only working with old dates
+  #for m0 in range(0,len(dates),12):
+  for m0 in range(month_offset,len(dates),12):
     if dates[m0] > 1961: break
   print >> sys.stderr, m0, dates[m0]
   for i in range(sic.shape[1]):
