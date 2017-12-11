@@ -33,6 +33,11 @@ print >> sys.stderr, nc.variables.keys()
 lats1 = nc.variables["lat"][:]
 lons1 = nc.variables["lon"][:]
 tas = numpy.ma.filled(nc.variables["tas"][:,:,:],-1.0e30)
+time = nc.variables["time"][:]
+year=numpy.array([int(tt/10000) for tt in time])
+month_decimal=(numpy.arange(12)+0.5)/12
+month=numpy.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
+dates_tas=year+month
 nc.close()
 
 # read tos.nc
@@ -42,6 +47,10 @@ lats2 = nc.variables["lat"][:]
 lons2 = nc.variables["lon"][:]
 tos = numpy.ma.filled(nc.variables["tos"][:,:,:],-1.0e30)
 time = nc.variables["time"][:]
+year=numpy.array([int(tt/10000) for tt in time])
+month_decimal=(numpy.arange(12)+0.5)/12
+month=numpy.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
+dates_tos=year+month
 nc.close()
 
 # read sic.nc
@@ -50,6 +59,11 @@ print >> sys.stderr, nc.variables.keys()
 lats3 = nc.variables["lat"][:]
 lons3 = nc.variables["lon"][:]
 sic = numpy.ma.filled(nc.variables["sic"][:,:,:],-1.0e30)
+time = nc.variables["time"][:]
+year=numpy.array([int(tt/10000) for tt in time])
+month_decimal=(numpy.arange(12)+0.5)/12
+month=numpy.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
+dates_sic=year+month
 nc.close()
 
 # read sftof.nc
@@ -83,11 +97,10 @@ print >> sys.stderr, sic.shape
 # # dates
 # dates = (numpy.arange(tas.shape[0])+0.5)/12.0 + y0
 # print >> sys.stderr, dates
-year=numpy.array([int(tt/10000) for tt in time])
-month_decimal=(numpy.arange(12)+0.5)/12
-month=numpy.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
-dates=year+month
 print >> sys.stderr, dates
+print dates_tas[0:100]
+print dates_sic[0:100]
+print dates_tos[0:100]
 
 # force missing cells to be open water/land and scale if stored as percentage
 sic[sic<  0.0] = 0.0
