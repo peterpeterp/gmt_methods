@@ -34,6 +34,11 @@ lats1 = nc.variables["lat"][:]
 lons1 = nc.variables["lon"][:]
 tas = numpy.ma.filled(nc.variables["tas"][:,:,:],-1.0e30)
 time = nc.variables["time"][:]
+month=numpy.array([[int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
+if month[0]!=0:
+    first_time_step=np.where(month==0)[0][0]
+    tas=tas[first_time_step:,:,:]
+    time=time[first_time_step:]
 year=numpy.array([int(tt/10000) for tt in time])
 month_decimal=(numpy.arange(12)+0.5)/12
 month=numpy.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
@@ -47,10 +52,15 @@ lats2 = nc.variables["lat"][:]
 lons2 = nc.variables["lon"][:]
 tos = numpy.ma.filled(nc.variables["tos"][:,:,:],-1.0e30)
 time = nc.variables["time"][:]
+month=numpy.array([[int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
+if month[0]!=0:
+    first_time_step=np.where(month==0)[0][0]
+    tos=tos[first_time_step:,:,:]
+    time=time[first_time_step:]
 year=numpy.array([int(tt/10000) for tt in time])
 month_decimal=(numpy.arange(12)+0.5)/12
 month=numpy.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
-dates_tos=year+month
+dates_tas=year+month
 nc.close()
 
 # read sic.nc
@@ -61,10 +71,15 @@ lons3 = nc.variables["lon"][:]
 sic = numpy.ma.filled(nc.variables["sic"][:,:,:],-1.0e30)
 y0 = int(nc.variables["time"][:][0]/10000)
 time = nc.variables["time"][:]
+month=numpy.array([[int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
+if month[0]!=0:
+    first_time_step=np.where(month==0)[0][0]
+    sic=sic[first_time_step:,:,:]
+    time=time[first_time_step:]
 year=numpy.array([int(tt/10000) for tt in time])
 month_decimal=(numpy.arange(12)+0.5)/12
 month=numpy.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
-dates_sic=year+month
+dates_tas=year+month
 nc.close()
 
 # read sftof.nc
@@ -100,9 +115,7 @@ print >> sys.stderr, sic.shape
 # print >> sys.stderr, dates
 if dates_sic[0]==dates_tos[0] and dates_tos[0]==dates_tas[0]:
     dates=dates_tas
-    month_offset=12-numpy.array([int((tt-int(tt/10000)*10000)/100)-1 for tt in time])[0]
 print >> sys.stderr, dates
-print >> sys.stderr, month_offset
 
 # force missing cells to be open water/land and scale if stored as percentage
 sic[sic<  0.0] = 0.0
@@ -119,9 +132,7 @@ print >> sys.stderr, "sftof ", numpy.min(sftof), numpy.max(sftof), numpy.mean(sf
 # optional fixed ice mode
 if 'f' in options:
   # mask all cells with any ice post 1961
-  # !!! this is only working with old dates
-  #for m0 in range(0,len(dates),12):
-  for m0 in range(month_offset,len(dates),12):
+  for m0 in range(0,len(dates),12):
     if dates[m0] > 1961: break
   print >> sys.stderr, m0, dates[m0]
   for i in range(sic.shape[1]):
