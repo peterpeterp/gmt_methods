@@ -41,7 +41,7 @@ print >> sys.stderr, nc.variables.keys()
 lats2 = nc.variables["lat"][:]
 lons2 = nc.variables["lon"][:]
 tos = numpy.ma.filled(nc.variables["tos"][:,:,:],-1.0e30)
-dates = nc.variables["time"][:]
+time = nc.variables["time"][:]
 nc.close()
 
 # read sic.nc
@@ -83,6 +83,10 @@ print >> sys.stderr, sic.shape
 # # dates
 # dates = (numpy.arange(tas.shape[0])+0.5)/12.0 + y0
 # print >> sys.stderr, dates
+year=np.array([int(tt/10000) for tt in time])
+month_decimal=(np.arange(12)+0.5)/12
+month=np.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
+dates=year+month
 
 # force missing cells to be open water/land and scale if stored as percentage
 sic[sic<  0.0] = 0.0
