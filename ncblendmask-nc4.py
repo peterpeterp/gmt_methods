@@ -36,7 +36,7 @@ tas = numpy.ma.filled(nc.variables["tas"][:,:,:],-1.0e30)
 time = nc.variables["time"][:]
 month=numpy.array([int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
 if month[0]!=0:
-    first_time_step=np.where(month==0)[0][0]
+    first_time_step=numpy.where(month==0)[0][0]
     tas=tas[first_time_step:,:,:]
     time=time[first_time_step:]
 year=numpy.array([int(tt/10000) for tt in time])
@@ -54,7 +54,7 @@ tos = numpy.ma.filled(nc.variables["tos"][:,:,:],-1.0e30)
 time = nc.variables["time"][:]
 month=numpy.array([int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
 if month[0]!=0:
-    first_time_step=np.where(month==0)[0][0]
+    first_time_step=numpy.where(month==0)[0][0]
     tos=tos[first_time_step:,:,:]
     time=time[first_time_step:]
 year=numpy.array([int(tt/10000) for tt in time])
@@ -73,7 +73,7 @@ y0 = int(nc.variables["time"][:][0]/10000)
 time = nc.variables["time"][:]
 month=numpy.array([int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
 if month[0]!=0:
-    first_time_step=np.where(month==0)[0][0]
+    first_time_step=numpy.where(month==0)[0][0]
     sic=sic[first_time_step:,:,:]
     time=time[first_time_step:]
 year=numpy.array([int(tt/10000) for tt in time])
