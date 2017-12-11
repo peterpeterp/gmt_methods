@@ -60,7 +60,7 @@ if month[0]!=0:
 year=numpy.array([int(tt/10000) for tt in time])
 month_decimal=(numpy.arange(12)+0.5)/12
 month=numpy.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
-dates_tas=year+month
+dates_tos=year+month
 nc.close()
 
 # read sic.nc
@@ -79,7 +79,7 @@ if month[0]!=0:
 year=numpy.array([int(tt/10000) for tt in time])
 month_decimal=(numpy.arange(12)+0.5)/12
 month=numpy.array([month_decimal[int((tt-int(tt/10000)*10000)/100)-1] for tt in time])
-dates_tas=year+month
+dates_sic=year+month
 nc.close()
 
 # read sftof.nc
