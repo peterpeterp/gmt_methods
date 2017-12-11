@@ -34,7 +34,7 @@ lats1 = nc.variables["lat"][:]
 lons1 = nc.variables["lon"][:]
 tas = numpy.ma.filled(nc.variables["tas"][:,:,:],-1.0e30)
 time = nc.variables["time"][:]
-month=numpy.array([[int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
+month=numpy.array([int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
 if month[0]!=0:
     first_time_step=np.where(month==0)[0][0]
     tas=tas[first_time_step:,:,:]
@@ -52,7 +52,7 @@ lats2 = nc.variables["lat"][:]
 lons2 = nc.variables["lon"][:]
 tos = numpy.ma.filled(nc.variables["tos"][:,:,:],-1.0e30)
 time = nc.variables["time"][:]
-month=numpy.array([[int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
+month=numpy.array([int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
 if month[0]!=0:
     first_time_step=np.where(month==0)[0][0]
     tos=tos[first_time_step:,:,:]
@@ -71,7 +71,7 @@ lons3 = nc.variables["lon"][:]
 sic = numpy.ma.filled(nc.variables["sic"][:,:,:],-1.0e30)
 y0 = int(nc.variables["time"][:][0]/10000)
 time = nc.variables["time"][:]
-month=numpy.array([[int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
+month=numpy.array([int((tt-int(tt/10000)*10000)/100)-1 for tt in time])
 if month[0]!=0:
     first_time_step=np.where(month==0)[0][0]
     sic=sic[first_time_step:,:,:]
