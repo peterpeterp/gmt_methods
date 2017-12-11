@@ -41,7 +41,7 @@ print >> sys.stderr, nc.variables.keys()
 lats2 = nc.variables["lat"][:]
 lons2 = nc.variables["lon"][:]
 tos = numpy.ma.filled(nc.variables["tos"][:,:,:],-1.0e30)
-dates = nc.variables["time"][:][0]
+dates = nc.variables["time"][:]
 nc.close()
 
 # read sic.nc
