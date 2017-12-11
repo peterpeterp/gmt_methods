@@ -12,7 +12,7 @@ try:
 		style='had4'
 except:
 	job_id=10
-	style='xxx'
+	style='xax'
 
 scenario = 'rcp85'
 
