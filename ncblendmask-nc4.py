@@ -100,7 +100,7 @@ print >> sys.stderr, sic.shape
 # print >> sys.stderr, dates
 if dates_sic[0]==dates_tos[0] and dates_tos[0]==dates_tas[0]:
     dates=dates_tas
-    month_offset=numpy.array([int((tt-int(tt/10000)*10000)/100)-1 for tt in time])[0]
+    month_offset=12-numpy.array([int((tt-int(tt/10000)*10000)/100)-1 for tt in time])[0]
 print >> sys.stderr, dates
 print >> sys.stderr, month_offset
 
