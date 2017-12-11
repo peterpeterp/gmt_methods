@@ -19,7 +19,7 @@ for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended 
 	ngood=0
 	ntot=0
 	plt.close()
-	fig,ax=plt.subplots(nrows=2,ncols=2,figsize=(9,11))
+	fig,ax=plt.subplots(nrows=3,ncols=2,figsize=(9,11))
 	l_styles = ['-','--','-.',':']
 	m_styles = ['','.','o','^','*']
 	colormap = matplotlib.cm.get_cmap('Spectral')
@@ -28,21 +28,23 @@ for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended 
 	subax = fig.add_axes([0.6,0.0,0.4,0.3],axisbg='w')
 
 	for model_run,(marker,linestyle,color) in zip(sorted(gmt.model_run),itertools.product(m_styles,l_styles, colormap)):
-		cowtan_file='blend-results.160518/rcp85-xax/rcp85_'+model_run+'.temp'
+		cowtan_file='blend-results.160518/rcp85-'+style+'/rcp85_'+model_run+'.temp'
 		if np.isfinite(np.nanmean(gmt[style,'rcp85',model_run,'gmt',:].values)) and os.path.isfile(cowtan_file):
 			tmp=pd.read_table(cowtan_file,sep=' ',header=None)
 			tmp.columns=['time','air','gmt','diff']
 			perc_diff=(gmt[style,'rcp85',model_run,var,1861:2100].values-np.array(tmp[var]))
-			if np.nanmean(np.abs(perc_diff))<0.05:
+			if np.nanmean(np.abs(perc_diff))<0.01:
 			    ax[0,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
 			    ax[0,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
-			    ngood+=1
 			else:
-			    ax[1,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
-			    ax[1,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
+				if np.nanmean(np.abs(perc_diff[-100:-1]))>0.01 and np.nanmean(np.abs(perc_diff))<0.1:
+				    ax[1,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
+				    ax[1,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
+				else:
+				    ax[2,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
+				    ax[2,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
 		else:
 			subax.plot(range(3),color='k',label=model_run)
-		ntot+=1
 
 	# for model_run in [xx.split('/')[-1].split('_')[1]+'_'+xx.split('/')[-1].split('_')[2].split('.')[0] for xx in glob.glob('blend-results.160518/rcp85-had4/rcp85_*')]:
 	# 	if model_run in gmt.model_run and np.isfinite(np.nanmean(gmt['had4','rcp85',model_run,'gmt',:].values))==False:
@@ -62,6 +64,13 @@ for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended 
 	ax[1,1].legend(loc='upper left',ncol=2,fontsize=7)
 	ax[1,0].set_title(('mean deviation > 0.05'))
 
+	ax[2,0].set_ylim((-1,1))
+	ax[2,0].set_ylabel('deviation from Cowtan2015')
+	ax[2,1].axis('off')
+	ax[2,1].set_ylim((-99,-98))
+	ax[2,1].legend(loc='upper left',ncol=2,fontsize=7)
+	ax[2,0].set_title(('mean deviation > 0.05'))
+
 	subax.set_ylim((-99,-98))
 	subax.axis('off')
 	#subax.set_title('missing files')
@@ -70,80 +79,62 @@ for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended 
 	plt.suptitle(title)
 	plt.savefig('plots/check_'+style+'_'+var+'.png')
 
-	print ngood,ntot
-
-gmt=da.read_nc('data/gmt_all.nc')['gmt']
-for style,var,title in zip(['had4','had4'],['air','gmt'],['SAT masked','HadCRUT4 emulation']):
-	ngood=0
-	ntot=0
-	plt.close()
-	fig,ax=plt.subplots(nrows=2,ncols=2,figsize=(9,11))
-	l_styles = ['-','--','-.',':']
-	m_styles = ['','.','o','^','*']
-	colormap = matplotlib.cm.get_cmap('Spectral')
-	colormap = [colormap(i/float(len(gmt.model_run)/7)) for i in range(len(gmt.model_run)/7)]
-
-	subax = fig.add_axes([0.6,0.0,0.4,0.3],axisbg='w')
-
-	for model_run,(marker,linestyle,color) in zip(sorted(gmt.model_run),itertools.product(m_styles,l_styles, colormap)):
-		cowtan_file='blend-results.160518/rcp85-had4/rcp85_'+model_run+'.temp'
-		if np.isfinite(np.nanmean(gmt['had4','rcp85',model_run,'gmt',:].values)) and os.path.isfile(cowtan_file):
-			tmp=pd.read_table(cowtan_file,sep=' ',header=None)
-			tmp.columns=['time','air','gmt','diff']
-			perc_diff=(gmt[style,'rcp85',model_run,var,1861:2015].values-np.array(tmp[var]))
-			if np.nanmean(np.abs(perc_diff))<0.05:
-			    ax[0,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
-			    ax[0,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
-			    ngood+=1
-			else:
-			    ax[1,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
-			    ax[1,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
-		else:
-			subax.plot(range(3),color='k',label=model_run)
-		ntot+=1
-
-
-	ax[0,0].set_ylim((-0.1,0.1))
-	ax[0,0].set_ylabel('deviation from Cowtan2015')
-	ax[0,1].axis('off')
-	ax[0,1].set_ylim((-99,-98))
-	ax[0,1].legend(loc='upper left',ncol=2,fontsize=7)
-	ax[0,0].set_title(('mean deviation < 0.05'))
-
-	ax[1,0].set_ylim((-1,1))
-	ax[1,0].set_ylabel('deviation from Cowtan2015')
-	ax[1,1].axis('off')
-	ax[1,1].set_ylim((-99,-98))
-	ax[1,1].legend(loc='upper left',ncol=2,fontsize=7)
-	ax[1,0].set_title(('mean deviation > 0.05'))
-
-	subax.set_ylim((-99,-98))
-	subax.axis('off')
-	subax.set_title('missing files')
-	subax.legend(loc='upper left',ncol=2,fontsize=7)
-
-	plt.suptitle(title)
-	plt.savefig('plots/check_'+style+'_'+var+'.png')
-
-	print ngood,ntot
-
-
-
+#
+# gmt=da.read_nc('data/gmt_all.nc')['gmt']
+# for style,var,title in zip(['had4','had4'],['air','gmt'],['SAT masked','HadCRUT4 emulation']):
+# 	ngood=0
+# 	ntot=0
+# 	plt.close()
+# 	fig,ax=plt.subplots(nrows=2,ncols=2,figsize=(9,11))
+# 	l_styles = ['-','--','-.',':']
+# 	m_styles = ['','.','o','^','*']
+# 	colormap = matplotlib.cm.get_cmap('Spectral')
+# 	colormap = [colormap(i/float(len(gmt.model_run)/7)) for i in range(len(gmt.model_run)/7)]
+#
+# 	subax = fig.add_axes([0.6,0.0,0.4,0.3],axisbg='w')
+#
+# 	for model_run,(marker,linestyle,color) in zip(sorted(gmt.model_run),itertools.product(m_styles,l_styles, colormap)):
+# 		cowtan_file='blend-results.160518/rcp85-'+style+'/rcp85_'+model_run+'.temp'
+# 		if np.isfinite(np.nanmean(gmt['had4','rcp85',model_run,'gmt',:].values)) and os.path.isfile(cowtan_file):
+# 			tmp=pd.read_table(cowtan_file,sep=' ',header=None)
+# 			tmp.columns=['time','air','gmt','diff']
+# 			perc_diff=(gmt[style,'rcp85',model_run,var,1861:2015].values-np.array(tmp[var]))
+# 			if np.nanmean(np.abs(perc_diff))<0.05:
+# 			    ax[0,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
+# 			    ax[0,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
+# 			    ngood+=1
+# 			else:
+# 			    ax[1,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
+# 			    ax[1,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
+# 		else:
+# 			subax.plot(range(3),color='k',label=model_run)
+# 		ntot+=1
 #
 #
+# 	ax[0,0].set_ylim((-0.1,0.1))
+# 	ax[0,0].set_ylabel('deviation from Cowtan2015')
+# 	ax[0,1].axis('off')
+# 	ax[0,1].set_ylim((-99,-98))
+# 	ax[0,1].legend(loc='upper left',ncol=2,fontsize=7)
+# 	ax[0,0].set_title(('mean deviation < 0.05'))
 #
+# 	ax[1,0].set_ylim((-1,1))
+# 	ax[1,0].set_ylabel('deviation from Cowtan2015')
+# 	ax[1,1].axis('off')
+# 	ax[1,1].set_ylim((-99,-98))
+# 	ax[1,1].legend(loc='upper left',ncol=2,fontsize=7)
+# 	ax[1,0].set_title(('mean deviation > 0.05'))
 #
+# 	subax.set_ylim((-99,-98))
+# 	subax.axis('off')
+# 	subax.set_title('missing files')
+# 	subax.legend(loc='upper left',ncol=2,fontsize=7)
 #
-
-
-
-
-
-
-
-
-
-
+# 	plt.suptitle(title)
+# 	plt.savefig('plots/check_'+style+'_'+var+'.png')
+#
+# 	print ngood,ntot
+#
 #
 #
 # gmt=da.read_nc('data/gmt_all_old_mask.nc')['gmt']
