@@ -97,10 +97,10 @@ print >> sys.stderr, sic.shape
 # # dates
 # dates = (numpy.arange(tas.shape[0])+0.5)/12.0 + y0
 # print >> sys.stderr, dates
-print >> sys.stderr, dates
-print dates_tas[0:100]
-print dates_sic[0:100]
-print dates_tos[0:100]
+#print >> sys.stderr, dates
+print >> sys.stderr, dates_tas[0:100]
+print >> sys.stderr, dates_sic[0:100]
+print >> sys.stderr, dates_tos[0:100]
 
 # force missing cells to be open water/land and scale if stored as percentage
 sic[sic<  0.0] = 0.0
