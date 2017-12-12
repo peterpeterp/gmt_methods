@@ -40,4 +40,4 @@ for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended 
 		ax.axis('off')
 
 	plt.suptitle(title)
-	plt.savefig('plots/check_'+style+'_'+var+'_detail.png')
+	plt.savefig('plots/check_'+style+'_'+var+'_detail_dis.png')
