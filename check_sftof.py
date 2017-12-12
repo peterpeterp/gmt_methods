@@ -1,12 +1,8 @@
 import os,sys,glob,time,collections,gc
 import numpy as np
 from netCDF4 import Dataset,netcdftime,num2date
-import matplotlib.pylab as plt
 import dimarray as da
 import pandas as pd
-import seaborn as sns
-import itertools
-import matplotlib
 
 try:
 	os.chdir('/Users/peterpfleiderer/Documents/Projects/gmt/')
