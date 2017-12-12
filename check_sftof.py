@@ -21,7 +21,7 @@ print folder
 model=folder.split('_')[0]
 run=folder.split('_')[1]
 
-if True:
+if False:
 	if os.path.isfile('data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc') and style=='had4':
 		tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc'
 	else:
