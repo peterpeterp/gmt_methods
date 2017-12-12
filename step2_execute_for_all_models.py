@@ -45,11 +45,13 @@ else:
 	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'.nc'
 
 
-for sftof_style in ['_remapdis_0','_remapdis_100']:
+for sftof_style in ['_raw']:
 	if model in sftof_replace_dict.keys():
 		sftof='sftof/'+sftof_replace_dict[model]+sftof_style+'.nc'
 	else:
 		sftof='sftof/'+model+sftof_style+'.nc'
+
+	sftof='sftof/sftof_fx_ACCESS1-0_historical_r0i0p0.nc'
 
 	if style=='xax':
 		if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:

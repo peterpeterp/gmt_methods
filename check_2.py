@@ -13,7 +13,7 @@ try:
 except:
 	os.chdir('/p/projects/tumble/carls/shared_folder/gmt/')
 
-for sftof_style in ['_remapdis','_remapnn']:
+for sftof_style in ['_remapdis_0','_remapdis_100','_remapdis','_remapnn']:
 	gmt=da.read_nc('data/gmt_all'+sftof_style+'.nc')['gmt']
 	for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended air/sea temperature, unmasked, temperature anomalies, variable ice']):
 		plt.close()
