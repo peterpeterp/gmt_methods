@@ -19,9 +19,10 @@ print [ff.split('_')[-3] for ff in glob.glob('sftof/sftof_fx_*_historical_r0i0p0
 # 	Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'_remapnn.nc',shell=True).wait()
 
 for file_name in glob.glob('sftof/sftof_fx_*.nc'):
-	Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+file_name.split('_')[2]+'_remapdis.nc',shell=True).wait()
-	Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+file_name.split('_')[2]+'_remapn.nc',shell=True).wait()
+	# Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+file_name.split('_')[2]+'_remapdis.nc',shell=True).wait()
+	# Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+file_name.split('_')[2]+'_remapn.nc',shell=True).wait()
 
+	print "cdo -expr,'sftof=(sftof<100.0)?0.0:sftof;' "+file_name+' sftof/'+file_name.split('_')[2]+'_remapdis.nc sftof/'+file_name.split('_')[2]+'_remapdis_0.nc'
 	Popen("cdo -expr,'sftof=(sftof<100.0)?0.0:sftof;' "+file_name+' sftof/'+file_name.split('_')[2]+'_remapdis.nc sftof/'+file_name.split('_')[2]+'_remapdis_0.nc',shell=True).wait()
 	Popen("cdo -expr,'sftof=(sftof>0.0)?100.0:sftof;' "+file_name+' sftof/'+file_name.split('_')[2]+'_remapdis.nc sftof/'+file_name.split('_')[2]+'_remapdis_100.nc',shell=True).wait()
 
