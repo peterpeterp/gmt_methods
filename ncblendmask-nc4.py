@@ -121,11 +121,11 @@ print >> sys.stderr, sic.shape
 
 # this fucked up everything!!!!
 # dates
-dates = (numpy.arange(tas.shape[0])+0.5)/12.0 + y0
-print >> sys.stderr, dates
-# if dates_sic[0]==dates_tos[0] and dates_tos[0]==dates_tas[0] and dates_tas[0]=dates_mask[0]:
-#     dates=dates_tas
+# dates = (numpy.arange(tas.shape[0])+0.5)/12.0 + y0
 # print >> sys.stderr, dates
+if dates_sic[0]==dates_tos[0] and dates_tos[0]==dates_tas[0] and dates_tas[0]=dates_mask[0]:
+    dates=dates_tas
+print >> sys.stderr, dates
 
 # force missing cells to be open water/land and scale if stored as percentage
 sic[sic<  0.0] = 0.0

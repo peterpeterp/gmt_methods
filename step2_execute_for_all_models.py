@@ -58,7 +58,7 @@ if style=='xxx':
 
 if style=='had4':
 	if os.path.isfile('had4_'+scenario+'.txt')==False or overwrite:
-		Popen('python blend-runnable/ncblendhadcrut-nc4.py '+tas+' '+tos+' '+sic+' '+sftof+'  data/CRU_extended.nc data/SST_extended.nc > data_models/'+model+'_'+run+'/had4_'+scenario+'.txt',shell=True).wait()
+		Popen('python gmt_methods/ncblendhadcrut-nc4.py '+tas+' '+tos+' '+sic+' '+sftof+'  data/CRU_extended.nc data/SST_extended.nc > data_models/'+model+'_'+run+'/had4_'+scenario+'.txt',shell=True).wait()
 
 
 
