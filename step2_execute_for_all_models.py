@@ -48,9 +48,9 @@ else:
 
 for sftof_style in ['_remapdis','_remapnn']:
 	if model in sftof_replace_dict.keys():
-		sftof=glob.glob('sftof/'+sftof_replace_dict[model]+sftof_style+'.nc')[0]
+		sftof='sftof/'+sftof_replace_dict[model]+sftof_style+'.nc'
 	else:
-		sftof=glob.glob('sftof/'+model+sftof_style+'.nc')[0]
+		sftof='sftof/'+model+sftof_style+'.nc'
 
 	if style=='xax':
 		if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:

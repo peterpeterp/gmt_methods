@@ -15,8 +15,8 @@ print [ff.split('_')[-3] for ff in glob.glob('sftof/sftof_fx_*_historical_r0i0p0
 
 for file_name in glob.glob('sftof/sftof_fx_*_historical_r0i0p0.nc'):
 	model = file_name.split('/')[-1]
-	Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'_rempadis.nc',shell=True).wait()
-	Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'_rempann.nc',shell=True).wait()
+	Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'_remapdis.nc',shell=True).wait()
+	Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'_remapnn.nc',shell=True).wait()
 
 for model in [ff.split('/')[-1] for ff in glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/fx/sftlf/*')]:
 	if model not in [ff.split('_')[-2] for ff in  glob.glob('sftof/sftof_fx_*_historical_r0i0p0.nc')]:
@@ -43,5 +43,5 @@ for model in [ff.split('/')[-1] for ff in glob.glob('/p/projects/ipcc_pcmdi/ipcc
 		nc_out.close()
 		nc_in.close()
 
-		Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+out_file+' sftof/'+model+'_rempadis.nc',shell=True).wait()
-		Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+out_file+' sftof/'+model+'_rempann.nc',shell=True).wait()
+		Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+out_file+' sftof/'+model+'_remapdis.nc',shell=True).wait()
+		Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+out_file+' sftof/'+model+'_remapnn.nc',shell=True).wait()
