@@ -14,7 +14,7 @@ print [ff.split('_')[-3] for ff in glob.glob('sftof/sftof_fx_*_historical_r0i0p0
 
 
 for file_name in glob.glob('sftof/sftof_fx_*_historical_r0i0p0.nc'):
-	model = file_name.split('/')[-1]
+	model = file_name.split('_')[-2]
 	Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'_remapdis.nc',shell=True).wait()
 	Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'_remapnn.nc',shell=True).wait()
 
