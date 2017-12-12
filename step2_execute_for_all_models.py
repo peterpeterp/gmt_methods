@@ -54,16 +54,16 @@ for sftof_style in ['_remapdis','_remapnn']:
 
 	if style=='xax':
 		if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
-			Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+sftof_style'.txt',shell=True).wait()
+			Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+sftof_style+'.txt',shell=True).wait()
 
 	if style=='xxx':
 		if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
-			Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+sftof_style'.txt',shell=True).wait()
+			Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+sftof_style+'.txt',shell=True).wait()
 
 
 	if style=='had4':
 		if os.path.isfile('had4_'+scenario+'.txt')==False or overwrite:
-			Popen('python gmt_methods/ncblendhadcrut-nc4.py '+tas+' '+tos+' '+sic+' '+sftof+'  data/CRU_extended.nc data/SST_extended.nc > data_models/'+model+'_'+run+'/had4_'+scenario+sftof_style'.txt',shell=True).wait()
+			Popen('python gmt_methods/ncblendhadcrut-nc4.py '+tas+' '+tos+' '+sic+' '+sftof+'  data/CRU_extended.nc data/SST_extended.nc > data_models/'+model+'_'+run+'/had4_'+scenario+sftof_style+'.txt',shell=True).wait()
 
 
 
