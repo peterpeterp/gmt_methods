@@ -10,7 +10,7 @@ try:
 except:
 	os.chdir('/p/projects/tumble/carls/shared_folder/gmt/')
 
-overwrite=True
+overwrite=False
 
 job_id=39
 style='xax'
@@ -44,7 +44,7 @@ if True:
 	for model_sftof in models:
 		sftof='sftof/'+model_sftof+'.nc'
 		if os.path.isfile(sftof):
-			if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
+			if os.path.isfile('test/'+model+'_'+run+'_sftof_'+model_sftof+'.txt')==False or overwrite:
 				Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > test/'+model+'_'+run+'_sftof_'+model_sftof+'.txt',shell=True).wait()
 
 
