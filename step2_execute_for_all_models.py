@@ -6,10 +6,10 @@ overwrite=True
 try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
 	if job_id>=90:
-		style='xax'
+		style='had4'
 		job_id-=90
 	else:
-		style='had4'
+		style='xax'
 except:
 	job_id=39
 	style='xax'
