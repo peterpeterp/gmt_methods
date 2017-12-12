@@ -41,7 +41,7 @@ else:
 	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'.nc'
 
 
-for sftof_style in ['_remapdis_50']:
+for sftof_style in ['_remapbil','_remapnn']:
 	if model in sftof_replace_dict.keys():
 		sftof='sftof/'+sftof_replace_dict[model]+sftof_style+'.nc'
 	else:
