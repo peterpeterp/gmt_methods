@@ -24,7 +24,7 @@ for file_name in glob.glob('sftof/sftof_fx_*.nc'):
 
 	Popen("cdo -expr,'sftof=(sftof<100.0)?0.0:sftof;'  sftof/"+file_name.split('_')[2]+'_remapdis.nc sftof/'+file_name.split('_')[2]+'_remapdis_0.nc',shell=True).wait()
 	Popen("cdo -expr,'sftof=(sftof>0.0)?100.0:sftof;' sftof/"+file_name.split('_')[2]+'_remapdis.nc sftof/'+file_name.split('_')[2]+'_remapdis_100.nc',shell=True).wait()
-	Popen("cdo -expr,'sftof=(sftof>50.0)?100.0:sftof;' sftof/"+file_name.split('_')[2]+'_remapdis.nc sftof/'+file_name.split('_')[2]+'_remapdis_50.nc',shell=True).wait()
+	Popen("cdo -expr,'sftof=(sftof<50.0)?0.0:sftof;' -expr,'sftof=(sftof>50.0)?100.0:sftof;' sftof/"+file_name.split('_')[2]+'_remapdis.nc sftof/'+file_name.split('_')[2]+'_remapdis_50.nc',shell=True).wait()
 
 
 
