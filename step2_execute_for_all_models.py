@@ -11,7 +11,7 @@ try:
 	else:
 		style='xax'
 except:
-	job_id=sys.argv[1]
+	job_id=int(sys.argv[1])
 	style='xax'
 
 scenario = 'rcp85'
