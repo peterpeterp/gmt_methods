@@ -11,7 +11,7 @@ try:
 	else:
 		style='had4'
 except:
-	job_id=61
+	job_id=39
 	style='xax'
 
 scenario = 'rcp85'
@@ -25,11 +25,12 @@ model=folder.split('_')[0]
 run=folder.split('_')[1]
 
 
-# if model in sftof_replace_dict.keys():
-# 	sftof=glob.glob('sftof/'+sftof_replace_dict[model]+'.nc')[0]
-# else:
-# 	sftof=glob.glob('sftof/'+model+'.nc')[0]
-sftof='sftof/NorESM1-M.nc'
+if model in sftof_replace_dict.keys():
+	sftof=glob.glob('sftof/'+sftof_replace_dict[model]+'.nc')[0]
+else:
+	sftof=glob.glob('sftof/'+model+'.nc')[0]
+
+
 
 if os.path.isfile('data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc') and style=='had4':
 	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc'
@@ -47,17 +48,24 @@ else:
 	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'.nc'
 
 if style=='xax':
-	if os.path.isfile(style+'_'+scenario+'_old_mask.txt')==False or overwrite:
+	if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
 		Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',shell=True).wait()
 
 if style=='xxx':
-	if os.path.isfile(style+'_'+scenario+'_old_mask.txt')==False or overwrite:
+	if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
 		Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',shell=True).wait()
 
 
 if style=='had4':
-	if os.path.isfile('had4_'+scenario+'_old_mask.txt')==False or overwrite:
+	if os.path.isfile('had4_'+scenario+'.txt')==False or overwrite:
 		Popen('python blend-runnable/ncblendhadcrut-nc4.py '+tas+' '+tos+' '+sic+' '+sftof+'  data/CRU_extended.nc data/SST_extended.nc > data_models/'+model+'_'+run+'/had4_'+scenario+'.txt',shell=True).wait()
+
+
+for model_sftof in [fl.split('/')[-1].split('_')[0] for fl in glob.glob('data_models/*')]:
+	sftof='sftof/'+model_sftof+'.nc'
+	if os.path.isfile(sftof):
+		if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
+			Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > test/'+model+'_'+run+'_sftof_'+model_sftof+'.txt',shell=True).wait()
 
 
 
