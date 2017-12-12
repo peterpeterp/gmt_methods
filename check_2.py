@@ -13,13 +13,29 @@ try:
 except:
 	os.chdir('/p/projects/tumble/carls/shared_folder/gmt/')
 
-for sftof_style in ['_remapdis_0','_remapdis_100','_remapdis','_remapnn']:
+gmt=da.read_nc('data/gmt_all_remapdis_50.nc')['gmt']
+grid_sizes=[]
+for model_run in gmt.model_run:
+	try:
+		tmp=da.read_nc('sftof/sftof_fx_'+model_run.split('_')[0]+'_historical_r0i0p0.nc')
+		try:
+			grid_sizes.append(tmp['i'].shape[0]*tmp['j'].shape[0])
+			print model_run, 'i-j'
+		except:
+			grid_sizes.append(tmp['lat'].shape[0]*tmp['lon'].shape[0])
+			print model_run, 'lat-lon'
+	except:
+		grid_sizes.append(0)
+
+model_runs_df=pd.DataFrame(np.array([gmt.model_run,grid_sizes]).T,columns=['name','size'])
+
+for sftof_style in ['_remapdis_50','_remapdis_0','_remapdis_100','_remapdis','_remapnn']:
 	gmt=da.read_nc('data/gmt_all'+sftof_style+'.nc')['gmt']
 	for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended air/sea temperature, unmasked, temperature anomalies, variable ice']):
 		plt.close()
 		fig,axes=plt.subplots(nrows=9,ncols=10,figsize=(12,15))
 		axes=axes.flatten()
-		for model_run,ax,i in zip(sorted(gmt.model_run),axes[0:len(gmt.model_run)],range(len(gmt.model_run))):
+		for model_run,ax,i in zip(model_runs_df.sort_values(by=['size'],ascending=False)['name'],axes[0:len(gmt.model_run)],range(len(gmt.model_run))):
 			cowtan_file='blend-results.160518/rcp85-'+style+'/rcp85_'+model_run+'.temp'
 			if np.isfinite(np.nanmean(gmt[style,'rcp85',model_run,'gmt',:].values)) and os.path.isfile(cowtan_file):
 				tmp=pd.read_table(cowtan_file,sep=' ',header=None)
