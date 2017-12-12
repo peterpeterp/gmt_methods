@@ -3,6 +3,7 @@ import numpy as np
 from netCDF4 import Dataset,netcdftime,num2date
 import dimarray as da
 import pandas as pd
+from subprocess import Popen
 
 try:
 	os.chdir('/Users/peterpfleiderer/Documents/Projects/gmt/')
