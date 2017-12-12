@@ -8,7 +8,7 @@ try:
 	if job_id>=90:
 		style='had4'
 		job_id-=90
-		adsasd	
+		adsasd
 	else:
 		style='xax'
 except:
@@ -26,10 +26,7 @@ model=folder.split('_')[0]
 run=folder.split('_')[1]
 
 
-if model in sftof_replace_dict.keys():
-	sftof=glob.glob('sftof/'+sftof_replace_dict[model]+'.nc')[0]
-else:
-	sftof=glob.glob('sftof/'+model+'.nc')[0]
+
 
 
 
@@ -48,18 +45,25 @@ if os.path.isfile('data_models/'+model+'_'+run+'/sic_'+scenario+'_extended.nc') 
 else:
 	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'.nc'
 
-if style=='xax':
-	if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
-		Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',shell=True).wait()
 
-if style=='xxx':
-	if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
-		Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',shell=True).wait()
+for sftof_style in ['_remapdis','_remapnn']:
+	if model in sftof_replace_dict.keys():
+		sftof=glob.glob('sftof/'+sftof_replace_dict[model]+sftof_style+'.nc')[0]
+	else:
+		sftof=glob.glob('sftof/'+model+sftof_style+'.nc')[0]
+
+	if style=='xax':
+		if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
+			Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+sftof_style'.txt',shell=True).wait()
+
+	if style=='xxx':
+		if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
+			Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+sftof_style'.txt',shell=True).wait()
 
 
-if style=='had4':
-	if os.path.isfile('had4_'+scenario+'.txt')==False or overwrite:
-		Popen('python gmt_methods/ncblendhadcrut-nc4.py '+tas+' '+tos+' '+sic+' '+sftof+'  data/CRU_extended.nc data/SST_extended.nc > data_models/'+model+'_'+run+'/had4_'+scenario+'.txt',shell=True).wait()
+	if style=='had4':
+		if os.path.isfile('had4_'+scenario+'.txt')==False or overwrite:
+			Popen('python gmt_methods/ncblendhadcrut-nc4.py '+tas+' '+tos+' '+sic+' '+sftof+'  data/CRU_extended.nc data/SST_extended.nc > data_models/'+model+'_'+run+'/had4_'+scenario+sftof_style'.txt',shell=True).wait()
 
 
 
