@@ -61,13 +61,6 @@ if style=='had4':
 		Popen('python blend-runnable/ncblendhadcrut-nc4.py '+tas+' '+tos+' '+sic+' '+sftof+'  data/CRU_extended.nc data/SST_extended.nc > data_models/'+model+'_'+run+'/had4_'+scenario+'.txt',shell=True).wait()
 
 
-for model_sftof in [fl.split('/')[-1].split('_')[0] for fl in glob.glob('data_models/*')]:
-	sftof='sftof/'+model_sftof+'.nc'
-	if os.path.isfile(sftof):
-		if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
-			Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > test/'+model+'_'+run+'_sftof_'+model_sftof+'.txt',shell=True).wait()
-
-
 
 
 # python blend-runnable/ncblendmask-nc4.py xax data_models/CanESM2_r1i1p1/tas_rcp85.nc data_models/CanESM2_r1i1p1/tos_rcp85.nc data_models/CanESM2_r1i1p1/sic_rcp85.nc sftof/GFDL-CM3.nc > test.txt
