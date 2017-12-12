@@ -21,7 +21,11 @@ print folder
 model=folder.split('_')[0]
 run=folder.split('_')[1]
 
-if False:
+models=[]
+for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
+	models.append(folder.split('_')[0])
+
+if True:
 	if os.path.isfile('data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc') and style=='had4':
 		tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc'
 	else:
@@ -37,16 +41,14 @@ if False:
 	else:
 		sic='data_models/'+model+'_'+run+'/sic_'+scenario+'.nc'
 
-	for model_sftof in [fl.split('/')[-1].split('_')[0] for fl in glob.glob('data_models/*')]:
+	for model_sftof in models:
 		sftof='sftof/'+model_sftof+'.nc'
 		if os.path.isfile(sftof):
 			if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
 				Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > test/'+model+'_'+run+'_sftof_'+model_sftof+'.txt',shell=True).wait()
 
 
-models=[]
-for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
-	models.append(folder.split('_')[0])
+
 
 
 models=list(set(models))
