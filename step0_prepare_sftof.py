@@ -19,7 +19,8 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 
 	for file_name in glob.glob('sftof/sftof_fx_*_historical_r0i0p0.nc'):
 		if model==file_name.split('_')[-3]:
-			Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'.nc',shell=True).wait()
+			#Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'.nc',shell=True).wait()
+			Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'.nc',shell=True).wait()
 
 		elif model in [ff.split('/')[-1] for ff in glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/fx/sftlf/*')]:
 			in_file=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/fx/sftlf/'+model+'/*/*')[0]
@@ -45,4 +46,5 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 			nc_out.close()
 			nc_in.close()
 
-			Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+out_file+' sftof/'+model+'.nc',shell=True).wait()
+			#Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+out_file+' sftof/'+model+'.nc',shell=True).wait()
+			Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+out_file+' sftof/'+model+'.nc',shell=True).wait()

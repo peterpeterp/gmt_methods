@@ -48,8 +48,8 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 		Popen(command+'tmp_m_'+var+'.nc',shell=True).wait()
 
 		Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
-		#Popen('cdo -O remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
-		Popen('cdo -O remapnn,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
+		Popen('cdo -O remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
+		#Popen('cdo -O remapnn,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
 		Popen('rm tmp_s_'+var+'.nc tmp_m_'+var+'.nc',shell=True).wait()
 	if len(scenario_files)==0:
 		info=open('delete_here','w')
