@@ -25,10 +25,11 @@ model=folder.split('_')[0]
 run=folder.split('_')[1]
 
 
-if model in sftof_replace_dict.keys():
-	sftof=glob.glob('sftof/'+sftof_replace_dict[model]+'.nc')[0]
-else:
-	sftof=glob.glob('sftof/'+model+'.nc')[0]
+# if model in sftof_replace_dict.keys():
+# 	sftof=glob.glob('sftof/'+sftof_replace_dict[model]+'.nc')[0]
+# else:
+# 	sftof=glob.glob('sftof/'+model+'.nc')[0]
+sftof='sftof/NorESM1-M.nc'
 
 if os.path.isfile('data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc') and style=='had4':
 	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc'
@@ -61,7 +62,7 @@ if style=='had4':
 
 
 
-# python blend-runnable/ncblendhadcrut-nc4.py data_models/ACCESS1-0_r1i1p1/tas_rcp85.nc data_models/ACCESS1-0_r1i1p1/tos_rcp85.nc data_models/ACCESS1-0_r1i1p1/sic_rcp85.nc sftof/ACCESS1-0.nc data/CRU_extended.nc data/SST_extended.nc > test.txt
+# python blend-runnable/ncblendmask-nc4.py xax data_models/CanESM2_r1i1p1/tas_rcp85.nc data_models/CanESM2_r1i1p1/tos_rcp85.nc data_models/CanESM2_r1i1p1/sic_rcp85.nc sftof/GFDL-CM3.nc > test.txt
 
 # python blend-runnable/ncblendhadcrut-nc4.py data_models/ACCESS1-0_r1i1p1/tas_rcp85_merged.nc data_models/ACCESS1-0_r1i1p1/tos_rcp85_merged.nc data_models/ACCESS1-0_r1i1p1/sic_rcp85_merged.nc sftof/ACCESS1-0.nc data/CRU_extended_old.nc data/SST_extended_old.nc > test.txt
 

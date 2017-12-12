@@ -33,16 +33,15 @@ for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended 
 			tmp=pd.read_table(cowtan_file,sep=' ',header=None)
 			tmp.columns=['time','air','gmt','diff']
 			perc_diff=(gmt[style,'rcp85',model_run,var,1861:2100].values-np.array(tmp[var]))
-			if np.nanmean(np.abs(perc_diff))<0.01:
+			if np.nanmean(np.abs(perc_diff))<0.01 and np.nanmean(np.abs(perc_diff[-100:-1]))<0.001:
 			    ax[0,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
 			    ax[0,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
+			elif np.nanmean(np.abs(perc_diff[-100:-1]))>0.001 and np.nanmean(np.abs(perc_diff))<0.01:
+				ax[1,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
+				ax[1,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
 			else:
-				if np.nanmean(np.abs(perc_diff[-100:-1]))>0.01 and np.nanmean(np.abs(perc_diff))<0.1:
-				    ax[1,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
-				    ax[1,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
-				else:
-				    ax[2,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
-				    ax[2,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
+				ax[2,0].plot(np.array(tmp['time']),perc_diff,color=color, linestyle=linestyle,marker=marker,label=model_run)
+				ax[2,1].plot(range(3),color=color, linestyle=linestyle,marker=marker,label=model_run)
 		else:
 			subax.plot(range(3),color='k',label=model_run)
 
@@ -50,26 +49,26 @@ for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended 
 	# 	if model_run in gmt.model_run and np.isfinite(np.nanmean(gmt['had4','rcp85',model_run,'gmt',:].values))==False:
 	# 		subax.plot(range(3),color='k',label=model_run)
 
-	ax[0,0].set_ylim((-0.1,0.1))
+	ax[0,0].set_ylim((-0.01,0.01))
 	ax[0,0].set_ylabel('deviation from Cowtan2015')
 	ax[0,1].axis('off')
 	ax[0,1].set_ylim((-99,-98))
 	ax[0,1].legend(loc='upper left',ncol=2,fontsize=7)
-	ax[0,0].set_title(('mean deviation < 0.05'))
+	ax[0,0].set_title(('mean deviation < 0.01'))
 
-	ax[1,0].set_ylim((-1,1))
+	ax[1,0].set_ylim((-0.01,0.01))
 	ax[1,0].set_ylabel('deviation from Cowtan2015')
 	ax[1,1].axis('off')
 	ax[1,1].set_ylim((-99,-98))
 	ax[1,1].legend(loc='upper left',ncol=2,fontsize=7)
-	ax[1,0].set_title(('mean deviation > 0.05'))
+	ax[1,0].set_title(('trend'))
 
 	ax[2,0].set_ylim((-1,1))
 	ax[2,0].set_ylabel('deviation from Cowtan2015')
 	ax[2,1].axis('off')
 	ax[2,1].set_ylim((-99,-98))
 	ax[2,1].legend(loc='upper left',ncol=2,fontsize=7)
-	ax[2,0].set_title(('mean deviation > 0.05'))
+	ax[2,0].set_title(('completely off'))
 
 	subax.set_ylim((-99,-98))
 	subax.axis('off')
@@ -194,7 +193,7 @@ for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended 
 #
 #
 #
-# gmt=da.read_nc('data/gmt_all_old_mask.nc')['gmt']
+# gmt=da.read_nc('data/gmt_all.nc')['gmt']
 # for model_run,(marker,linestyle,color) in zip(sorted(gmt.model_run),itertools.product(m_styles,l_styles, colormap)):
 # 	if np.isfinite(np.nanmean(gmt['had4','rcp85',model_run,'gmt',:].values)):
 # 		tmp=pd.read_table('blend-results.160518/rcp85-had4/rcp85_'+model_run+'.temp',sep=' ',header=None)
