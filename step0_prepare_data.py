@@ -15,7 +15,7 @@ except:
 try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
 except:
-	job_id=0
+	job_id=int(sys.argv[1])
 
 overwrite=True
 
@@ -44,7 +44,7 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 	if len(scenario_files)!=0 and (os.path.isfile(var+'_'+scenario+'.nc')==False or overwrite):
 		for file_name in scenario_files+hist_files:
 			print file_name
-			if var in 'tos','sic':
+			if var in ['tos','sic']:
 				command+='-mul sftof_NaN1.nc '+file_name+' '
 			else:
 				command+=file_name+' '
