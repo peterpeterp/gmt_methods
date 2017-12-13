@@ -18,8 +18,6 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 	model=folder.split('_')[0]
 	run=folder.split('_')[1]
 	model_run=model+'_'+run
-	print model
-	print run
 
 	rel_path='data_models/'+model_run+'/'
 

@@ -15,7 +15,7 @@ except:
 try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
 except:
-	job_id=39
+	job_id=1
 
 overwrite=True
 
@@ -44,11 +44,14 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 	if len(scenario_files)!=0 and (os.path.isfile(var+'_'+scenario+'.nc')==False or overwrite):
 		for file_name in scenario_files+hist_files:
 			print file_name
-			command+=file_name+' '
+			if var in 'tos','sic':
+				command+='-mul sftof_NaN1.nc '+file_name+' '
+			else:
+				command+=file_name+' '
 		Popen(command+'tmp_m_'+var+'.nc',shell=True).wait()
 
 		Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
-		Popen('cdo -O remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
+		Popen('cdo -O remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'_.nc',shell=True).wait()
 		#Popen('cdo -O remapnn,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
 		Popen('rm tmp_s_'+var+'.nc tmp_m_'+var+'.nc',shell=True).wait()
 	if len(scenario_files)==0:
