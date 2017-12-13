@@ -35,7 +35,7 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 	if os.path.isfile(rel_path+'sftof_raw.nc'):
 
 		Popen("cdo -expr,'sftof=(sftof>0.0)?1.0:sftof;' "+rel_path+"sftof_raw.nc "+rel_path+"sftof_01.nc",shell=True).wait()
-		Popen("cdo -expr,'sftof=(sftof<1.0)?NaN:sftof;' "+rel_path+"sftof_01.nc "+rel_path+"sftof_NaN1.nc",shell=True).wait()
+		Popen("cdo -setmissval,0 "+rel_path+"sftof_01.nc "+rel_path+"sftof_NaN1.nc",shell=True).wait()
 
 		Popen("cdo remapdis,blend-runnable/grid1x1.cdo "+rel_path+"sftof_01.nc "+rel_path+"sftof_01_1x1.nc",shell=True).wait()
 		Popen("cdo remapdis,blend-runnable/grid1x1.cdo "+rel_path+"sftof_NaN1.nc "+rel_path+"sftof_NaN1_1x1.nc",shell=True).wait()
