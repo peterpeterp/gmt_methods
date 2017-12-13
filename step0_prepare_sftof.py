@@ -23,17 +23,18 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 
 	rel_path='data_models/'+model_run+'/'
 
-	if model in [ff.split('_')[-3] for ff in glob.glob('sftof/sftof_fx_*_historical_r0i0p0.nc')]:
-		Popen('cp sftof/sftof_fx_'+model+'_historical_r0i0p0.nc '+rel_path+'sftof_raw.nc',shell=True).wait()
-
-	elif model in [ff.split('_')[-3] for ff in glob.glob('sftof/sftof_*_from_sftlft.nc')]:
-		Popen('cp sftof/sftof_'+model+'_from_sftlft.nc '+rel_path+'sftof_raw.nc',shell=True).wait()
-
-	else:
-		print 'issue'
-		missing_sftof.write(model_run+'\n')
+	# if model in [ff.split('_')[-3] for ff in glob.glob('sftof/sftof_fx_*_historical_r0i0p0.nc')]:
+	# 	Popen('cp sftof/sftof_fx_'+model+'_historical_r0i0p0.nc '+rel_path+'sftof_raw.nc',shell=True).wait()
+    #
+	# elif model in [ff.split('_')[-3] for ff in glob.glob('sftof/sftof_*_from_sftlft.nc')]:
+	# 	Popen('cp sftof/sftof_'+model+'_from_sftlft.nc '+rel_path+'sftof_raw.nc',shell=True).wait()
+    #
+	# else:
+	# 	print 'issue'
+	# 	missing_sftof.write(model_run+'\n')
 
 	if os.path.isfile(rel_path+'sftof_raw.nc'):
+		print 'hio'
 		Popen('cdo remapdis,blend-runnable/grid1x1.cdo data_models/'+model_run+'/tas_rcp85.nc sftof_01_1x1.nc')
 		asdasd
 
