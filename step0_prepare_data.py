@@ -15,7 +15,7 @@ except:
 try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
 except:
-	job_id=1
+	job_id=0
 
 overwrite=True
 
