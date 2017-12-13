@@ -20,16 +20,14 @@ for model_run in gmt.model_run:
 		tmp=da.read_nc('sftof/sftof_fx_'+model_run.split('_')[0]+'_historical_r0i0p0.nc')
 		try:
 			grid_sizes.append(tmp['i'].shape[0]*tmp['j'].shape[0])
-			print model_run, 'i-j'
 		except:
 			grid_sizes.append(tmp['lat'].shape[0]*tmp['lon'].shape[0])
-			print model_run, 'lat-lon'
 	except:
 		grid_sizes.append(0)
 
 model_runs_df=pd.DataFrame(np.array([gmt.model_run,grid_sizes]).T,columns=['name','size'])
 
-for sftof_style in ['_remapdis_50','_remapdis_0','_remapdis_100','_remapdis','_remapnn']:
+for sftof_style in ['_remapbil','_remapdis_50','_remapdis_0','_remapdis_100','_remapdis','_remapnn']:
 	gmt=da.read_nc('data/gmt_all'+sftof_style+'.nc')['gmt']
 	for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended air/sea temperature, unmasked, temperature anomalies, variable ice']):
 		plt.close()

@@ -10,7 +10,33 @@ try:
 except:
 	os.chdir('/Users/peterpfleiderer/Documents/Projects/gmt')
 
-print [ff.split('_')[-3] for ff in glob.glob('sftof/sftof_fx_*_historical_r0i0p0.nc')]
+
+for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
+
+	os.chdir('data_models/'+model_run+'/')
+
+	print folder
+	model=folder.split('_')[0]
+	run=folder.split('_')[1]
+	model_run=model+'_'+run
+
+	if model in [ff.split('_')[-3] for ff in glob.glob('../../sftof/sftof_fx_*_historical_r0i0p0.nc')]:
+		Popen('cp ../../sftof/sftof_fx_'+model+'_historical_r0i0p0.nc sftof_raw.nc',shell=True).wait()
+
+	elif model in [ff.split('_')[-3] for ff in glob.glob('../../sftof/sftof_*_from_sftlft.nc')]:
+		Popen('cp ../../sftof/sftof_'+model+'_from_sftlft.nc sftof_raw.nc',shell=True).wait()
+
+
+	Popen("cdo -expr,'sftof=(sftof<1.0)?0.0:sftof;' -expr,'sftof=(sftof>0.0)?1.0:sftof;' sftof_raw.nc sftof_01.nc")
+	Popen("cdo -expr,'sftof=(sftof<1.0)?NaN:sftof;' sftof_01.nc sftof_NaN1.nc")
+
+	Popen("cdo remapdis,../../blend-runnable/grid1x1.cdo sftof_01.nc sftof_01_1x1.nc")
+	Popen("cdo remapdis,../../blend-runnable/grid1x1.cdo sftof_NaN1.nc sftof_NaN1_1x1.nc")
+
+
+
+	os.chdir('../../')
+
 
 #
 # for file_name in glob.glob('sftof/sftof_fx_*_historical_r0i0p0.nc'):
@@ -18,17 +44,17 @@ print [ff.split('_')[-3] for ff in glob.glob('sftof/sftof_fx_*_historical_r0i0p0
 # 	Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'_remapdis.nc',shell=True).wait()
 # 	Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+model+'_remapnn.nc',shell=True).wait()
 
-for file_name in glob.glob('sftof/sftof_fx_*.nc'):
-	# Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+file_name.split('_')[2]+'_remapdis.nc',shell=True).wait()
-	Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+file_name.split('_')[2]+'_remapnn.nc',shell=True).wait()
-	Popen('cdo remapbil,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+file_name.split('_')[2]+'_remapbil.nc',shell=True).wait()
+# for file_name in glob.glob('sftof/sftof_fx_*.nc'):
+# 	# Popen('cdo remapdis,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+file_name.split('_')[2]+'_remapdis.nc',shell=True).wait()
+# 	Popen('cdo remapnn,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+file_name.split('_')[2]+'_remapnn.nc',shell=True).wait()
+# 	Popen('cdo remapbil,blend-runnable/grid1x1.cdo '+file_name+' sftof/'+file_name.split('_')[2]+'_remapbil.nc',shell=True).wait()
 
 	# Popen("cdo -expr,'sftof=(sftof<100.0)?0.0:sftof;'  sftof/"+file_name.split('_')[2]+'_remapdis.nc sftof/'+file_name.split('_')[2]+'_remapdis_0.nc',shell=True).wait()
 	# Popen("cdo -expr,'sftof=(sftof>0.0)?100.0:sftof;' sftof/"+file_name.split('_')[2]+'_remapdis.nc sftof/'+file_name.split('_')[2]+'_remapdis_100.nc',shell=True).wait()
 	# Popen("cdo -expr,'sftof=(sftof<50.0)?0.0:sftof;' -expr,'sftof=(sftof>50.0)?100.0:sftof;' sftof/"+file_name.split('_')[2]+'_remapdis.nc sftof/'+file_name.split('_')[2]+'_remapdis_50.nc',shell=True).wait()
 
 
-
+# using sftlf
 # for model in [ff.split('/')[-1] for ff in glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/fx/sftlf/*')]:
 # 	if model not in [ff.split('_')[-2] for ff in  glob.glob('sftof/sftof_fx_*_historical_r0i0p0.nc')]:
 # 		in_file=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/fx/sftlf/'+model+'/*/*')[0]
