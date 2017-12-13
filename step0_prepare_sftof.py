@@ -35,6 +35,7 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 
 	if os.path.isfile(rel_path+'sftof_raw.nc'):
 		print 'hio'
+		print 'data_models/'+model_run+'/tas_rcp85.nc'
 		Popen('cdo remapdis,blend-runnable/grid1x1.cdo data_models/'+model_run+'/tas_rcp85.nc sftof_01_1x1.nc')
 		asdasd
 
