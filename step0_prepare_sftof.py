@@ -18,6 +18,8 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 	model=folder.split('_')[0]
 	run=folder.split('_')[1]
 	model_run=model+'_'+run
+	print model
+	print run
 
 	rel_path='data_models/'+model_run+'/'
 
@@ -28,6 +30,7 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 		Popen('cp sftof/sftof_'+model+'_from_sftlft.nc '+rel_path+'sftof_raw.nc',shell=True).wait()
 
 	else:
+		print 'issue'
 		missing_sftof.write(model_run+'\n')
 
 	if os.path.isfile(rel_path+'sftof_raw.nc'):
