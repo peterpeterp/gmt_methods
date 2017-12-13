@@ -12,13 +12,12 @@ except:
 
 
 for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
-
-	os.chdir('data_models/'+model_run+'/')
-
 	print folder
 	model=folder.split('_')[0]
 	run=folder.split('_')[1]
 	model_run=model+'_'+run
+
+	os.chdir('data_models/'+model_run+'/')
 
 	if model in [ff.split('_')[-3] for ff in glob.glob('../../sftof/sftof_fx_*_historical_r0i0p0.nc')]:
 		Popen('cp ../../sftof/sftof_fx_'+model+'_historical_r0i0p0.nc sftof_raw.nc',shell=True).wait()
