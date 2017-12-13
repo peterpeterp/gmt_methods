@@ -31,6 +31,7 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 		missing_sftof.write(model_run+'\n')
 
 	if os.path.isfile('sftof_raw.nc'):
+		print os.system('ls')
 		Popen("cdo -expr,'sftof=(sftof<1.0)?0.0:sftof;' -expr,'sftof=(sftof>0.0)?1.0:sftof;' sftof_raw.nc sftof_01.nc")
 		Popen("cdo -expr,'sftof=(sftof<1.0)?NaN:sftof;' sftof_01.nc sftof_NaN1.nc")
 
