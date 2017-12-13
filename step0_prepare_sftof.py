@@ -19,28 +19,25 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 	run=folder.split('_')[1]
 	model_run=model+'_'+run
 
-	os.chdir('data_models/'+model_run+'/')
+	rel_path='data_models/'+model_run+'/'
 
-	if model in [ff.split('_')[-3] for ff in glob.glob('../../sftof/sftof_fx_*_historical_r0i0p0.nc')]:
-		Popen('cp ../../sftof/sftof_fx_'+model+'_historical_r0i0p0.nc sftof_raw.nc',shell=True).wait()
+	if model in [ff.split('_')[-3] for ff in glob.glob('sftof/sftof_fx_*_historical_r0i0p0.nc')]:
+		Popen('cp sftof/sftof_fx_'+model+'_historical_r0i0p0.nc '+rel_path+'sftof_raw.nc',shell=True).wait()
 
-	elif model in [ff.split('_')[-3] for ff in glob.glob('../../sftof/sftof_*_from_sftlft.nc')]:
-		Popen('cp ../../sftof/sftof_'+model+'_from_sftlft.nc sftof_raw.nc',shell=True).wait()
+	elif model in [ff.split('_')[-3] for ff in glob.glob('sftof/sftof_*_from_sftlft.nc')]:
+		Popen('cp sftof/sftof_'+model+'_from_sftlft.nc '+rel_path+'sftof_raw.nc',shell=True).wait()
 
 	else:
 		missing_sftof.write(model_run+'\n')
 
-	if os.path.isfile('sftof_raw.nc'):
-		print os.system('ls')
-		Popen("cdo -expr,'sftof=(sftof<1.0)?0.0:sftof;' -expr,'sftof=(sftof>0.0)?1.0:sftof;' sftof_raw.nc sftof_01.nc")
-		Popen("cdo -expr,'sftof=(sftof<1.0)?NaN:sftof;' sftof_01.nc sftof_NaN1.nc")
+	if os.path.isfile(rel_path+'sftof_raw.nc'):
+		Popen("cdo -expr,'sftof=(sftof<1.0)?0.0:sftof;' -expr,'sftof=(sftof>0.0)?1.0:sftof;' "+rel_path+"sftof_raw.nc "+rel_path+"sftof_01.nc")
+		Popen("cdo -expr,'sftof=(sftof<1.0)?NaN:sftof;' "+rel_path+"sftof_01.nc "+rel_path+"sftof_NaN1.nc")
 
-		Popen("cdo remapdis,../../blend-runnable/grid1x1.cdo sftof_01.nc sftof_01_1x1.nc")
-		Popen("cdo remapdis,../../blend-runnable/grid1x1.cdo sftof_NaN1.nc sftof_NaN1_1x1.nc")
-
+		Popen("cdo remapdis,blend-runnable/grid1x1.cdo "+rel_path+"sftof_01.nc "+rel_path+"sftof_01_1x1.nc")
+		Popen("cdo remapdis,blend-runnable/grid1x1.cdo "+rel_path+"sftof_NaN1.nc "+rel_path+"sftof_NaN1_1x1.nc")
 
 
-	os.chdir('../../')
 
 
 missing_sftof.close()
