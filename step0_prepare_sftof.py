@@ -31,7 +31,7 @@ for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 		missing_sftof.write(model_run+'\n')
 
 	if os.path.isfile(rel_path+'sftof_raw.nc'):
-		Popen("cdo remapdis,blend-runnable/grid1x1.cdo data_models/"+model_run+"/sftof_raw.nc sftof_01_1x1.nc")
+		Popen('cdo remapdis,blend-runnable/grid1x1.cdo data_models/'+model_run+'/sftof_raw.nc sftof_01_1x1.nc')
 		asdasd
 
 		Popen("cdo -expr,'sftof=(sftof>0.0)?1.0:sftof;' "+rel_path+"sftof_raw.nc "+rel_path+"sftof_01.nc")
