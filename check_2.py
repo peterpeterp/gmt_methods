@@ -33,7 +33,7 @@ for sftof_style in ['_remapbil','_remapdis_50','_remapdis_0','_remapdis_100','_r
 		plt.close()
 		fig,axes=plt.subplots(nrows=9,ncols=10,figsize=(12,15))
 		axes=axes.flatten()
-		for model_run,ax,i in zip(model_runs_df.sort_values(by=['size'],ascending=False)['name'],axes[0:len(gmt.model_run)],range(len(gmt.model_run))):
+		for model_run,ax,i in zip(model_runs_df.sort_values(by=['name'],ascending=False)['name'],axes[0:len(gmt.model_run)],range(len(gmt.model_run))):
 			cowtan_file='blend-results.160518/rcp85-'+style+'/rcp85_'+model_run+'.temp'
 			if np.isfinite(np.nanmean(gmt[style,'rcp85',model_run,'gmt',:].values)) and os.path.isfile(cowtan_file):
 				tmp=pd.read_table(cowtan_file,sep=' ',header=None)
@@ -56,4 +56,4 @@ for sftof_style in ['_remapbil','_remapdis_50','_remapdis_0','_remapdis_100','_r
 			ax.axis('off')
 
 		plt.suptitle(title)
-		plt.savefig('plots/check_'+style+'_'+var+'_detail_'+sftof_style+'.png')
+		plt.savefig('plots/check_'+style+'_'+var+'_detail'+sftof_style+'.png')
