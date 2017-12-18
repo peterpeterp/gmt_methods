@@ -37,7 +37,7 @@ def downscale( data, w ):
 
 # MAIN PROGRAM
 # read tas.nc
-nc = netCDF4.Dataset(sys.argv[2], "r")
+nc = netCDF4.Dataset(sys.argv[1], "r")
 print >> sys.stderr, nc.variables.keys()
 lats1 = nc.variables["lat"][:]
 lons1 = nc.variables["lon"][:]
@@ -55,7 +55,7 @@ dates_tas=year+month
 nc.close()
 
 # read tos.nc
-nc = netCDF4.Dataset(sys.argv[3], "r")
+nc = netCDF4.Dataset(sys.argv[2], "r")
 print >> sys.stderr, nc.variables.keys()
 lats2 = nc.variables["lat"][:]
 lons2 = nc.variables["lon"][:]
@@ -73,7 +73,7 @@ dates_tos=year+month
 nc.close()
 
 # read sic.nc
-nc = netCDF4.Dataset(sys.argv[4], "r")
+nc = netCDF4.Dataset(sys.argv[3], "r")
 print >> sys.stderr, nc.variables.keys()
 lats3 = nc.variables["lat"][:]
 lons3 = nc.variables["lon"][:]
