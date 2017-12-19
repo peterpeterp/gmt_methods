@@ -27,7 +27,7 @@ for model_run in gmt.model_run:
 
 model_runs_df=pd.DataFrame(np.array([gmt.model_run,grid_sizes]).T,columns=['name','size'])
 
-for sftof_style in ['_remapbil','_remapdis_50','_remapdis_0','_remapdis_100','_remapdis','_remapnn']:
+for sftof_style in ['_remapdis']:
 	gmt=da.read_nc('data/gmt_all'+sftof_style+'.nc')['gmt']
 	for style,var,title in zip(['xax','xax'],['air','gmt'],['SAT unmasked','Blended air/sea temperature, unmasked, temperature anomalies, variable ice']):
 		plt.close()
@@ -42,7 +42,7 @@ for sftof_style in ['_remapbil','_remapdis_50','_remapdis_0','_remapdis_100','_r
 				ax.plot(np.array(tmp['time']),perc_diff)
 				if model_run=='ACCESS1-0_r1i1p1':
 					print perc_diff
-			ax.text(1853,0.04,model_run.replace('_','\n'),fontsize=8)
+				ax.text(1853,0.04,model_run.replace('_','\n'),fontsize=8)
 			ax.set_xlim((1850,2100))
 			ax.set_ylim((-0.05,0.05))
 			ax.get_xaxis().set_visible(False)
@@ -56,4 +56,4 @@ for sftof_style in ['_remapbil','_remapdis_50','_remapdis_0','_remapdis_100','_r
 			ax.axis('off')
 
 		plt.suptitle(title)
-		plt.savefig('plots/check_'+style+'_'+var+'_detail'+sftof_style+'.png')
+		plt.savefig('plots/check/check_'+style+'_'+var+'_detail'+sftof_style+'.png')
