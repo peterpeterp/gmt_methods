@@ -7,8 +7,8 @@ import itertools
 import matplotlib
 import seaborn as sns
 
-gmt=da.read_nc('data/gmt_plot_ready.nc')['gmt']
-gmt_qu=da.read_nc('data/gmt_quantiles.nc')['gmt_qu']
+gmt=da.read_nc('data/old/gmt_plot_ready_old.nc')['gmt']
+gmt_qu=da.read_nc('data/old/gmt_quantiles_old.nc')['gmt_qu']
 
 # FIG 1
 plot_dict={

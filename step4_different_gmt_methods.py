@@ -8,28 +8,11 @@ import matplotlib
 from scipy import stats
 import seaborn as sns
 
-gmt_all=da.read_nc('data/gmt.nc')['gmt']
-
-models=list(gmt_all.model)
-models.remove('CESM1-CAM5')
-models.remove('MIROC5')
-models.remove('BNU-ESM')
-models.remove('bcc-csm1-1-m')
-
-gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
-
-ensemble=open('ensemble.txt','w')
-for scenario in gmt_.scenario:
-	ensemble.write(scenario+':\n')
-	for model in sorted(gmt_.model):
-		if np.isfinite(np.nanmean(gmt_['had4',scenario,model,'gmt',:])):
-			ensemble.write(model+'\t')
-	ensemble.write('\n')
-ensemble.close()
+gmt_=da.read_nc('data/gmt_model.nc')['gmt']
 
 # new gmt names new dimarray
 styles=['gmt_ar5','gmt_sat','gmt_millar','gmt_bm','gmt_b','gmt_1','gmt_1.1']
-gmt__=da.DimArray(axes=[['rcp85'],models,styles,gmt_.time],dims=['scenario','model','style','time'])
+gmt__=da.DimArray(axes=[['rcp85'],gmt_.model,styles,gmt_.time],dims=['scenario','model','style','time'])
 
 # reference periods
 ref_preindustrial=gmt__.time[(gmt__.time>1850) & (gmt__.time<1900)]
@@ -61,7 +44,7 @@ for style in gmt__.style:
 	print style,np.nanmean(gmt__['rcp85',:,style,1986:2006])
 
 # yearly values
-gmt=da.DimArray(axes=[['rcp85'],models,styles,np.arange(1850,2100,1)],dims=['scenario','model','style','time'])
+gmt=da.DimArray(axes=[['rcp85'],gmt_.model,styles,np.arange(1850,2100,1)],dims=['scenario','model','style','time'])
 for model in gmt.model:
 	for style in gmt.style:
 		for year in gmt.time:
