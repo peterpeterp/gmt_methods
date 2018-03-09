@@ -14,9 +14,18 @@ except:
 	job_id=int(sys.argv[1])
 	style='had4'
 
+if model in ['CanESM2','IPSL-CM5A-LR','IPSL-CM5A-MR','IPSL-CM5B-LR']:
+	asdasd
+
 scenario = 'rcp85'
 
-sftof_replace_dict={'HadGEM2-AO':'HadGEM2-ES','GISS-E2-R-CC':'GISS-E2-R','GISS-E2-H-CC':'GISS-E2-H'}
+sftof_replace_dict={'HadGEM2-AO':'HadGEM2-ES',
+					'GISS-E2-R-CC':'GISS-E2-R',
+					'GISS-E2-H-CC':'GISS-E2-H',
+					'CanESM2':'ACCESS1-0',
+					'IPSL-CM5A-LR':'ACCESS1-0',
+					'IPSL-CM5A-MR':'ACCESS1-0',
+					'IPSL-CM5B-LR':'ACCESS1-0'}
 
 print [fl.split('/')[-1] for fl in glob.glob('data_models/*')],len([fl.split('/')[-1] for fl in glob.glob('data_models/*')])
 folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][job_id]
