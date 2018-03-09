@@ -14,8 +14,6 @@ except:
 	job_id=int(sys.argv[1])
 	style='had4'
 
-if model in ['CanESM2','IPSL-CM5A-LR','IPSL-CM5A-MR','IPSL-CM5B-LR']:
-	asdasd
 
 scenario = 'rcp85'
 
@@ -33,6 +31,8 @@ print folder
 model=folder.split('_')[0]
 run=folder.split('_')[1]
 
+if model in ['CanESM2','IPSL-CM5A-LR','IPSL-CM5A-MR','IPSL-CM5B-LR']:
+	asdasd
 
 if os.path.isfile('data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc') and style=='had4':
 	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc'
