@@ -14,16 +14,31 @@ except:
 
 try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
+	overwrite=True
+	folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][job_id]
+	print folder
+	model=folder.split('_')[0]
+	run=folder.split('_')[1]
+	model_run=model+'_'+run
+
 except:
-	job_id=39
+	import argparse
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--verbosity",'-v', help="increase output verbosity",action="store_true")
+	parser.add_argument("--overwrite",'-o', help="overwrite output files",action="store_true")
+	parser.add_argument('--model','-m',help='model name',required=True)
+	parser.add_argument('--run','-r' ,help='run name',required=True)
+	args = parser.parse_args()
 
-overwrite=True
+	if args.overwrite:
+	    overwrite=True
+	else:
+	    overwrite=False
 
-folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][job_id]
-print folder
-model=folder.split('_')[0]
-run=folder.split('_')[1]
-model_run=model+'_'+run
+	model=args.model
+	run=args.run
+
+
 
 
 #Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
@@ -46,10 +61,21 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 			print file_name
 			command+=file_name+' '
 		Popen(command+'tmp_m_'+var+'.nc',shell=True).wait()
+		if var=='tos':
+			# check if "not-ocean-cells" are missing or 273.1 as in EC-EARTH
+			cdoinfo=Popen('cdo info tmp_m_'+var+'.nc',shell=True, stdout=subprocess.PIPE).stdout.read()
+			# reading one line of cdo info
+			# level=0 , if missing=0 the below condition is True
+			if len(cdoinfo.split('\n')[1].split(' 0 '))==3:
+				# change 273.15 to missing
+				Popen('cdo selyear,1850/2099 -setmissval,273.15 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
+			else:
+				Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 
-		Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
+		else:
+			Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
+
 		Popen('cdo -O remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
-		#Popen('cdo -O remapnn,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
 		Popen('rm tmp_s_'+var+'.nc tmp_m_'+var+'.nc',shell=True).wait()
 	if len(scenario_files)==0:
 		info=open('delete_here','w')
