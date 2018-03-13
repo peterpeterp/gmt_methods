@@ -74,6 +74,7 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 			cdoinfo=Popen('cdo info tmp_m_'+var+'.nc',shell=True, stdout=subprocess.PIPE).stdout.read()
 			# reading one line of cdo info
 			# level=0 , if missing=0 the below condition is True
+			# /!\ this condition might become a problem when there are other 0 appearing in the output
 			if len(cdoinfo.split('\n')[1].split(' 0 '))==3:
 				# change 273.15 to missing
 				Popen('cdo selyear,1850/2099 -setmissval,273.15 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
@@ -84,7 +85,7 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 			Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 
 		Popen('cdo -O remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
-		Popen('rm tmp_s_'+var+'.nc tmp_m_'+var+'.nc',shell=True).wait()
+		#Popen('rm tmp_s_'+var+'.nc tmp_m_'+var+'.nc',shell=True).wait()
 	if len(scenario_files)==0:
 		info=open('delete_here','w')
 		info.write('bla')
