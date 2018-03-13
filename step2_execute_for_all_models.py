@@ -39,6 +39,8 @@ except:
 
 scenario = 'rcp85'
 
+# some replacements because sftof missing
+# some replacements because of bad sftof file
 sftof_replace_dict={'HadGEM2-AO':'HadGEM2-ES',
 					'GISS-E2-R-CC':'GISS-E2-R',
 					'GISS-E2-H-CC':'GISS-E2-H',
@@ -49,6 +51,7 @@ sftof_replace_dict={'HadGEM2-AO':'HadGEM2-ES',
 
 
 
+# As the blending scripts struggle when the time axis isn't complete, I extended some files with nans (see step1_checkand extend_data.py)
 if os.path.isfile('data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc') and style=='had4':
 	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'_extended.nc'
 else:
@@ -65,7 +68,8 @@ else:
 	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'.nc'
 
 
-for sftof_style in ['_remapdis']:
+# this for loop was introduced to test the influence of different sftof remap styles - obsolete now
+for sftof_style in ['']:
 	if model in sftof_replace_dict.keys():
 		sftof='sftof/'+sftof_replace_dict[model]+sftof_style+'.nc'
 	else:
