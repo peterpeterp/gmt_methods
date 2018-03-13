@@ -1,4 +1,5 @@
 import os,glob,sys
+import subprocess
 from subprocess import Popen
 import numpy as np
 from netCDF4 import Dataset,netcdftime,num2date
@@ -20,14 +21,16 @@ try:
 	model=folder.split('_')[0]
 	run=folder.split('_')[1]
 	model_run=model+'_'+run
+	var_names=['tas','sic','tos']
+
 
 except:
 	import argparse
 	parser = argparse.ArgumentParser()
-	parser.add_argument("--verbosity",'-v', help="increase output verbosity",action="store_true")
 	parser.add_argument("--overwrite",'-o', help="overwrite output files",action="store_true")
 	parser.add_argument('--model','-m',help='model name',required=True)
 	parser.add_argument('--run','-r' ,help='run name',required=True)
+	parser.add_argument('--variable','-v' ,help='variables to prepare',nargs='+',required=False)
 	args = parser.parse_args()
 
 	if args.overwrite:
@@ -37,6 +40,11 @@ except:
 
 	model=args.model
 	run=args.run
+
+	if args.variable is not None:
+		var_names=args.variable
+	else:
+		var_names=['tas','sic','tos']
 
 
 
@@ -83,7 +91,8 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 		info.close()
 
 for scenario in ['rcp85']:
-	for var,group in zip(variable.keys(),variable.values()):
+	for var in var_names:
+		group=variable[var]
 		print scenario,var,group
 		print model,run
 		normal_procedure(model,run,scenario,group,var,overwrite)
