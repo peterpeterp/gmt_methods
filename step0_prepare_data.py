@@ -15,7 +15,7 @@ except:
 
 try:
 	job_id=int(os.environ.get('SLURM_ARRAY_TASK_ID'))
-	overwrite=True
+	overwrite=False
 	folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][job_id]
 	print folder
 	model=folder.split('_')[0]
