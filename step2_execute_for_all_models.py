@@ -10,6 +10,13 @@ try:
 		job_id-=90
 	else:
 		style='xax'
+
+	print [fl.split('/')[-1] for fl in glob.glob('data_models/*')],len([fl.split('/')[-1] for fl in glob.glob('data_models/*')])
+	folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][job_id]
+	print folder
+	model=folder.split('_')[0]
+	run=folder.split('_')[1]
+	
 except:
 	import argparse
 	parser = argparse.ArgumentParser()
@@ -40,11 +47,7 @@ sftof_replace_dict={'HadGEM2-AO':'HadGEM2-ES',
 					'IPSL-CM5A-MR':'ACCESS1-0',
 					'IPSL-CM5B-LR':'ACCESS1-0'}
 
-print [fl.split('/')[-1] for fl in glob.glob('data_models/*')],len([fl.split('/')[-1] for fl in glob.glob('data_models/*')])
-folder=[fl.split('/')[-1] for fl in glob.glob('data_models/*')][job_id]
-print folder
-model=folder.split('_')[0]
-run=folder.split('_')[1]
+
 
 if model in ['CanESM2','IPSL-CM5A-LR','IPSL-CM5A-MR','IPSL-CM5B-LR']:
 
