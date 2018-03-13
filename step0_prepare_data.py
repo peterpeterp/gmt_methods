@@ -61,7 +61,6 @@ os.system('export SKIP_SAME_TIME=1')
 
 variable={'tas':'Amon','sic':'OImon','tos':'Omon'}
 
-
 def normal_procedure(model,run,scenario,group,var,overwrite):
 	command='cdo -a mergetime '
 	hist_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/'+group+'/'+var+'/'+model+'/'+run+'/*')
@@ -78,8 +77,12 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 			# level=0 , if missing=0 the below condition is True
 			# /!\ this condition might become a problem when there are other 0 appearing in the output
 			if len(cdoinfo.split('\n')[1].split(' 0 '))==3:
-				# change 273.15 to missing
-				Popen('cdo selyear,1850/2099 -setmissval,273.15 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
+				if '0.0000' in cdoinfo.split('\n')[1].split(' '):
+					# change 0 to missing
+					Popen('cdo selyear,1850/2099 -setmissval,0 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
+				else:
+					# change 273.15 to missing
+					Popen('cdo selyear,1850/2099 -setmissval,273.15 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 			else:
 				Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 

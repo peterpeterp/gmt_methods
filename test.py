@@ -17,3 +17,4 @@ cdoinfo.split('\n')[1]
 
 
 cdoinfo=Popen('cdo info data_models/EC-EARTH_r1i1p1/tos.nc',shell=True, stdout=subprocess.PIPE).stdout.read()
+cdoinfo.split('\n')[1].split(' 0 ')
