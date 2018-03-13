@@ -11,8 +11,23 @@ try:
 	else:
 		style='xax'
 except:
-	job_id=int(sys.argv[1])
-	style='had4'
+	import argparse
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--overwrite",'-o', help="overwrite output files",action="store_true")
+	parser.add_argument('--model','-m',help='model name',required=True)
+	parser.add_argument('--run','-r' ,help='run name',required=True)
+	parser.add_argument('--style','-s' ,help='blending-masking style',required=True)
+	args = parser.parse_args()
+
+	if args.overwrite:
+	    overwrite=True
+	else:
+	    overwrite=False
+
+	model=args.model
+	run=args.run
+	style=args.style
+
 
 
 scenario = 'rcp85'
