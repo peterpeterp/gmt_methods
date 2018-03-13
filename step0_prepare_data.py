@@ -79,7 +79,8 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 			# /!\ this condition might become a problem when there are other 0 appearing in the output
 			if len(cdoinfo.split('\n')[1].split(' 0 '))==3:
 				# change 273.15 to missing
-				Popen('cdo selyear,1850/2099 -m 1.0e20 setrtomiss,273.14,273.16 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
+				Popen('cdo -m 1.0e20 setrtomiss,273.14,273.16 tmp_m_'+var+'.nc tmp_masked_'+var+'.nc',shell=True).wait()
+				Popen('cdo selyear,1850/2099 tmp_masked_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 			else:
 				Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 
