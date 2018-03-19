@@ -21,6 +21,9 @@ styles=['xax','had4']
 
 variables=['air','gmt']
 
+# execute this to delete failed files
+# find data_models/*/ -name "*.txt" -size -99 -exec rm {} \;
+
 #for sftof_style in ['_remapdis_50','_remapdis_0','_remapdis_100','_remapdis','_remapnn','_remapbil']:
 for sftof_style in ['']:
 	tmp_example=pd.read_table('data_models/ACCESS1-0_r1i1p1/had4_rcp85.txt',sep=' ',header=None)
