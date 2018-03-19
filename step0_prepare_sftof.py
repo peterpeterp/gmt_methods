@@ -10,7 +10,6 @@ try:
 except:
 	os.chdir('/Users/peterpfleiderer/Documents/Projects/gmt')
 
-missing_sftof=open('missing_sftof.txt','w')
 
 for file_name in glob.glob('sftof_raw/sftof_fx_*_historical_r0i0p0.nc'):
 	model=file_name.split('_')[-3]
@@ -20,7 +19,9 @@ for file_name in glob.glob('sftof_raw/sftof_fx_*_historical_r0i0p0.nc'):
 missing_sftof=open('missing_sftof.txt','w')
 for folder in [fl.split('/')[-1] for fl in glob.glob('data_models/*')]:
 	model=folder.split('_')[0]
-	if model not in [ff.split('/')[-1] for ff in glob.glob('sftof/*')]:
+	run=folder.split('_')[1]
+	model_run=model+'_'+run
+	if model not in [ff.split('/')[-1].split('.')[0] for ff in glob.glob('sftof/*')]:
 		missing_sftof.write(model_run+'\n')
 missing_sftof.close()
 
