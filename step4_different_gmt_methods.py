@@ -97,7 +97,7 @@ for x_method in ['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']:
 		if y_method==x_method:
 			conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],2))+'\t')
 		else:
-			conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],2))+' ('+str(round(gmt_qu[scenario,x_method,y_method,1.5,1/6.*100],2))+'-'+str(round(gmt_qu[scenario,x_method,y_method,1.5,5/6.*100],2))+')\t')
+			conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],2))+' ('+str(round(gmt_qu[scenario,x_method,y_method,1.5,0],2))+'-'+str(round(gmt_qu[scenario,x_method,y_method,1.5,100],2))+')\t')
 conversion_table.close()
 
 # conversion table precise
@@ -118,7 +118,7 @@ for x_method in styles:
 		if y_method==x_method:
 			conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],2))+'\t')
 		else:
-			conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],2))+' ('+str(round(gmt_qu[scenario,x_method,y_method,1.5,1/6.*100],2))+'-'+str(round(gmt_qu[scenario,x_method,y_method,1.5,5/6.*100],2))+')\t')
+			conversion_table.write(str(round(gmt_qu[scenario,x_method,y_method,1.5,50],2))+' ('+str(round(gmt_qu[scenario,x_method,y_method,1.5,0],2))+'-'+str(round(gmt_qu[scenario,x_method,y_method,1.5,100],2))+')\t')
 conversion_table.close()
 
 

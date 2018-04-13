@@ -36,13 +36,13 @@ varin_dict={
     'RX5':{'var_name':'RX5DAY','longname':'Cold extremes (RX5)','unit':'RX5DAY [$^\circ$ C]','cut_interval':[-30,45],'nc_name':'highest_five_day_precipitation_amount_per_time_period'}
     }
 
-gmt_all=da.read_nc('data/gmt.nc')['gmt']
+gmt_all=da.read_nc('data/gmt_model.nc')['gmt']
 models=list(gmt_all.model)
-models.remove('CESM1-CAM5')
-models.remove('MIROC5')
-models.remove('BNU-ESM')
-models.remove('bcc-csm1-1-m')
-gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
+# #models.remove('CESM1-CAM5')
+# #models.remove('MIROC5')
+# models.remove('BNU-ESM')
+# models.remove('bcc-csm1-1-m')
+# gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
 
 wlvls=da.read_nc('data/wlvls.nc')['wlvls']
 
