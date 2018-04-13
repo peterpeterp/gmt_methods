@@ -8,39 +8,58 @@ import matplotlib
 from scipy import stats
 import seaborn as sns
 
+def running_mean_func(xx,N):
+	if N==1:
+		return xx
+	if N!=1:
+	    x=np.ma.masked_invalid(xx.copy())
+	    ru_mean=x.copy()*np.nan
+	    for t in range(int(N/2),len(x)-int(N/2)):
+	        ru_mean[t]=np.nanmean(x[t-int(N/2):t+int(N/2)])
+	    return ru_mean
+
 gmt_raw=da.read_nc('data/gmt_model.nc')['gmt']
 
 # new gmt names new dimarray
 styles=['gmt_ar5','gmt_sat','gmt_millar','gmt_bm','gmt_b','gmt_1','gmt_1.1']
-gmt=da.DimArray(axes=[['rcp85'],gmt_raw.model,styles,gmt_raw.time],dims=['scenario','model','style','time'])
+gmt_m=da.DimArray(axes=[['rcp85'],gmt_raw.model,styles,gmt_raw.time],dims=['scenario','model','style','time'])
 
 # reference periods
-for scenario in gmt.scenario:
-	for model in gmt.model:
-		# anomalies to preindustrial
-		gmt[scenario,model,'gmt_sat',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',1861:1880])
-		gmt[scenario,model,'gmt_bm',:]=np.array(gmt_raw['had4',scenario,model,'gmt',:])-np.nanmean(gmt_raw['had4',scenario,model,'gmt',1861:1880])
-		gmt[scenario,model,'gmt_b',:]=np.array(gmt_raw['xax',scenario,model,'gmt',:])-np.nanmean(gmt_raw['xax',scenario,model,'gmt',1861:1880])
+ref_preindustrial=gmt_m.time[(gmt_m.time>=1861) & (gmt_m.time<1881)]
+ref_ar5=gmt_m.time[(gmt_m.time>=1986) & (gmt_m.time<2006)]
+ref_millar=gmt_m.time[(gmt_m.time>=2010) & (gmt_m.time<2020)]
 
-		# anomalies as in AR5
-		gmt[scenario,model,'gmt_ar5',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',1986:2005])+0.61
+for style in gmt_m.style:
+	for scenario in gmt_m.scenario:
+		for model in gmt_m.model:
+			# anomalies to preindustrial
+			gmt_m[scenario,model,'gmt_sat',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',ref_preindustrial])
+			gmt_m[scenario,model,'gmt_bm',:]=np.array(gmt_raw['had4',scenario,model,'gmt',:])-np.nanmean(gmt_raw['had4',scenario,model,'gmt',ref_preindustrial])
+			gmt_m[scenario,model,'gmt_b',:]=np.array(gmt_raw['xax',scenario,model,'gmt',:])-np.nanmean(gmt_raw['xax',scenario,model,'gmt',ref_preindustrial])
 
-		# Millar like
-		gmt[scenario,model,'gmt_millar',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',2010:2019])+0.93
-		gmt[scenario,model,'gmt_1',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',2010:2019])+1
-		gmt[scenario,model,'gmt_1.1',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',2010:2019])+1.1
+			# anomalies as in AR5
+			gmt_m[scenario,model,'gmt_ar5',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',ref_ar5])+0.61
+
+			# Millar like
+			gmt_m[scenario,model,'gmt_millar',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',ref_millar])+0.93
+			gmt_m[scenario,model,'gmt_1',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',ref_millar])+1
+			gmt_m[scenario,model,'gmt_1.1',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',ref_millar])+1.1
+
+gmt_ru20=da.DimArray(axes=[['rcp85'],gmt_raw.model,styles,gmt_raw.time],dims=['scenario','model','style','time'])
+for scenario in gmt_m.scenario:
+	for model in gmt_m.model:
+		for style in gmt_m.style:
+			gmt_ru20[scenario,model,style,:]=running_mean_func(gmt_m[scenario,model,style,:],20)
+
+
 
 print '2010-2019'
-for style in gmt.style:
-	print style,np.nanmean(gmt['rcp85',:,style,2010:2019])
+for style in gmt_ru20.style:
+	print style,np.nanmean(gmt_ru20['rcp85',:,style,2010:2020])
 
 print '1986-2005'
-for style in gmt.style:
-	print style,np.nanmean(gmt['rcp85',:,style,1986:2005])
-
-print '2000-2009'
-for style in gmt.style:
-	print style,np.nanmean(gmt['rcp85',:,style,2000:2009])
+for style in gmt_ru20.style:
+	print style,np.nanmean(gmt_ru20['rcp85',:,style,1986:2006])
 
 
 print 'done'

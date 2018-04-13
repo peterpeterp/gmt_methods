@@ -7,7 +7,7 @@ import itertools
 import matplotlib
 from scipy import stats
 import pandas as pd
-import seaborn as sns
+import seaborn as sns; sns.set()
 
 
 

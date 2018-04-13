@@ -9,10 +9,10 @@ from scipy import stats
 
 
 
-gmt_all=da.read_nc('data/gmt.nc')['gmt']
+gmt_all=da.read_nc('data/gmt_model.nc')['gmt']
 models=list(gmt_all.model)
-models.remove('CESM1-CAM5')
-models.remove('MIROC5')
+#models.remove('CESM1-CAM5')
+#models.remove('MIROC5')
 models.remove('BNU-ESM')
 models.remove('bcc-csm1-1-m')
 

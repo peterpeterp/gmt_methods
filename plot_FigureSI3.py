@@ -5,18 +5,31 @@ import matplotlib.pylab as plt
 import dimarray as da
 import itertools
 import matplotlib
-import seaborn as sns; sns.set()
+import seaborn as sns
+sns.set()
+
+def running_mean_func(xx,N):
+	if N==1:
+		return xx
+	if N!=1:
+	    x=np.ma.masked_invalid(xx.copy())
+	    ru_mean=x.copy()*np.nan
+	    for t in range(int(N/2),len(x)-int(N/2)):
+	        ru_mean[t]=np.nanmean(x[t-int(N/2):t+int(N/2)])
+	    return ru_mean
+
 
 gmt=da.read_nc('data/gmt_plot_ready.nc')['gmt']
 gmt_qu=da.read_nc('data/gmt_quantiles.nc')['gmt_qu']
 
-# FIG SI 2 as FIG 1 but blended instead of blended_masked
+# FIG 1
 plot_dict={
 	'gmt_sat':{'l_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$','pos':0.65},
-	'gmt_b':{'l_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend}}$','pos':0.75},
+	'gmt_millar':{'l_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{M17}}$','pos':0.85},
+	'gmt_bm':{'l_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend-mask}}$','pos':0.75},
 }
 for scenario in ['rcp85']:
-	plt.close()
+	plt.close('all')
 	fig,axes=plt.subplots(nrows=1,ncols=2,figsize=(10,5))
 	ax=axes.flatten()
 	ax[0].fill_between([-1,5],[1.55,1.55],[1.45,1.45],color='white')
@@ -24,7 +37,7 @@ for scenario in ['rcp85']:
 	ax[0].plot([-1,5],[1.55,1.55],linestyle='--',color='k')
 	x__=np.arange(0,5,0.01)
 
-	for method in ['gmt_sat','gmt_b']:
+	for method in ['gmt_sat','gmt_millar','gmt_bm']:
 		tmp=plot_dict[method]
 		x_=np.asarray(gmt[scenario,:,'gmt_ar5',:]).reshape(len(gmt.model)*len(gmt.time))
 		y_=np.asarray(gmt[scenario,:,method,:]).reshape(len(gmt.model)*len(gmt.time))
@@ -32,7 +45,8 @@ for scenario in ['rcp85']:
 		x,y=x_[idx],y_[idx]
 		ax[0].scatter(x,y,color=tmp['l_color'],marker='v',alpha=0.3)
 
-	for method in ['gmt_b','gmt_sat']:
+
+	for method in ['gmt_millar','gmt_bm','gmt_sat']:
 		tmp=plot_dict[method]
 		yy=gmt_qu[scenario,'gmt_ar5',method,1.5,50]
 		ax[0].plot([gmt_qu[scenario,'gmt_ar5',method,1.5,0],gmt_qu[scenario,'gmt_ar5',method,1.5,100]],[tmp['pos'],tmp['pos']],color=tmp['color'])
@@ -47,12 +61,11 @@ for scenario in ['rcp85']:
 	ax[0].set_ylim((0.61,2.3))
 	ax[0].set_xlim((0.61,2.3))
 	ax[0].text(-0.1, 1.02, 'a', transform=ax[0].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
-
 	ax[0].set_xlabel('$\mathregular{GMT_{AR5}}$ $\mathregular{[^\circ C]}$')
 	ax[0].set_ylabel('$\mathregular{GMT_{alt}}$ $\mathregular{[^\circ C]}$')
 	ax[0].legend(loc='upper left',fontsize=12)
 
-	for method in ['gmt_b']:
+	for method in ['gmt_bm']:
 		x_=np.asarray(gmt[scenario,:,'gmt_ar5',:]).reshape(len(gmt.model)*len(gmt.time))
 		y_=np.asarray(gmt[scenario,:,method,:]).reshape(len(gmt.model)*len(gmt.time))
 		idx = np.isfinite(x_) & np.isfinite(y_)
@@ -74,8 +87,8 @@ for scenario in ['rcp85']:
 	ax[1].text(-0.1, 1.02, 'b', transform=ax[1].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
 
 	ax[1].set_xlabel('$\mathregular{GMT_{AR5}}$ $\mathregular{[^\circ C]}$')
-	ax[1].set_ylabel('$\mathregular{GMT_{blend} -GMT_{AR5}}$ $\mathregular{[^\circ C]}$')
+	ax[1].set_ylabel('$\mathregular{GMT_{blend-mask} -GMT_{AR5}}$ $\mathregular{[^\circ C]}$')
 
 	plt.tight_layout()
-	plt.savefig('plots/FIG1_'+scenario+'_qu_SI.png')
-	plt.savefig('plots/FIG1_'+scenario+'_qu_SI.pdf')
+	plt.savefig('plots/FIG1_'+scenario+'_qu.png')
+	plt.savefig('plots/FIG1_'+scenario+'_qu.pdf')

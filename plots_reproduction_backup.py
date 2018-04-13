@@ -32,11 +32,29 @@ def yearly_anomaly(gmt_in,ref_period=[1861,1880]):
 
 	return gmt_year
 
-gmt_year=da.read_nc('data/gmt_year.nc')['gmt']
-gmt_model=da.read_nc('data/gmt_model.nc')['gmt']
+gmt_raw=da.read_nc('data/gmt_all_remapdis.nc')['gmt']
+model_runs=sorted(gmt_raw.model_run)
+for model_run in gmt_raw.model_run:
+	if model_run.split('_')[0] in ['CESM1-CAM5','BNU-ESM','bcc-csm1-1-m','CESM1-WACCM']:
+		model_runs.remove(model_run)
+	elif np.isnan(np.nanmean(gmt_raw['xax','rcp85',model_run,'gmt',:].values)):
+		model_runs.remove(model_run)
 
-gmt_year.values-=np.expand_dims(np.nanmean(gmt_year[:,:,:,:,1861:1880].values,axis=4),axis=4)
-gmt_model.values-=np.expand_dims(np.nanmean(gmt_model[:,:,:,:,1861:1880].values,axis=4),axis=4)
+model_runs.remove('EC-EARTH_r7i1p1')
+model_runs.remove('EC-EARTH_r11i1p1')
+model_runs.remove('EC-EARTH_r12i1p1')
+model_runs.remove('EC-EARTH_r13i1p1')
+model_runs.remove('EC-EARTH_r14i1p1')
+
+gmt_all_clean=gmt_raw[gmt_raw.style,gmt_raw.scenario,model_runs,gmt_raw.variable,gmt_raw.time]
+gmt_year=yearly_anomaly(gmt_all_clean)
+
+models=sorted(set([model_run.split('_')[0] for model_run in model_runs]))
+gmt_model=da.DimArray(axes=[gmt_raw.style,gmt_raw.scenario,models,gmt_raw.variable,np.arange(1850,2100,1)],dims=['style','scenario','model','variable','time'])
+for model in models:
+	ensemble=[model_run for model_run in model_runs if model_run.split('_')[0]==model]
+	print model, ensemble
+	gmt_model[:,:,model,:,:]=np.nanmean(gmt_year[:,:,ensemble,:,:],axis=2)
 
 dat=open('data/Had4_gmt.txt','r').read()
 had4=[]
@@ -49,27 +67,10 @@ for line in dat.split('\n')[::2]:
 had4=np.array(had4[11*12:-12])
 
 gmt_richardson=da.read_nc('data/gmt_all_richardson.nc')['gmt']
-gmt_richardson.values-=np.expand_dims(np.nanmean(gmt_richardson[:,:,:,:,1861:1880].values,axis=4),axis=4)
+gmt_richardson.values-=np.expand_dims(np.nanmean(gmt_richardson[:,:,:,:,1860:1880].values,axis=4),axis=4)
 
 gmt_cowtan=da.read_nc('data/gmt_all_cowtan.nc')['gmt']
 gmt_cowtan_year=yearly_anomaly(gmt_cowtan[:,:,gmt_richardson.model_run,:,:])
-
-plot_dict={'Peter model average':{'data':gmt_model,'colors':['yellow','pink','cyan']},
-			'Peter':{'data':gmt_year,'colors':['orange','plum','lightblue']},
-			'Cowtan':{'data':gmt_cowtan_year,'colors':['darkred','darkviolet','darkblue']},
-			'Richardson':{'data':gmt_richardson,'colors':['red','magenta','blue']}}
-
-names=['Richardson','Cowtan','Peter','Peter model average']
-
-
-print('1986-2005')
-for name in names[::-1]:
-	print(name,np.nanpercentile(plot_dict[name]['data']['xax','rcp85',:,'air',1986:2005],50))
-
-print('2021-2040')
-for name in names[::-1]:
-	print(name,np.nanpercentile(plot_dict[name]['data']['xax','rcp85',:,'air',2021:2040],50))
-
 
 # richardson 1b
 plt.close()
@@ -86,6 +87,13 @@ for ax in [ax1,ax2]:
 ax1.set_ylabel('$\Delta$T ($^\circ$C)',fontsize=16,labelpad=-5)
 ax2.set_ylabel('$\Delta$T - $\Delta$T$_{tas}$ ($^\circ$C)',fontsize=16,
 			   labelpad=0)
+
+plot_dict={'Peter model average':{'data':gmt_model,'colors':['yellow','pink','cyan']},
+			'Peter':{'data':gmt_year,'colors':['orange','plum','lightblue']},
+			'Cowtan':{'data':gmt_cowtan_year,'colors':['darkred','darkviolet','darkblue']},
+			'Richardson':{'data':gmt_richardson,'colors':['red','magenta','blue']}}
+
+names=['Richardson','Cowtan','Peter','Peter model average']
 
 for name in names[::-1]:
 	data,colors=plot_dict[name]['data'],plot_dict[name]['colors']
