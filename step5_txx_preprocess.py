@@ -24,8 +24,13 @@ wlvls=da.DimArray(axes=[['rcp26','rcp45','rcp85'],models,levels],dims=['scenario
 
 missing_gmt=open('data/missing_gmt_in_wlcalc.txt','w')
 
-os.chdir('/p/projects/tumble/carls/shared_folder/wlcalculator/app/')
-sys.path.append('/p/projects/tumble/carls/shared_folder/wlcalculator/app/')
+try:
+	os.chdir('/p/projects/tumble/carls/shared_folder/wlcalculator/app/')
+	sys.path.append('/p/projects/tumble/carls/shared_folder/wlcalculator/app/')
+	os.chdir('../../gmt/')
+except:
+	sys.path.append('/Users/peterpfleiderer/Documents/Projects/wlcalculator/app/')
+
 os.system('ls')
 import wacalc.CmipData as CmipData; reload(CmipData)
 
@@ -43,7 +48,6 @@ for model in gmt_.model:
 			print e
 			missing_gmt.write(model+scenario+'\n')
 
-os.chdir('../../gmt/')
 
 missing_gmt.close()
 
