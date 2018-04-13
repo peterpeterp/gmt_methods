@@ -42,7 +42,7 @@ models=list(gmt_all.model)
 # #models.remove('MIROC5')
 # models.remove('BNU-ESM')
 # models.remove('bcc-csm1-1-m')
-# gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
+gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
 
 wlvls=da.read_nc('data/wlvls.nc')['wlvls']
 

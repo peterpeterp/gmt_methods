@@ -54,6 +54,9 @@ missing_gmt.close()
 ds=da.Dataset({'wlvls':wlvls})
 ds.write_nc('data/wlvls.nc', mode='w')
 
+# write period table
+for model in gmt.model:
+	ensemble=[model_run for model_run in gmt_runAv.model if model_run.split('_')[0]==model]
 
 # for folder in [fl.split('/')[-1] for fl in glob.glob('data/*')]:
 # 	model=folder.split('_')[0]
