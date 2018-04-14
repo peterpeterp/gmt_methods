@@ -102,6 +102,8 @@ for model in wlvls.model:
         cmip5_dict[model][var].derive_time_slices(ref_period,target_periods,period_names)
         cmip5_dict[model][var].derive_distributions()
 
+        print(cmip5_dict[model][var])
+        
         for change in levels:
             cmip5_dict[model][var].derive_pdf_difference('ref',str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
 
