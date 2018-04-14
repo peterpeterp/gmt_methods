@@ -63,6 +63,8 @@ for scenario in ['rcp85']:
 				y_15=y[tmp]
 				x_15=x[tmp]
 
+				ax[pp].set_title('points in bin: '+str(len(x_15)))
+
 				for qu in gmt_qu.out:
 					gmt_qu[scenario,x_method,y_method,level,qu]=np.nanpercentile(x_15,qu)
 

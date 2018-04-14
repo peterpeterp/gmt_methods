@@ -66,7 +66,7 @@ for model in wlvls.model:
     ref_period=[1986,2006]
     target_periods.append(ref_period)
 
-    try:
+    if True:
         # combine datasets
         var_name=varin_dict[var]['nc_name']
 
@@ -93,6 +93,8 @@ for model in wlvls.model:
 
         input_data=da.concatenate((input_hist, input_rcp85), axis='year')
 
+        print(input_data)
+
         cmip5_dict[model][var]=pdf.PDF_Processing(var)
         cmip5_dict[model][var].mask_for_ref_period_data_coverage(input_data,ref_period,check_ref_period_only=False,target_periods=target_periods)
 
@@ -106,9 +108,9 @@ for model in wlvls.model:
         for change in levels[-2:]:
             cmip5_dict[model][var].derive_pdf_difference(str(1.5),str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
 
-    except Exception as e:
-        print e
-        print '-----------'+model
+    # except Exception as e:
+    #     print e
+    #     print '-----------'+model
 
 
 os.chdir('../gmt/')

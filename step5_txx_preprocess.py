@@ -55,8 +55,12 @@ ds=da.Dataset({'wlvls':wlvls})
 ds.write_nc('data/wlvls.nc', mode='w')
 
 # write period table
-for model in gmt.model:
+period_table=open('model_period_table.txt','w')
+for model in gmt_.model:
 	ensemble=[model_run for model_run in gmt_runAv.model if model_run.split('_')[0]==model]
+	period_table.write('\t'.join([model,str(len(ensemble)),str(wlvls['rcp85',model,1.5]),str(wlvls['rcp85',model,1.66])])+'\n')
+period_table.close()
+
 
 # for folder in [fl.split('/')[-1] for fl in glob.glob('data/*')]:
 # 	model=folder.split('_')[0]
