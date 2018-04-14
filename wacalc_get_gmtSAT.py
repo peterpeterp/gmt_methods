@@ -3,7 +3,6 @@ from subprocess import Popen
 
 overwrite=True
 
-except:
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--overwrite",'-o', help="overwrite output files",action="store_true")
@@ -61,5 +60,3 @@ for model_run in model_runs:
 
 	if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
 		Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+sftof_style+'.txt',shell=True).wait()
-
-	
