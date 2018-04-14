@@ -107,11 +107,11 @@ for model in wlvls.model:
         for change in levels:
             cmip5_dict[model][var].derive_pdf_difference('ref',str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
 
-        print(cmip5_dict[model][var])
-        print(levels)
-        for change in levels[-2:]:
-            print(change)
-            cmip5_dict[model][var].derive_pdf_difference(str(1.5),str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
+        # print(cmip5_dict[model][var])
+        # print(levels)
+        # for change in levels[-2:]:
+        #     print(change)
+        #     cmip5_dict[model][var].derive_pdf_difference(str(1.5),str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
 
     # except Exception as e:
     #     print e
