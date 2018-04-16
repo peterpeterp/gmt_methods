@@ -90,15 +90,17 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 			if len(cdoinfo.split('\n')[1].split(' 0 '))==3:
 				if '0.0000' in cdoinfo.split('\n')[1].split(' '):
 					# change 0 to missing
-					Popen('cdo selyear,1850/2099 -setmissval,0 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
+					Popen('cdo setmissval,0 tmp_m_'+var+'.nc tmp_zwi_'+var+'.nc',shell=True).wait()
+					Popen('cdo selyear,1850/2099 tmp_zwi_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 				else:
 					# change 273.15 to missing
-					Popen('cdo selyear,1850/2099 -setmissval,273.15 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
+					Popen('cdo setmissval,273.15 tmp_m_'+var+'.nc tmp_zwi_'+var+'.nc',shell=True).wait()
+					Popen('cdo selyear,1850/2099 tmp_zwi_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 			else:
 				Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 
 		else:
-			Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
+			Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc tmp_zwi_'+var+'.nc',shell=True).wait()
 
 		Popen('cdo -O remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
 		if keep==False:
