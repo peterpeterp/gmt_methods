@@ -22,12 +22,14 @@ try:
 	run=folder.split('_')[1]
 	model_run=model+'_'+run
 	var_names=['tas','sic','tos']
+	keep=False
 
 
 except:
 	import argparse
 	parser = argparse.ArgumentParser()
 	parser.add_argument("--overwrite",'-o', help="overwrite output files",action="store_true")
+	parser.add_argument("--keep",'-k', help="keep in between files files",action="store_true")
 	parser.add_argument('--model','-m',help='model name',required=True)
 	parser.add_argument('--run','-r' ,help='run name',required=True)
 	parser.add_argument('--variable','-v' ,help='variables to prepare',nargs='+',required=False)
@@ -37,6 +39,11 @@ except:
 	    overwrite=True
 	else:
 	    overwrite=False
+
+	if args.keep:
+	    keep=True
+	else:
+	    keep=False
 
 	model=args.model
 	run=args.run
@@ -94,7 +101,8 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 			Popen('cdo selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 
 		Popen('cdo -O remapdis,../../blend-runnable/grid1x1.cdo tmp_s_'+var+'.nc '+var+'_'+scenario+'.nc',shell=True).wait()
-		Popen('rm tmp_s_'+var+'.nc tmp_m_'+var+'.nc',shell=True).wait()
+		if keep==False:
+			Popen('rm tmp_s_'+var+'.nc tmp_m_'+var+'.nc',shell=True).wait()
 	if len(scenario_files)==0:
 		info=open('delete_here','w')
 		info.write('bla')
