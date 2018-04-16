@@ -65,6 +65,8 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 	command='cdo -a mergetime '
 	hist_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/'+group+'/'+var+'/'+model+'/'+run+'/*')
 	scenario_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/'+scenario+'/'+group+'/'+var+'/'+model+'/'+run+'/*')
+	if len(scenario_files)==0:
+		scenario_files=glob.glob('/p/projects/tumble/carls/shared_folder/gmt/missing_files/'+var+'*'+group+'*'+model+'*'+scenario+'*'+run+'*')
 	if len(scenario_files)!=0 and (os.path.isfile(var+'_'+scenario+'.nc')==False or overwrite):
 		for file_name in scenario_files+hist_files:
 			print file_name
