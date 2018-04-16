@@ -39,11 +39,7 @@ for model_run in model_runs:
 	tas='data_models/'+model+'_'+run+'/tas_'+scenario+'.nc'
 	tos='data_models/'+model+'_'+run+'/tos_'+scenario+'.nc'
 	sic='data_models/'+model+'_'+run+'/sic_'+scenario+'.nc'
-
-	if model in sftof_replace_dict.keys():
-		sftof='sftof/'+sftof_replace_dict[model]+'.nc'
-	else:
-		sftof='sftof/'+model+'.nc'
+	sftof='sftof/'+model+'.nc'
 
 	if os.path.isfile(style+'_'+scenario+'.txt')==False or overwrite:
 		Popen('python gmt_methods/ncblendmask-nc4.py '+style+' '+tas+' '+tos+' '+sic+' '+sftof+' > data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',shell=True).wait()
