@@ -50,7 +50,7 @@ except:
 os.system('module load cdo/1.7.0')
 
 
-#Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
+Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
 os.chdir('data_models/'+model+'_'+run+'/')
 
 os.system('export SKIP_SAME_TIME=1')
