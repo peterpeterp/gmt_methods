@@ -36,15 +36,15 @@ for sftof_style in ['']:
 			for model_run in model_runs:
 				#tmp=pd.read_table('data_models/'+model+'_'+run+'/'+style+'_'+scenario+'.txt',sep=' ',header=None)
 				#try:
-				if True:
+				try:
 					tmp=pd.read_table('data_models/'+model_run+'/'+style+'_'+scenario+sftof_style+'.txt',sep=' ',header=None)
 					tmp.columns=['time','air','gmt','diff']
 					time_ax=np.array(tmp['time'])
 					useful_years=time_ax[(time_ax>1850) & (time_ax<2100)]
 					gmt[style,scenario,model_run,'air',useful_years]=np.array(tmp['air'])[(time_ax>1850) & (time_ax<2100)]
 					gmt[style,scenario,model_run,'gmt',useful_years]=np.array(tmp['gmt'])[(time_ax>1850) & (time_ax<2100)]
-				# except:
-				# 	pass
+				except Exception,e:
+					print(model_run,e)
 
 
 	ds=da.Dataset({'gmt':gmt})

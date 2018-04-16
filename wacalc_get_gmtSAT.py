@@ -8,7 +8,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--overwrite",'-o', help="overwrite output files",action="store_true")
 parser.add_argument('--model','-m',help='model name',required=True)
 parser.add_argument('--run','-r' ,help='run name',required=True)
-parser.add_argument('--style','-s' ,help='blending-masking style',required=True)
 args = parser.parse_args()
 
 if args.overwrite:
@@ -18,7 +17,6 @@ else:
 
 model=args.model
 run=args.run
-style=args.style
 
 if model is not None and run is not None:
 	model_runs=[model+'_'+run]
@@ -30,17 +28,6 @@ else:
 
 scenario = 'rcp85'
 style='xxx'
-# some replacements because sftof missing
-# some replacements because of bad sftof file
-sftof_replace_dict={'HadGEM2-AO':'HadGEM2-ES',
-					'GISS-E2-R-CC':'GISS-E2-R',
-					'GISS-E2-H-CC':'GISS-E2-H',
-					'CanESM2':'ACCESS1-0',
-					'IPSL-CM5A-LR':'ACCESS1-0',
-					'IPSL-CM5A-MR':'ACCESS1-0',
-					'IPSL-CM5B-LR':'ACCESS1-0',
-					'CNRM-CM5':'CNRM-CM5-2'}
-
 
 for model_run in model_runs:
 	print model_run

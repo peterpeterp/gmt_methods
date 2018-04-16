@@ -11,7 +11,8 @@ gmt_raw=da.read_nc('data/gmt_all.nc')['gmt']
 # remove special runs
 model_runs=sorted(gmt_raw.model_run)
 for model_run in gmt_raw.model_run:
-	if model_run.split('_')[0] in ['CESM1-CAM5','BNU-ESM','bcc-csm1-1-m','CESM1-WACCM']:
+	#if model_run.split('_')[0] in ['CESM1-CAM5','BNU-ESM','bcc-csm1-1-m','CESM1-WACCM']:
+	if model_run.split('_')[0] in ['BNU-ESM','bcc-csm1-1-m','CESM1-WACCM']:
 		model_runs.remove(model_run)
 	elif np.isnan(np.nanmean(gmt_raw['xax','rcp85',model_run,'gmt',:].values)):
 		model_runs.remove(model_run)
