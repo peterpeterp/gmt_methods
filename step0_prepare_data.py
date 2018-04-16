@@ -47,7 +47,7 @@ except:
 		var_names=['tas','sic','tos']
 
 # there seems to be some issue with cdo/1.8.0 and this script
-os.system('module load cdo/1.7.0')
+#os.system('module load cdo/1.7.0')
 
 
 Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
@@ -65,7 +65,7 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 	command='cdo -a mergetime '
 	hist_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/'+group+'/'+var+'/'+model+'/'+run+'/*')
 	if len(hist_files)==0:
-		hist_files=glob.glob('/p/projects/tumble/carls/shared_folder/gmt/missing_files/'+var+'*'+group+'*'+model+'*historical*'+run+'*')	
+		hist_files=glob.glob('/p/projects/tumble/carls/shared_folder/gmt/missing_files/'+var+'*'+group+'*'+model+'*historical*'+run+'*')
 	scenario_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/'+scenario+'/'+group+'/'+var+'/'+model+'/'+run+'/*')
 	if len(scenario_files)==0:
 		scenario_files=glob.glob('/p/projects/tumble/carls/shared_folder/gmt/missing_files/'+var+'*'+group+'*'+model+'*'+scenario+'*'+run+'*')
