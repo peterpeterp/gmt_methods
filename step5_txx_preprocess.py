@@ -38,7 +38,7 @@ import wacalc.CmipData as CmipData; reload(CmipData)
 for model in gmt_.model:
 	for scenario in gmt_.scenario:
 		try:
-			cmipdata = CmipData.CmipData('CMIP5',[model.lower()],[scenario])
+			cmipdata = CmipData.CmipData('CMIP5',[model.lower()],[scenario],cmip5_path='../../data/cmip5_ver003')
 			cmipdata.get_cmip()
 			cmipdata.compute_period( [1986,2006], [1850,1900], levels, window=21)
 			lvls=cmipdata.exceedance_tm
