@@ -52,6 +52,8 @@ cmip5_dict={}
 
 os.chdir('../pdf_processing/')
 
+print('number of models: '+len(wlvls.model))
+
 for model in wlvls.model:
     print('__________'+model+'__________')
     if model not in cmip5_dict.keys(): cmip5_dict[model]={}
@@ -73,13 +75,19 @@ for model in wlvls.model:
 
     scenario_files=glob.glob('/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_rcp85_*_2006-2100.YEARMAX.nc')
     if len(scenario_files)>0:
-        scenario_file=scenario_files[0]
-        nc_rcp85=Dataset(scenario_file)
-        hist_files=glob.glob(scenario_file.replace('rcp85','historical').replace('_2006-2100.YEARMAX.nc','*YEARMAX*'))
-        print(scenario_file)
-        if len(hist_files)>0:
-            nc_hist=Dataset(hist_files[0])
-            print(hist_files[0])
+        found=False
+        for scenario_file in scenario_files:
+            hist_files=glob.glob(scenario_file.replace('rcp85','historical').replace('_2006-2100.YEARMAX.nc','*YEARMAX*'))
+            if len(hist_files)>0:
+                hist_file=hist_files[0]
+                found=True
+                break
+
+        if found:
+            print(hist_file)
+            print(scenario_file)
+            nc_hist=Dataset(hist_file)
+            nc_rcp85=Dataset(scenario_file)
 
             lat=nc_rcp85.variables['lat'][:]
             lon=nc_rcp85.variables['lon'][:]
