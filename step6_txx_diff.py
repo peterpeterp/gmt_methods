@@ -66,52 +66,52 @@ for model in wlvls.model:
     ref_period=[1986,2006]
     target_periods.append(ref_period)
 
-    try:
-        # combine datasets
-        var_name=varin_dict[var]['nc_name']
+    # combine datasets
+    var_name=varin_dict[var]['nc_name']
 
-        nc_rcp85=Dataset(glob.glob('/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_rcp85_*_2006-2100.YEARMAX.nc')[0])
-        lat=nc_rcp85.variables['lat'][:]
-        lon=nc_rcp85.variables['lon'][:]
+    scenario_files=glob.glob('/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_rcp85_*_2006-2100.YEARMAX.nc')
+    if len(scenario_files)>0:
+        scenario_file=scenario_files[0]
+        nc_rcp85=Dataset(scenario_file)
+        hist_files=glob.glob(scenario_file.replace('_2006-2100.YEARMAX.nc','*'))
+        if len(hist_files)>0:
+            nc_hist=Dataset(scenario_files[0])
+            lat=nc_rcp85.variables['lat'][:]
+            lon=nc_rcp85.variables['lon'][:]
 
-        datevar = []
-        datevar.append(num2date(nc_rcp85.variables['time'][:],units = nc_rcp85.variables['time'].units,calendar = nc_rcp85.variables['time'].calendar))
-        year=np.array([int(str(date).split("-")[0])	for date in datevar[0][:]])
-        var_in=nc_rcp85.variables[var_name][:,:,:]
-        if var_in.mean()>150:
-            var_in-=273.15
-        input_rcp85=da.DimArray(var_in[:,:,:].squeeze(), axes=[year, lat, lon],dims=['year', 'lat', 'lon'] )
+            datevar = []
+            datevar.append(num2date(nc_rcp85.variables['time'][:],units = nc_rcp85.variables['time'].units,calendar = nc_rcp85.variables['time'].calendar))
+            year=np.array([int(str(date).split("-")[0])	for date in datevar[0][:]])
+            var_in=nc_rcp85.variables[var_name][:,:,:]
+            if var_in.mean()>150:
+                var_in-=273.15
+            input_rcp85=da.DimArray(var_in[:,:,:].squeeze(), axes=[year, lat, lon],dims=['year', 'lat', 'lon'] )
 
-        nc_hist=Dataset('/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_historical_r1i1p1_1901-2005.YEARMAX.nc')
-        datevar = []
-        datevar.append(num2date(nc_hist.variables['time'][:],units = nc_hist.variables['time'].units,calendar = nc_hist.variables['time'].calendar))
-        year=np.array([int(str(date).split("-")[0])	for date in datevar[0][:]])
-        var_in=nc_hist.variables[var_name][:,:,:]
-        if var_in.mean()>150:
-            var_in-=273.15
-        input_hist=da.DimArray(var_in[:,:,:].squeeze(), axes=[year, lat, lon],dims=['year', 'lat', 'lon'] )
+            datevar = []
+            datevar.append(num2date(nc_hist.variables['time'][:],units = nc_hist.variables['time'].units,calendar = nc_hist.variables['time'].calendar))
+            year=np.array([int(str(date).split("-")[0])	for date in datevar[0][:]])
+            var_in=nc_hist.variables[var_name][:,:,:]
+            if var_in.mean()>150:
+                var_in-=273.15
+            input_hist=da.DimArray(var_in[:,:,:].squeeze(), axes=[year, lat, lon],dims=['year', 'lat', 'lon'] )
 
-        input_data=da.concatenate((input_hist, input_rcp85), axis='year')
+            input_data=da.concatenate((input_hist, input_rcp85), axis='year')
 
-        cmip5_dict[model][var]=pdf.PDF_Processing(var)
-        cmip5_dict[model][var].mask_for_ref_period_data_coverage(input_data,ref_period,check_ref_period_only=False,target_periods=target_periods)
+            cmip5_dict[model][var]=pdf.PDF_Processing(var)
+            cmip5_dict[model][var].mask_for_ref_period_data_coverage(input_data,ref_period,check_ref_period_only=False,target_periods=target_periods)
 
-        # Derive time slices
-        cmip5_dict[model][var].derive_time_slices(ref_period,target_periods,period_names)
-        cmip5_dict[model][var].derive_distributions()
+            # Derive time slices
+            cmip5_dict[model][var].derive_time_slices(ref_period,target_periods,period_names)
+            cmip5_dict[model][var].derive_distributions()
 
-        for change in levels:
-            cmip5_dict[model][var].derive_pdf_difference('ref',str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
+            for change in levels:
+                cmip5_dict[model][var].derive_pdf_difference('ref',str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
 
-        # print(cmip5_dict[model][var])
-        # print(levels)
-        # for change in levels[-2:]:
-        #     print(change)
-        #     cmip5_dict[model][var].derive_pdf_difference(str(1.5),str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
-
-    except Exception as e:
-        print e
-        print '-----------'+model
+            # print(cmip5_dict[model][var])
+            # print(levels)
+            # for change in levels[-2:]:
+            #     print(change)
+            #     cmip5_dict[model][var].derive_pdf_difference(str(1.5),str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
 
 
 os.chdir('../gmt/')
