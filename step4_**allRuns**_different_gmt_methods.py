@@ -129,3 +129,93 @@ ds.write_nc('data/gmt_plot_ready_allRuns.nc', mode='w')
 
 ds=da.Dataset({'gmt_qu':gmt_qu})
 ds.write_nc('data/gmt_quantiles_allRuns.nc', mode='w')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# ACCESS1-0_r1i1p1
+# ACCESS1-3_r1i1p1
+# CCSM4_r1i1p1
+# CCSM4_r2i1p1
+# CCSM4_r3i1p1
+# CCSM4_r4i1p1
+# CCSM4_r5i1p1
+# CCSM4_r6i1p1
+# CESM1-BGC_r1i1p1
+# CMCC-CMS_r1i1p1
+# CMCC-CM_r1i1p1
+# CNRM-CM5_r10i1p1
+# CNRM-CM5_r1i1p1
+# CNRM-CM5_r2i1p1
+# CNRM-CM5_r4i1p1
+# CNRM-CM5_r6i1p1
+# CSIRO-Mk3-6-0_r10i1p1
+# CSIRO-Mk3-6-0_r1i1p1
+# CSIRO-Mk3-6-0_r2i1p1
+# CSIRO-Mk3-6-0_r3i1p1
+# CSIRO-Mk3-6-0_r4i1p1
+# CSIRO-Mk3-6-0_r5i1p1
+# CSIRO-Mk3-6-0_r6i1p1
+# CSIRO-Mk3-6-0_r7i1p1
+# CSIRO-Mk3-6-0_r8i1p1
+# CSIRO-Mk3-6-0_r9i1p1
+# CanESM2_r1i1p1
+# CanESM2_r2i1p1
+# CanESM2_r3i1p1
+# CanESM2_r4i1p1
+# CanESM2_r5i1p1
+# EC-EARTH_r1i1p1
+# EC-EARTH_r2i1p1
+# EC-EARTH_r8i1p1
+# EC-EARTH_r9i1p1
+# GFDL-CM3_r1i1p1
+# GFDL-ESM2G_r1i1p1
+# GFDL-ESM2M_r1i1p1
+# GISS-E2-H-CC_r1i1p1
+# GISS-E2-H_r1i1p1
+# GISS-E2-H_r1i1p2
+# GISS-E2-H_r1i1p3
+# GISS-E2-R-CC_r1i1p1
+# GISS-E2-R_r1i1p1
+# GISS-E2-R_r1i1p2
+# GISS-E2-R_r1i1p3
+# HadGEM2-AO_r1i1p1
+# HadGEM2-CC_r1i1p1
+# HadGEM2-ES_r1i1p1
+# HadGEM2-ES_r2i1p1
+# HadGEM2-ES_r3i1p1
+# HadGEM2-ES_r4i1p1
+# IPSL-CM5A-LR_r1i1p1
+# IPSL-CM5A-LR_r2i1p1
+# IPSL-CM5A-LR_r3i1p1
+# IPSL-CM5A-LR_r4i1p1
+# IPSL-CM5A-MR_r1i1p1
+# IPSL-CM5B-LR_r1i1p1
+# MIROC-ESM-CHEM_r1i1p1
+# MIROC-ESM_r1i1p1
+# MIROC5_r1i1p1
+# MIROC5_r2i1p1
+# MIROC5_r3i1p1
+# MPI-ESM-LR_r1i1p1
+# MPI-ESM-LR_r2i1p1
+# MPI-ESM-LR_r3i1p1
+# MPI-ESM-MR_r1i1p1
+# MRI-CGCM3_r1i1p1
+# MRI-ESM1_r1i1p1
+# NorESM1-ME_r1i1p1
+# NorESM1-M_r1i1p1

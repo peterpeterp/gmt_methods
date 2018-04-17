@@ -32,8 +32,8 @@ slr=pd.read_csv('data/slr_2100_temperature_levels_1p5_1p66_ref1986_2005.csv')
 plot_dict={
 	'gmt_sat':{'wlvl':1.4622,'name':'1.4468_ref','light_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$','pos':3,'lsty':'-'},
 	'gmt_ar5':{'wlvl':1.5,'name':'1.5_ref','light_color':'lawngreen','color':sns.color_palette()[1],'longname':'$\mathregular{GMT_{AR5}}$','pos':0,'lsty':'--'},
-	'gmt_millar':{'wlvl':1.66,'name':'1.66_ref','light_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{M17}}$','pos':1,'lsty':'-'},
-	'gmt_bm':{'wlvl':1.7,'name':'1.6584_ref','light_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend-mask}}$','pos':2,'lsty':'-'},
+	'gmt_millar':{'wlvl':1.65,'name':'1.65_ref','light_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{M17}}$','pos':1,'lsty':'-'},
+	'gmt_bm':{'wlvl':1.69,'name':'1.6584_ref','light_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend-mask}}$','pos':2,'lsty':'-'},
 }
 
 # Figure 2
@@ -66,24 +66,24 @@ ax[0].set_xlabel('$\mathregular{TXx}$ $\mathregular{[^\circ C]}$')
 ax[0].legend(loc='upper right',fontsize=10)
 ax[0].set_title('Hot extremes (Txx)')
 
-for time_slice in ['gmt_ar5','gmt_millar']:
-    y=np.array(slr[str(plot_dict[time_slice]['wlvl'])])
-    qu=np.nanpercentile(y,[5,1/6.*100,50,5/6.*100,95])
-    x=plot_dict[time_slice]['pos']
-    #ax[1].plot([x,x],[qu[0],qu[4]],lw=2,color=plot_dict[time_slice]['color'])
-    ax[1].fill_between([x-0.03,x+0.03],[qu[1],qu[1]],[qu[3],qu[3]],lw=2,color=plot_dict[time_slice]['color'])
-    ax[1].plot([x-0.03,x+0.03],[qu[2],qu[2]],lw=2,color='white')
-    #ax[1].scatter([x],[np.nanmean(y)],marker='*',s=40,color='white')
-
-#ax[1].set_ylim((0.25,0.6))
-ax[1].set_xlim((-0.5,1.5))
-ax[1].set_xticks([plot_dict[time_slice]['pos'] for time_slice in ['gmt_ar5','gmt_millar']])
-ax[1].set_xticklabels([plot_dict[time_slice]['longname'] for time_slice in ['gmt_ar5','gmt_millar']])
-ax[1].set_ylabel('Sea level rise in 2100 [m]')
-ax[1].text(-0.1, 1.02, 'b', transform=ax[1].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
-ax[1].legend(loc='upper right',fontsize=10)
-ax[1].set_title('Sea level rise in 2100')
-
+# for time_slice in ['gmt_ar5','gmt_millar']:
+#     y=np.array(slr[str(plot_dict[time_slice]['wlvl'])])
+#     qu=np.nanpercentile(y,[5,1/6.*100,50,5/6.*100,95])
+#     x=plot_dict[time_slice]['pos']
+#     #ax[1].plot([x,x],[qu[0],qu[4]],lw=2,color=plot_dict[time_slice]['color'])
+#     ax[1].fill_between([x-0.03,x+0.03],[qu[1],qu[1]],[qu[3],qu[3]],lw=2,color=plot_dict[time_slice]['color'])
+#     ax[1].plot([x-0.03,x+0.03],[qu[2],qu[2]],lw=2,color='white')
+#     #ax[1].scatter([x],[np.nanmean(y)],marker='*',s=40,color='white')
+#
+# #ax[1].set_ylim((0.25,0.6))
+# ax[1].set_xlim((-0.5,1.5))
+# ax[1].set_xticks([plot_dict[time_slice]['pos'] for time_slice in ['gmt_ar5','gmt_millar']])
+# ax[1].set_xticklabels([plot_dict[time_slice]['longname'] for time_slice in ['gmt_ar5','gmt_millar']])
+# ax[1].set_ylabel('Sea level rise in 2100 [m]')
+# ax[1].text(-0.1, 1.02, 'b', transform=ax[1].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
+# ax[1].legend(loc='upper right',fontsize=10)
+# ax[1].set_title('Sea level rise in 2100')
+#
 plt.tight_layout()
 plt.savefig('plots/Figure2.png',dpi=300)
 plt.savefig('plots/Figure2.pdf')
@@ -91,17 +91,19 @@ plt.savefig('plots/Figure2.pdf')
 # number
 x=all_cmip5._distributions['global']['pdf']['xaxis']
 gmt_ar5_txx=all_cmip5._distributions['global']['pdf']['1.5_ref']
-gmt_millar_txx=all_cmip5._distributions['global']['pdf']['1.66_ref']
+gmt_millar_txx=all_cmip5._distributions['global']['pdf']['1.65_ref']
 
-print sum(gmt_ar5_txx[x>1])
-print sum(gmt_millar_txx[x>1])
-print sum(gmt_ar5_txx[x>1.5])
-print sum(gmt_millar_txx[x>1.5])
+print '       \t\t GMT_AR5      \t GMT_M17'
+print 'above 1  \t',sum(gmt_ar5_txx[x>1]),'\t',sum(gmt_millar_txx[x>1])
+print 'above 1.5\t',sum(gmt_ar5_txx[x>1.5]),'\t',sum(gmt_millar_txx[x>1.5])
 
 for time_slice in ['gmt_ar5','gmt_millar']:
     y=np.array(slr[str(plot_dict[time_slice]['wlvl'])])
     qu=np.nanpercentile(y,[5,1/6.*100,50,5/6.*100,95])
     print time_slice,qu
+
+
+
 
 # #SLR check
 # plt.clf()

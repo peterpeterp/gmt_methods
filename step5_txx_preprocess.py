@@ -53,10 +53,17 @@ missing_gmt.close()
 ds=da.Dataset({'wlvls':wlvls})
 ds.write_nc('data/wlvls.nc', mode='w')
 
+
+wlvls=da.read_nc('data/wlvls.nc')['wlvls']
+
 # write period table
-period_table=open('model_period_table.txt','w')
-for model in gmt_.model:
-	period_table.write('\t'.join([model,str(wlvls['rcp85',model,1.5]),str(wlvls['rcp85',model,1.65])])+'\n')
+period_table=open('tables/model_period_table.txt','w')
+for model in wlvls.model:
+	if np.isfinite(wlvls['rcp85',model,1.5]):
+		period_table.write('\t'.join([model,str(int(wlvls['rcp85',model,1.5])),str(int(wlvls['rcp85',model,1.65]))])+'\n')
+	else:
+		period_table.write('\t'.join([model,'-','-'])+'\n')
+
 period_table.close()
 
 

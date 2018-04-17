@@ -18,8 +18,9 @@ def running_mean_func(xx,N):
 	    return ru_mean
 
 
-gmt=da.read_nc('data/gmt_plot_ready.nc')['gmt']
-gmt_qu=da.read_nc('data/gmt_quantiles.nc')['gmt_qu']
+gmt=da.read_nc('data/gmt_plot_ready_year_1861-1880.nc')['gmt']
+gmt_qu=da.read_nc('data/gmt_quantiles_year_1861-1880.nc')['gmt_qu']
+
 
 time_ax=da.DimArray(axes=[np.array(gmt.time)],dims=['time'])
 time_ax[:]=gmt.time

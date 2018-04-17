@@ -19,6 +19,8 @@ plot_dict={
 
 scenario='rcp85'
 
+# these models start in 1861 GFDL-CM3 GFDL-ESM2G GFDL-ESM2M HadGEM2-AO HadGEM2-CC HadGEM2-ES
+
 for av_style in ['year','20year']:
 	for preind_name in ['1861-1880','1850-1900']:
 		gmt=da.read_nc('data/gmt_plot_ready_'+av_style+'_'+preind_name+'.nc')['gmt']
