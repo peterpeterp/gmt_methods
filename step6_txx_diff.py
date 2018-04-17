@@ -70,7 +70,7 @@ for model in wlvls.model:
         # combine datasets
         var_name=varin_dict[var]['nc_name']
 
-        nc_rcp85=Dataset('/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_rcp85_r1i1p1_2006-2100.YEARMAX.nc')
+        nc_rcp85=Dataset(glob.glob('/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_rcp85_*_2006-2100.YEARMAX.nc')[0])
         lat=nc_rcp85.variables['lat'][:]
         lon=nc_rcp85.variables['lon'][:]
 
