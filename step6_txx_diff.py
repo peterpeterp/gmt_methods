@@ -51,6 +51,7 @@ var='TXx'
 cmip5_dict={}
 
 os.chdir('../pdf_processing/')
+
 for model in wlvls.model:
     if model not in cmip5_dict.keys(): cmip5_dict[model]={}
 
@@ -75,7 +76,7 @@ for model in wlvls.model:
         nc_rcp85=Dataset(scenario_file)
         hist_files=glob.glob(scenario_file.replace('_2006-2100.YEARMAX.nc','*'))
         if len(hist_files)>0:
-            nc_hist=Dataset(scenario_files[0])
+            nc_hist=Dataset(hist_files[0])
             lat=nc_rcp85.variables['lat'][:]
             lon=nc_rcp85.variables['lon'][:]
 
