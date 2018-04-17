@@ -52,7 +52,7 @@ cmip5_dict={}
 
 os.chdir('../pdf_processing/')
 
-print('number of models: '+len(wlvls.model))
+print('number of models: '+str(len(wlvls.model)))
 
 for model in wlvls.model:
     print('__________'+model+'__________')
