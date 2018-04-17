@@ -110,8 +110,11 @@ for model in wlvls.model:
             cmip5_dict[model][var].derive_distributions()
 
             for change in levels:
-                print(cmip5_dict[model][var]._distributions['global'][change]-cmip5_dict[model][var]._distributions['global']['ref'])
-                cmip5_dict[model][var].derive_pdf_difference('ref',str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
+                if len(cmip5_dict[model][var]._distributions['global'][str(change)]-cmip5_dict[model][var]._distributions['global']['ref'])>0:
+                    cmip5_dict[model][var].derive_pdf_difference('ref',str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
+                else:
+                    print(cmip5_dict[model][var]._distributions['global'][str(change)]-cmip5_dict[model][var]._distributions['global']['ref'])
+                    break
 
             # print(cmip5_dict[model][var])
             # print(levels)
