@@ -17,7 +17,7 @@ def running_mean_func(xx,N):
 	        ru_mean[t]=np.nanmean(x[t-int(N/2):t+int(N/2)])
 	    return ru_mean
 
-gmt=da.read_nc('data/gmt_plot_ready.nc')['gmt']
+gmt=da.read_nc('data/gmt_plot_ready_year_1861-1880.nc')['gmt']
 gmt_runAv=da.read_nc('data/gmt_plot_ready_runAv.nc')['gmt']
 
 time_ax=da.DimArray(axes=[np.array(gmt.time)],dims=['time'])
@@ -59,7 +59,7 @@ for method in ['gmt_sat','gmt_bm']:
 ax[0].plot([1850,2035],[0,0],color='k')
 ax[0].set_xlim((1850,2016))
 #ax[0].set_ylim((-0.2,0.4))
-ax[0].legend(loc='upper left',fontsize=10)
+ax[0].legend(loc='upper left',fontsize=9,ncol=2)
 ax[0].text(-0.1, 1.02, 'a', transform=ax[0].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
 ax[0].set_ylabel('$\mathregular{GMT-GMT_{obs}}$ $\mathregular{[^\circ C]}$')
 
@@ -68,20 +68,20 @@ ens_mean=np.nanmean(gmt['rcp85',:,method,:],axis=0)
 colors=sns.hls_palette(len(gmt.model))
 single_run={}
 multiple_run={}
-for model in gmt.model:
+for model in sorted(gmt.model):
 	ensemble=[model_run for model_run in gmt_runAv.model if model_run.split('_')[0]==model]
 	if len(ensemble)>1:
 		multiple_run[model]=len(ensemble)
 	else:
 		single_run[model]=1
 
-for model,N,color in zip(multiple_run.keys(),multiple_run.values(),sns.hls_palette(len(multiple_run.keys()))):
-	ax[1].plot(time_ax,running_mean_func(gmt['rcp85',model,method,:]-ens_mean,20),linewidth=N,alpha=0.5,color=color,label=str(N)+' '+model)
-	ax[2].plot([-99,-9],linewidth=N,alpha=0.5,color=color,label=str(N)+' '+model)
+for model,color in zip(sorted(multiple_run.keys()),sns.hls_palette(len(multiple_run.keys()))):
+	ax[1].plot(time_ax,running_mean_func(gmt['rcp85',model,method,:]-ens_mean,20),linewidth=multiple_run[model],alpha=0.5,color=color,label=str(N)+' '+model)
+	ax[2].plot([-99,-9],linewidth=multiple_run[model],alpha=0.5,color=color,label=str(multiple_run[model])+' '+model)
 
-for model,N,color in zip(single_run.keys(),single_run.values(),sns.hls_palette(len(single_run.keys()))):
+for model,color in zip(sorted(single_run.keys()),sns.hls_palette(len(single_run.keys()))):
 	ax[1].plot(time_ax,running_mean_func(gmt['rcp85',model,method,:]-ens_mean,20),linewidth=1,linestyle='--',color=color)
-	ax[2].plot([-99,-9],linewidth=N,alpha=0.5,color=color,label=str(N)+' '+model)
+	ax[2].plot([-99,-9],linewidth=N,alpha=0.5,color=color,label=str(1)+' '+model)
 
 ax[1].plot([1850,2035],[0,0],color='k')
 ax[1].set_xlim((1850,2016))
@@ -91,7 +91,7 @@ ax[1].set_ylabel('$\mathregular{GMT_{model-mean}-GMT_{ensemble-mean}}$ $\mathreg
 
 ax[2].axis('off')
 ax[2].set_ylim((0,1))
-ax[2].legend(loc='upper left',fontsize=8,ncol=1)
+ax[2].legend(loc='upper left',fontsize=7,ncol=2)
 
 
 plt.tight_layout()

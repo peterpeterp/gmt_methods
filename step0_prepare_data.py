@@ -54,6 +54,7 @@ except:
 		var_names=['tas','sic','tos']
 
 # there seems to be some issue with cdo/1.8.0 and this script
+# the command has to be executed outside the script?
 os.system('module load cdo/1.7.0')
 
 

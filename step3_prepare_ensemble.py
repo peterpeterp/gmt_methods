@@ -45,19 +45,55 @@ for model in models:
 	gmt_model[:,:,model,:,:]=np.nanmean(gmt_year[:,:,ensemble,:,:],axis=2)
 
 ds=da.Dataset({'gmt':gmt_model})
-ds.write_nc('data/gmt_model.nc', mode='w')
+ds.write_nc('data/gmt_year_model.nc', mode='w')
 
-tmp_gmt=gmt_model.copy()
-tmp_gmt.values-=np.expand_dims(np.nanmean(tmp_gmt[:,:,:,:,1861:1880].values,axis=4),axis=4)
+def running_mean_func(xx,N):
+	if N==1:
+		return xx
+	if N!=1:
+	    x=np.ma.masked_invalid(xx.copy())
+	    ru_mean=x.copy()*np.nan
+	    for t in range(int(N/2),len(x)-int(N/2)):
+	        ru_mean[t]=np.nanmean(x[t-int(N/2):t+int(N/2)])
+	    return ru_mean
 
+# 20 year running mean values
+gmt_20year=da.DimArray(axes=[gmt_raw.style,gmt_raw.scenario,model_runs,gmt_raw.variable,np.arange(1850,2100,1)],dims=['style','scenario','model_run','variable','time'])
+for style in gmt_year.style:
+	for model_run in gmt_year.model_run:
+		for variable in gmt_year.variable:
+			gmt_20year[style,'rcp85',model_run,variable,:]=running_mean_func(gmt_year[style,'rcp85',model_run,variable,:],20)
+
+ds=da.Dataset({'gmt':gmt_20year})
+ds.write_nc('data/gmt_20year.nc', mode='w')
+
+# average all runs of one model
+models=sorted(set([model_run.split('_')[0] for model_run in model_runs]))
+print models
+gmt_20year_model=da.DimArray(axes=[gmt_raw.style,gmt_raw.scenario,models,gmt_raw.variable,np.arange(1850,2100,1)],dims=['style','scenario','model','variable','time'])
 for model in models:
 	ensemble=[model_run for model_run in model_runs if model_run.split('_')[0]==model]
-	tmp=gmt_model['xax','rcp85',model,'air',:]-np.nanmean(gmt_model['xax','rcp85',model,'air',1861:1880])
-	print(model,np.nanmean(tmp[1986:2005])-np.nanmean(tmp_gmt['xax','rcp85',:,'air',1986:2005]),len(ensemble),ensemble)
+	gmt_20year_model[:,:,model,:,:]=np.nanmean(gmt_20year[:,:,ensemble,:,:],axis=2)
+
+ds=da.Dataset({'gmt':gmt_20year_model})
+ds.write_nc('data/gmt_20year_model.nc', mode='w')
 
 
-for model in models:
-	ensemble=[model_run for model_run in model_runs if model_run.split('_')[0]==model]
-	if len(ensemble)>1:
-		tmp=gmt_model['xax','rcp85',model,'air',:]-np.nanmean(gmt_model['xax','rcp85',model,'air',1861:1880])
-		print(model,(np.nanmean(tmp[1986:2005])-np.nanmean(tmp_gmt['xax','rcp85',:,'air',1986:2005]))*len(ensemble),len(ensemble))
+
+
+
+
+# tmp_gmt=gmt_model.copy()
+# tmp_gmt.values-=np.expand_dims(np.nanmean(tmp_gmt[:,:,:,:,1861:1880].values,axis=4),axis=4)
+#
+# for model in models:
+# 	ensemble=[model_run for model_run in model_runs if model_run.split('_')[0]==model]
+# 	tmp=gmt_model['xax','rcp85',model,'air',:]-np.nanmean(gmt_model['xax','rcp85',model,'air',1861:1880])
+# 	print(model,np.nanmean(tmp[1986:2005])-np.nanmean(tmp_gmt['xax','rcp85',:,'air',1986:2005]),len(ensemble),ensemble)
+#
+#
+# for model in models:
+# 	ensemble=[model_run for model_run in model_runs if model_run.split('_')[0]==model]
+# 	if len(ensemble)>1:
+# 		tmp=gmt_model['xax','rcp85',model,'air',:]-np.nanmean(gmt_model['xax','rcp85',model,'air',1861:1880])
+# 		print(model,(np.nanmean(tmp[1986:2005])-np.nanmean(tmp_gmt['xax','rcp85',:,'air',1986:2005]))*len(ensemble),len(ensemble))

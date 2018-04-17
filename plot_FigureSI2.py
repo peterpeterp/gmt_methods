@@ -7,8 +7,8 @@ import itertools
 import matplotlib
 import seaborn as sns; sns.set()
 
-gmt=da.read_nc('data/gmt_plot_ready.nc')['gmt']
-gmt_qu=da.read_nc('data/gmt_quantiles.nc')['gmt_qu']
+gmt=da.read_nc('data/gmt_plot_ready_year_1861-1880.nc')['gmt']
+gmt_qu=da.read_nc('data/gmt_quantiles_year_1861-1880.nc')['gmt_qu']
 
 # FIG SI 2 as FIG 1 but blended instead of blended_masked
 plot_dict={
@@ -41,7 +41,7 @@ for scenario in ['rcp85']:
 		ax[0].plot([yy,yy],[tmp['pos']-0.02,tmp['pos']+0.02],color='white',lw=2)
 		#ax[0].text(yy,1,str(round(yy,2)),rotation=90,verticalalignment='center',horizontalalignment='center',backgroundcolor='white',color=tmp['color'])
 		ax[0].plot([-99,-99],[-99,-99],color=tmp['color'],lw=2,label=tmp['longname']+' '+str(round(yy,2))+ \
-		' ('+str(round(gmt_qu[scenario,'gmt_ar5',method,1.5,1/6.*100],2))+'-'+str(round(gmt_qu[scenario,'gmt_ar5',method,1.5,5/6.*100],2))+')')
+		' ('+str(round(gmt_qu[scenario,'gmt_ar5',method,1.5,0],2))+'-'+str(round(gmt_qu[scenario,'gmt_ar5',method,1.5,100],2))+')')
 
 	ax[0].plot([-1,5],[-1,5],linestyle='--',color='k')
 	ax[0].set_ylim((0.61,2.3))

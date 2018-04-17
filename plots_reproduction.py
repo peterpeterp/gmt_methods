@@ -33,7 +33,7 @@ def yearly_anomaly(gmt_in,ref_period=[1861,1880]):
 	return gmt_year
 
 gmt_year=da.read_nc('data/gmt_year.nc')['gmt']
-gmt_model=da.read_nc('data/gmt_model.nc')['gmt']
+gmt_model=da.read_nc('data/gmt_year_model.nc')['gmt']
 
 gmt_year.values-=np.expand_dims(np.nanmean(gmt_year[:,:,:,:,1861:1880].values,axis=4),axis=4)
 gmt_model.values-=np.expand_dims(np.nanmean(gmt_model[:,:,:,:,1861:1880].values,axis=4),axis=4)
@@ -127,12 +127,65 @@ fig.subplots_adjust(0.08,0.12,0.98,0.97,wspace=0.26)
 plt.savefig('plots/reproduction/richardson_fig1b.png',dpi=300)
 
 
+
+
+
 # comparing ensembles
 missing_runs=sorted([run for run in gmt_richardson.model_run if run not in gmt_year.model_run])
 missing_models=sorted(set([run.split('_')[0] for run in gmt_richardson.model_run if run.split('_')[0] not in gmt_model.model]))
 
-#CESM1-CAM5_r1i1p1	CESM1-CAM5_r2i1p1	CESM1-CAM5_r3i1p1	EC-EARTH_r12i1p1	FIO-ESM_r1i1p1	FIO-ESM_r2i1p1	FIO-ESM_r3i1p1	GISS-E2-H-CC_r1i1p1	GISS-E2-H_r2i1p1	GISS-E2-H_r2i1p3	GISS-E2-R-CC_r1i1p1	GISS-E2-R_r2i1p1	GISS-E2-R_r2i1p3	MRI-ESM1_r1i1p1	bcc-csm1-1_r1i1p1	inmcm4_r1i1p1
 
-#CESM1-CAM5	FIO-ESM	GISS-E2-H-CC	GISS-E2-R-CC	MRI-ESM1	bcc-csm1-1	inmcm4
+# richardson 1b but long
+plt.close()
+fig = plt.figure(figsize=(8,4))
+ax1 = fig.add_subplot(1,2,1,ylim=[-0.4,4],xlim=[1850,2100])
+ax2 = fig.add_subplot(1,2,2,ylim=[-0.5,0.05],xlim=[1850,2100])
+#ax3 = fig.add_subplot(1,3,3,ylim=[-9999,-999],xlim=[99,999])
 
-#ACCESS1-0	ACCESS1-3	CCSM4	CESM1-BGC	CMCC-CM	CMCC-CMS	CNRM-CM5	CSIRO-Mk3-6-0	CanESM2	EC-EARTH	GFDL-CM3	GFDL-ESM2G	GFDL-ESM2M	GISS-E2-H	GISS-E2-R	HadGEM2-AO	HadGEM2-CC	HadGEM2-ES	IPSL-CM5A-LR	IPSL-CM5A-MR	IPSL-CM5B-LR	MIROC-ESM	MIROC-ESM-CHEM	MIROC5	MPI-ESM-LR	MPI-ESM-MR	MRI-CGCM3	NorESM1-M	NorESM1-ME
+# set xlabels and xticks
+for ax in [ax1,ax2]:
+	ax.set_xticks(np.arange(1850,2100,40))
+	ax.set_xlabel('Year',fontsize=16)
+
+ax1.set_ylabel('$\Delta$T ($^\circ$C)',fontsize=16,labelpad=-5)
+ax2.set_ylabel('$\Delta$T - $\Delta$T$_{tas}$ ($^\circ$C)',fontsize=16,
+			   labelpad=0)
+
+for name in names[::-1]:
+	data,colors=plot_dict[name]['data'],plot_dict[name]['colors']
+	ax1.plot(data.time,np.nanpercentile(data['xax','rcp85',:,'air',:],50,axis=0),colors[0])
+	ax1.plot(data.time,np.nanpercentile(data['xax','rcp85',:,'gmt',:],50,axis=0),colors[1])
+	ax2.plot(data.time,np.nanpercentile(data['xax','rcp85',:,'gmt',:]-data['xax','rcp85',:,'air',:],50,axis=0),colors[1])
+	ax1.plot(data.time,np.nanpercentile(data['had4','rcp85',:,'gmt',:],50,axis=0),colors[2])
+	ax2.plot(data.time,np.nanpercentile(data['had4','rcp85',:,'gmt',:]-data['xax','rcp85',:,'air',:],50,axis=0),colors[2])
+	#ax2.plot(data.time,np.nanmean(data['had4','rcp85',:,'gmt',:]-data['xax','rcp85',:,'air',:],axis=0),colors[2],linewidth=0.2)
+
+ax1.plot([0],[0],'white',label='tas-only')
+for name in names:
+	data,colors=plot_dict[name]['data'],plot_dict[name]['colors']
+	ax1.plot([0],[0],colors[0],label=name)
+
+ax2.plot([0],[0],'white',label='blended')
+for name in names:
+	data,colors=plot_dict[name]['data'],plot_dict[name]['colors']
+	ax2.plot([0],[0],colors[1],label=name)
+ax2.plot([0],[0],'white',label=' ')
+ax2.plot([0],[0],'white',label='blended-masked')
+for name in names:
+	data,colors=plot_dict[name]['data'],plot_dict[name]['colors']
+	ax2.plot([0],[0],colors[2],label=name)
+
+leg = ax1.legend(loc='upper center',frameon=False,handletextpad=0,fontsize=8)
+leg = ax2.legend(loc='lower left',frameon=False,handletextpad=0,fontsize=8)
+
+for ax in fig.get_axes():
+	for ylab in ax.get_yticklabels():
+		ylab.set_fontsize(11)
+	for xlab in ax.get_xticklabels():
+		xlab.set_fontsize(11)
+
+# labelling of subplots
+ax1.text(1865,1.07,'(a)',fontsize=20)
+ax2.text(1990,0.025,'(b)',fontsize=20)
+fig.subplots_adjust(0.08,0.12,0.98,0.97,wspace=0.26)
+plt.savefig('plots/reproduction/richardson_fig1b_long.png',dpi=300)
