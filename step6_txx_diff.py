@@ -74,7 +74,7 @@ for model in wlvls.model:
     if len(scenario_files)>0:
         scenario_file=scenario_files[0]
         nc_rcp85=Dataset(scenario_file)
-        hist_files=glob.glob(scenario_file.replace('_2006-2100.YEARMAX.nc','*'))
+        hist_files=glob.glob(scenario_file.replace('rcp85','historical').replace('_2006-2100.YEARMAX.nc','*'))
         if len(hist_files)>0:
             nc_hist=Dataset(hist_files[0])
             lat=nc_rcp85.variables['lat'][:]
