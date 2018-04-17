@@ -60,7 +60,7 @@ for model in wlvls.model:
     for change in levels:
         period_names.append(str(change))
         mid_year=wlvls['rcp85',model,change]
-        target_periods.append([mid_year-10,mid_year+10])
+        target_periods.append([int(mid_year-10),int(mid_year+10)])
 
     period_names.append('ref')
     ref_period=[1986,2006]
