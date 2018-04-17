@@ -53,6 +53,7 @@ cmip5_dict={}
 os.chdir('../pdf_processing/')
 
 for model in wlvls.model:
+    print('__________'+model+'__________')
     if model not in cmip5_dict.keys(): cmip5_dict[model]={}
 
     # time informations and periods
