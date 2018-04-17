@@ -61,7 +61,7 @@ for model in wlvls.model:
     # time informations and periods
     target_periods=[]
     period_names=[]
-    if np.isfinite(wlvls['rcp85',model,level[0]]):
+    if np.isfinite(wlvls['rcp85',model,levels[0]]):
         for change in levels:
             period_names.append(str(change))
             mid_year=wlvls['rcp85',model,change]
