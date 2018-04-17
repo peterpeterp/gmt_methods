@@ -54,7 +54,7 @@ except:
 		var_names=['tas','sic','tos']
 
 # there seems to be some issue with cdo/1.8.0 and this script
-#os.system('module load cdo/1.7.0')
+os.system('module load cdo/1.7.0')
 
 
 Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
@@ -69,7 +69,7 @@ os.system('export SKIP_SAME_TIME=1')
 variable={'tas':'Amon','sic':'OImon','tos':'Omon'}
 
 def normal_procedure(model,run,scenario,group,var,overwrite):
-	command='cdo -a mergetime '
+	command='cdo -O -a mergetime '
 	hist_files=glob.glob('/p/projects/ipcc_pcmdi/ipcc_ar5_pcmdi/pcmdi_data/historical/'+group+'/'+var+'/'+model+'/'+run+'/*')
 	if len(hist_files)==0:
 		hist_files=glob.glob('/p/projects/tumble/carls/shared_folder/gmt/missing_files/'+var+'*'+group+'*'+model+'*historical*'+run+'*')
@@ -83,19 +83,19 @@ def normal_procedure(model,run,scenario,group,var,overwrite):
 		Popen(command+'tmp_m_'+var+'.nc',shell=True).wait()
 		if var=='tos':
 			# check if "not-ocean-cells" are missing or 273.1 as in EC-EARTH
-			cdoinfo=Popen('cdo info tmp_m_'+var+'.nc',shell=True, stdout=subprocess.PIPE).stdout.read()
+			cdoinfo=Popen('cdo info tmp_m_tos.nc',shell=True, stdout=subprocess.PIPE).stdout.read()
 			# reading one line of cdo info
 			# level=0 , if missing=0 the below condition is True
 			# /!\ this condition might become a problem when there are other 0 appearing in the output
 			if len(cdoinfo.split('\n')[1].split(' 0 '))==3:
 				if '0.0000' in cdoinfo.split('\n')[1].split(' '):
 					# change 0 to missing
-					Popen('cdo -O setmissval,0 tmp_m_'+var+'.nc tmp_zwi_'+var+'.nc',shell=True).wait()
-					Popen('cdo -O selyear,1850/2099 tmp_zwi_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
+					Popen('cdo -O setmissval,0 tmp_m_tos.nc tmp_zwi_tos.nc',shell=True).wait()
+					Popen('cdo -O selyear,1850/2099 tmp_zwi_tos.nc tmp_s_tos.nc',shell=True).wait()
 				else:
 					# change 273.15 to missing
-					Popen('cdo -O setmissval,273.15 tmp_m_'+var+'.nc tmp_zwi_'+var+'.nc',shell=True).wait()
-					Popen('cdo -O selyear,1850/2099 tmp_zwi_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
+					Popen('cdo -O setmissval,273.15 tmp_m_tos.nc tmp_zwi_tos.nc',shell=True).wait()
+					Popen('cdo -O selyear,1850/2099 tmp_zwi_tos.nc tmp_s_tos.nc',shell=True).wait()
 			else:
 				Popen('cdo -O selyear,1850/2099 tmp_m_'+var+'.nc tmp_s_'+var+'.nc',shell=True).wait()
 
