@@ -8,6 +8,9 @@ import matplotlib
 from scipy import stats
 import seaborn as sns
 
+os.chdir('/Users/peterpfleiderer/Documents/Projects/gmt')
+
+
 for av_style in ['year','20year']:
 	for preind_name,preind_period in zip(['1861-1880','1850-1900'],[[1861,1880],[1850,1900]]):
 		gmt_raw=da.read_nc('data/gmt_'+av_style+'_model.nc')['gmt']

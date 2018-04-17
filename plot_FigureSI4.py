@@ -18,7 +18,7 @@ def running_mean_func(xx,N):
 	    return ru_mean
 
 gmt=da.read_nc('data/gmt_plot_ready_year_1861-1880.nc')['gmt']
-gmt_runAv=da.read_nc('data/gmt_plot_ready_runAv.nc')['gmt']
+gmt_allRuns=da.read_nc('data/gmt_plot_ready_allRuns.nc')['gmt']
 
 time_ax=da.DimArray(axes=[np.array(gmt.time)],dims=['time'])
 time_ax[:]=gmt.time
@@ -54,7 +54,7 @@ for method in ['gmt_sat','gmt_bm']:
 	ax[0].plot(time_ax,running_mean_func(np.nanmean(gmt['rcp85',:,method,:]-had4_gmt,axis=0),20),label=plot_dict[method]['longname'],color=plot_dict[method]['color'])
 ax[0].plot([0,0],alpha=0,label='all runs equal')
 for method in ['gmt_sat','gmt_bm']:
-	ax[0].plot(time_ax,running_mean_func(np.nanmean(gmt_runAv['rcp85',:,method,:]-had4_gmt,axis=0),20),label=plot_dict[method]['longname'],color=plot_dict[method]['color'],linestyle='--')
+	ax[0].plot(time_ax,running_mean_func(np.nanmean(gmt_allRuns['rcp85',:,method,:]-had4_gmt,axis=0),20),label=plot_dict[method]['longname'],color=plot_dict[method]['color'],linestyle='--')
 
 ax[0].plot([1850,2035],[0,0],color='k')
 ax[0].set_xlim((1850,2016))
@@ -69,19 +69,19 @@ colors=sns.hls_palette(len(gmt.model))
 single_run={}
 multiple_run={}
 for model in sorted(gmt.model):
-	ensemble=[model_run for model_run in gmt_runAv.model if model_run.split('_')[0]==model]
+	ensemble=[model_run for model_run in gmt_allRuns.model if model_run.split('_')[0]==model]
 	if len(ensemble)>1:
 		multiple_run[model]=len(ensemble)
 	else:
 		single_run[model]=1
 
 for model,color in zip(sorted(multiple_run.keys()),sns.hls_palette(len(multiple_run.keys()))):
-	ax[1].plot(time_ax,running_mean_func(gmt['rcp85',model,method,:]-ens_mean,20),linewidth=multiple_run[model],alpha=0.5,color=color,label=str(N)+' '+model)
+	ax[1].plot(time_ax,running_mean_func(gmt['rcp85',model,method,:]-ens_mean,20),linewidth=multiple_run[model],alpha=0.5,color=color,label=str(multiple_run[model])+' '+model)
 	ax[2].plot([-99,-9],linewidth=multiple_run[model],alpha=0.5,color=color,label=str(multiple_run[model])+' '+model)
 
 for model,color in zip(sorted(single_run.keys()),sns.hls_palette(len(single_run.keys()))):
 	ax[1].plot(time_ax,running_mean_func(gmt['rcp85',model,method,:]-ens_mean,20),linewidth=1,linestyle='--',color=color)
-	ax[2].plot([-99,-9],linewidth=N,alpha=0.5,color=color,label=str(1)+' '+model)
+	ax[2].plot([-99,-9],linewidth=1,alpha=0.5,color=color,label=str(1)+' '+model)
 
 ax[1].plot([1850,2035],[0,0],color='k')
 ax[1].set_xlim((1850,2016))

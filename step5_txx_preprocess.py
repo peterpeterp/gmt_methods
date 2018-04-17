@@ -8,7 +8,6 @@ import matplotlib
 from scipy import stats
 
 
-
 gmt_all=da.read_nc('data/gmt_model.nc')['gmt']
 models=list(gmt_all.model)
 #models.remove('CESM1-CAM5')
@@ -18,7 +17,7 @@ models=list(gmt_all.model)
 
 gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
 
-levels=[1.5,1.66]
+levels=[1.5,1.65]
 
 wlvls=da.DimArray(axes=[['rcp26','rcp45','rcp85'],models,levels],dims=['scenario','model','level'])
 

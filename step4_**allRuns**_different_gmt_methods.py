@@ -8,6 +8,8 @@ import matplotlib
 from scipy import stats
 import seaborn as sns
 
+os.chdir('/Users/peterpfleiderer/Documents/Projects/gmt')
+
 gmt_raw=da.read_nc('data/gmt_year.nc')['gmt']
 
 # new gmt names new dimarray
@@ -89,7 +91,7 @@ for scenario in ['rcp85']:
 			#plt.savefig('plots/details/quantiles_'+x_method+'_'+str(level)+'.png')
 
 # conversion table
-conversion_table=open('conversion_table_runAv_runAv.txt','w')
+conversion_table=open('tables/conversion_table_allRuns.txt','w')
 conversion_table.write('\t'.join([' ']+['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']))
 for x_method in ['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']:
 	conversion_table.write('\n'+x_method+'\t')
@@ -101,7 +103,7 @@ for x_method in ['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']:
 conversion_table.close()
 
 # conversion table precise
-conversion_table=open('conversion_table_precise_runAv.txt','w')
+conversion_table=open('tables/conversion_table_precise_allRuns.txt','w')
 conversion_table.write('\t'.join([' ']+['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']))
 for x_method in ['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']:
 	conversion_table.write('\n'+x_method+'\t')
@@ -110,7 +112,7 @@ for x_method in ['gmt_ar5','gmt_sat','gmt_millar','gmt_bm']:
 conversion_table.close()
 
 # conversion table full
-conversion_table=open('conversion_table_SI_runAv.txt','w')
+conversion_table=open('tables/conversion_table_SI_allRuns.txt','w')
 conversion_table.write('\t'.join([' ']+styles))
 for x_method in styles:
 	conversion_table.write('\n'+x_method+'\t')
@@ -123,7 +125,7 @@ conversion_table.close()
 
 
 ds=da.Dataset({'gmt':gmt})
-ds.write_nc('data/gmt_plot_ready_runAv.nc', mode='w')
+ds.write_nc('data/gmt_plot_ready_allRuns.nc', mode='w')
 
 ds=da.Dataset({'gmt_qu':gmt_qu})
-ds.write_nc('data/gmt_quantiles_runAv.nc', mode='w')
+ds.write_nc('data/gmt_quantiles_allRuns.nc', mode='w')
