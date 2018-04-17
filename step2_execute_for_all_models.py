@@ -50,6 +50,7 @@ sftof_replace_dict={'HadGEM2-AO':'HadGEM2-ES',
 					'IPSL-CM5B-LR':'ACCESS1-0',
 					'CNRM-CM5':'CNRM-CM5-2',
 					'BNU-ESM':'ACCESS1-0',
+					'CESM1-CAM5':'ACCESS1-0'
 					} #'CESM1-CAM5':'CESM1-BGC'
 
 
