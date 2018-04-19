@@ -32,7 +32,7 @@ def yearly_anomaly(gmt_in,ref_period=[1861,1880]):
 
 	return gmt_year
 
-gmt_year=da.read_nc('data/gmt_year.nc')['gmt']
+gmt_year=da.read_nc('data/gmt_year_runs.nc')['gmt']
 gmt_model=da.read_nc('data/gmt_year_model.nc')['gmt']
 
 gmt_year.values-=np.expand_dims(np.nanmean(gmt_year[:,:,:,:,1861:1880].values,axis=4),axis=4)
@@ -131,7 +131,7 @@ plt.savefig('plots/reproduction/richardson_fig1b.png',dpi=300)
 
 
 # comparing ensembles
-missing_runs=sorted([run for run in gmt_richardson.model_run if run not in gmt_year.model_run])
+missing_runs=sorted([run for run in gmt_richardson.model_run if run not in gmt_year.model])
 missing_models=sorted(set([run.split('_')[0] for run in gmt_richardson.model_run if run.split('_')[0] not in gmt_model.model]))
 
 

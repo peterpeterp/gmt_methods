@@ -17,7 +17,7 @@ models=list(gmt_all.model)
 
 gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
 
-levels=[1.5,1.65]
+levels=[1.5,1.68]
 
 wlvls=da.DimArray(axes=[['rcp26','rcp45','rcp85'],models,levels],dims=['scenario','model','level'])
 

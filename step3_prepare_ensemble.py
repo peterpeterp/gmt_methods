@@ -28,25 +28,25 @@ model_runs.remove('EC-EARTH_r14i1p1')
 gmt_all_clean=gmt_raw[gmt_raw.style,gmt_raw.scenario,model_runs,gmt_raw.variable,gmt_raw.time]
 
 # yearly values
-gmt_year=da.DimArray(axes=[gmt_raw.style,gmt_raw.scenario,model_runs,gmt_raw.variable,np.arange(1850,2100,1)],dims=['style','scenario','model_run','variable','time'])
-for style in gmt_year.style:
-	for model_run in gmt_year.model_run:
-		for variable in gmt_year.variable:
-			for year in gmt_year.time:
-				gmt_year[style,'rcp85',model_run,variable,year]=np.nanmean(gmt_all_clean[style,'rcp85',model_run,variable,year:year+1])
+gmt_year_runs=da.DimArray(axes=[gmt_raw.style,gmt_raw.scenario,model_runs,gmt_raw.variable,np.arange(1850,2100,1)],dims=['style','scenario','model','variable','time'])
+for style in gmt_year_runs.style:
+	for model in gmt_year_runs.model:
+		for variable in gmt_year_runs.variable:
+			for year in gmt_year_runs.time:
+				gmt_year_runs[style,'rcp85',model,variable,year]=np.nanmean(gmt_all_clean[style,'rcp85',model,variable,year:year+1])
 
-ds=da.Dataset({'gmt':gmt_year})
-ds.write_nc('data/gmt_year.nc', mode='w')
+ds=da.Dataset({'gmt':gmt_year_runs})
+ds.write_nc('data/gmt_year_runs.nc', mode='w')
 
 # average all runs of one model
 models=sorted(set([model_run.split('_')[0] for model_run in model_runs]))
 print models
-gmt_model=da.DimArray(axes=[gmt_raw.style,gmt_raw.scenario,models,gmt_raw.variable,np.arange(1850,2100,1)],dims=['style','scenario','model','variable','time'])
+gmt_year_model=da.DimArray(axes=[gmt_raw.style,gmt_raw.scenario,models,gmt_raw.variable,np.arange(1850,2100,1)],dims=['style','scenario','model','variable','time'])
 for model in models:
 	ensemble=[model_run for model_run in model_runs if model_run.split('_')[0]==model]
-	gmt_model[:,:,model,:,:]=np.nanmean(gmt_year[:,:,ensemble,:,:],axis=2)
+	gmt_year_model[:,:,model,:,:]=np.nanmean(gmt_year_runs[:,:,ensemble,:,:],axis=2)
 
-ds=da.Dataset({'gmt':gmt_model})
+ds=da.Dataset({'gmt':gmt_year_model})
 ds.write_nc('data/gmt_year_model.nc', mode='w')
 
 def running_mean_func(xx,N):
@@ -60,14 +60,14 @@ def running_mean_func(xx,N):
 	    return ru_mean
 
 # 20 year running mean values
-gmt_20year=da.DimArray(axes=[gmt_raw.style,gmt_raw.scenario,model_runs,gmt_raw.variable,np.arange(1850,2100,1)],dims=['style','scenario','model_run','variable','time'])
-for style in gmt_year.style:
-	for model_run in gmt_year.model_run:
-		for variable in gmt_year.variable:
-			gmt_20year[style,'rcp85',model_run,variable,:]=running_mean_func(gmt_year[style,'rcp85',model_run,variable,:],20)
+gmt_20year_runs=da.DimArray(axes=[gmt_raw.style,gmt_raw.scenario,model_runs,gmt_raw.variable,np.arange(1850,2100,1)],dims=['style','scenario','model','variable','time'])
+for style in gmt_year_runs.style:
+	for model in gmt_year_runs.model:
+		for variable in gmt_year_runs.variable:
+			gmt_20year_runs[style,'rcp85',model,variable,:]=running_mean_func(gmt_year_runs[style,'rcp85',model,variable,:],20)
 
-ds=da.Dataset({'gmt':gmt_20year})
-ds.write_nc('data/gmt_20year.nc', mode='w')
+ds=da.Dataset({'gmt':gmt_20year_runs})
+ds.write_nc('data/gmt_20year_runs.nc', mode='w')
 
 # average all runs of one model
 models=sorted(set([model_run.split('_')[0] for model_run in model_runs]))
@@ -75,7 +75,7 @@ print models
 gmt_20year_model=da.DimArray(axes=[gmt_raw.style,gmt_raw.scenario,models,gmt_raw.variable,np.arange(1850,2100,1)],dims=['style','scenario','model','variable','time'])
 for model in models:
 	ensemble=[model_run for model_run in model_runs if model_run.split('_')[0]==model]
-	gmt_20year_model[:,:,model,:,:]=np.nanmean(gmt_20year[:,:,ensemble,:,:],axis=2)
+	gmt_20year_model[:,:,model,:,:]=np.nanmean(gmt_20year_runs[:,:,ensemble,:,:],axis=2)
 
 ds=da.Dataset({'gmt':gmt_20year_model})
 ds.write_nc('data/gmt_20year_model.nc', mode='w')

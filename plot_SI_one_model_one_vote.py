@@ -17,8 +17,8 @@ def running_mean_func(xx,N):
 	        ru_mean[t]=np.nanmean(x[t-int(N/2):t+int(N/2)])
 	    return ru_mean
 
-gmt=da.read_nc('data/gmt_plot_ready_year_1861-1880.nc')['gmt']
-gmt_allRuns=da.read_nc('data/gmt_plot_ready_allRuns.nc')['gmt']
+gmt=da.read_nc('data/gmt_plot_ready_year_model_1861-1880.nc')['gmt']
+gmt_allRuns=da.read_nc('data/gmt_plot_ready_year_runs_1861-1880.nc')['gmt']
 
 time_ax=da.DimArray(axes=[np.array(gmt.time)],dims=['time'])
 time_ax[:]=gmt.time
@@ -32,9 +32,9 @@ for line in dat.split('\n')[::2]:
 	had4.append(float(line.split(' ')[-1]))
 # get HadCRUT4 for 1850-2016
 had4_gmt_=np.array(had4[:-1])
-had4_gmt=da.DimArray(axes=[np.array(gmt_model.time)],dims=['time'])
+had4_gmt=da.DimArray(axes=[np.array(gmt.time)],dims=['time'])
 had4_gmt[1850:2016]=had4_gmt_
-ref_ar5=gmt_model.time[(gmt_model.time>=1986) & (gmt_model.time<2006)]
+ref_ar5=gmt.time[(gmt.time>=1986) & (gmt.time<2006)]
 had4_gmt[:]=had4_gmt[:]-np.nanmean(had4_gmt[ref_ar5])+0.61
 #print np.nanmean(np.array(had4_gmt_-np.nanmean(had4_gmt_[0:240]))[136*12:145*12])
 
@@ -51,10 +51,10 @@ ax=axes.flatten()
 
 ax[0].plot([0,0],alpha=0,label='all models equal')
 for method in ['gmt_sat','gmt_bm']:
-	ax[0].plot(time_ax,running_mean_func(np.nanmean(gmt['rcp85',:,method,:]-had4_gmt,axis=0),20),label=plot_dict[method]['longname'],color=plot_dict[method]['color'])
+	ax[0].plot(time_ax,running_mean_func(np.nanmean(gmt['rcp85',:,method,:]-had4_gmt,axis=0),10),label=plot_dict[method]['longname'],color=plot_dict[method]['color'])
 ax[0].plot([0,0],alpha=0,label='all runs equal')
 for method in ['gmt_sat','gmt_bm']:
-	ax[0].plot(time_ax,running_mean_func(np.nanmean(gmt_allRuns['rcp85',:,method,:]-had4_gmt,axis=0),20),label=plot_dict[method]['longname'],color=plot_dict[method]['color'],linestyle='--')
+	ax[0].plot(time_ax,running_mean_func(np.nanmean(gmt_allRuns['rcp85',:,method,:]-had4_gmt,axis=0),10),label=plot_dict[method]['longname'],color=plot_dict[method]['color'],linestyle='--')
 
 ax[0].plot([1850,2035],[0,0],color='k')
 ax[0].set_xlim((1850,2016))
@@ -95,5 +95,5 @@ ax[2].legend(loc='upper left',fontsize=7,ncol=2)
 
 
 plt.tight_layout()
-plt.savefig('plots/FigureSI4.png')
-plt.savefig('plots/FigureSI4.pdf')
+plt.savefig('plots/Figure_SI_one_model_one_vote.png',dpi=300)
+plt.savefig('plots/Figure_SI_one_model_one_vote.pdf')

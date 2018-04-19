@@ -12,9 +12,8 @@ import seaborn as sns; sns.set()
 
 # FIG 1
 plot_dict={
-	'gmt_sat':{'l_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$','pos':0.65,'z':1},
-	'gmt_millar':{'l_color':'cornflowerblue','color':sns.color_palette()[0],'longname':'$\mathregular{GMT_{M17}}$','pos':0.85,'z':3},
-	'gmt_bm':{'l_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend-mask}}$','pos':0.75,'z':2},
+	'gmt_sat':{'l_color':'orange','color':'darkorange','longname':'$\mathregular{GMT_{SAT}}$','pos':0.65,'z':2},
+	'gmt_b':{'l_color':'tomato','color':sns.color_palette()[2],'longname':'$\mathregular{GMT_{blend}}$','pos':0.75,'z':3},
 }
 
 scenario='rcp85'
@@ -31,7 +30,7 @@ for mod_style in ['model','runs']:
 			ax[0].plot([-1,5],[1.5,1.5],linestyle='--',color='k',zorder=0)
 			x__=np.arange(0,5,0.01)
 
-			for method in ['gmt_sat','gmt_bm','gmt_millar']:
+			for method in ['gmt_sat','gmt_b']:
 				tmp=plot_dict[method]
 				x_=np.asarray(gmt[scenario,:,'gmt_ar5',:]).reshape(len(gmt.model)*len(gmt.time))
 				y_=np.asarray(gmt[scenario,:,method,:]).reshape(len(gmt.model)*len(gmt.time))
@@ -39,7 +38,7 @@ for mod_style in ['model','runs']:
 				x,y=x_[idx],y_[idx]
 				ax[0].scatter(x,y,color=tmp['l_color'],marker='v',alpha=0.3)
 
-			for method in ['gmt_millar','gmt_bm','gmt_sat']:
+			for method in ['gmt_b','gmt_sat']:
 				tmp=plot_dict[method]
 				gmt_ar5_15=[]
 				for model in gmt.model:
@@ -66,7 +65,7 @@ for mod_style in ['model','runs']:
 			ax[0].set_ylabel('$\mathregular{GMT_{alt}}$ $\mathregular{[^\circ C]}$')
 			ax[0].legend(loc='upper left',fontsize=12)
 
-			for method in ['gmt_bm']:
+			for method in ['gmt_b']:
 				x_=np.asarray(gmt[scenario,:,'gmt_ar5',:]).reshape(len(gmt.model)*len(gmt.time))
 				y_=np.asarray(gmt[scenario,:,method,:]).reshape(len(gmt.model)*len(gmt.time))
 				idx = np.isfinite(x_) & np.isfinite(y_)
@@ -97,8 +96,8 @@ for mod_style in ['model','runs']:
 			ax[1].set_ylabel('$\mathregular{GMT_{blend-mask} -GMT_{AR5}}$ $\mathregular{[^\circ C]}$')
 
 			plt.tight_layout()
-			plt.savefig('plots/Figure1_'+av_style+'_'+mod_style+'_'+preind_name+'.png',dpi=300)
-			plt.savefig('plots/Figure1_'+av_style+'_'+mod_style+'_'+preind_name+'.pdf')
+			plt.savefig('plots/Figure_SI_blend_'+av_style+'_'+mod_style+'_'+preind_name+'.png',dpi=300)
+			plt.savefig('plots/Figure_SI_blend_'+av_style+'_'+mod_style+'_'+preind_name+'.pdf')
 
 
 

@@ -18,8 +18,8 @@ def running_mean_func(xx,N):
 	    return ru_mean
 
 
-gmt=da.read_nc('data/gmt_plot_ready_year_1861-1880.nc')['gmt']
-gmt_qu=da.read_nc('data/gmt_quantiles_year_1861-1880.nc')['gmt_qu']
+gmt=da.read_nc('data/gmt_plot_ready_year_model_1861-1880.nc')['gmt']
+gmt_qu=da.read_nc('data/gmt_quantiles_year_model_1861-1880.nc')['gmt_qu']
 
 
 time_ax=da.DimArray(axes=[np.array(gmt.time)],dims=['time'])
@@ -74,17 +74,17 @@ ax[0].set_ylabel('$\mathregular{GMT}$ $\mathregular{[^\circ C]}$')
 ax[0].legend(loc='upper left',fontsize=10)
 
 for method in ['gmt_sat','gmt_bm']:
-	ax[1].plot(time_ax,running_mean_func(np.nanmean(gmt['rcp85',:,method,:]-had4_gmt,axis=0),5),label=plot_dict[method]['longname'],color=plot_dict[method]['color'])
+	ax[1].plot(time_ax,running_mean_func(np.nanmean(gmt['rcp85',:,method,:]-had4_gmt,axis=0),10),label=plot_dict[method]['longname'],color=plot_dict[method]['color'])
 for method in ['gmt_ar5']:
-	ax[1].plot(time_ax[1986:],running_mean_func(np.nanmean(gmt['rcp85',:,method,1986:]-had4_gmt[1986:],axis=0),5),color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'],label=plot_dict[method]['longname'])
+	ax[1].plot(time_ax[1986:],running_mean_func(np.nanmean(gmt['rcp85',:,method,1986:]-had4_gmt[1986:],axis=0),10),color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'],label=plot_dict[method]['longname'])
 for method in ['gmt_millar']:
-	ax[1].plot(time_ax[2006:],running_mean_func(np.nanmean(gmt['rcp85',:,method,2006:]-had4_gmt[2006:],axis=0),5),color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'])
+	ax[1].plot(time_ax[2006:],running_mean_func(np.nanmean(gmt['rcp85',:,method,2006:]-had4_gmt[2006:],axis=0),10),color=plot_dict[method]['color'],linestyle=plot_dict[method]['lsty'])
 
 ax[1].plot([1850,2035],[0,0],color='k')
 ax[1].set_xlim((1850,2016))
-ax[1].set_ylim((-0.2,0.4))
+ax[1].set_ylim((-0.2,0.2))
 ax[1].text(-0.1, 1.02, 'b', transform=ax[1].transAxes,fontsize=18, fontweight='bold', va='top', ha='right')
 ax[1].set_ylabel('$\mathregular{GMT-GMT_{obs}}$ $\mathregular{[^\circ C]}$')
 plt.tight_layout()
-plt.savefig('plots/GMT_ref.png')
-plt.savefig('plots/GMT_ref.pdf')
+plt.savefig('plots/Figure_SI_gmt_transient.png',dpi=300)
+plt.savefig('plots/Figure_SI_gmt_transient.pdf')

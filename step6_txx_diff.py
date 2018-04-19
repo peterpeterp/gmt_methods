@@ -26,7 +26,7 @@ os.chdir('../gmt/')
 # PDF Method (currently defined: hist, python_silverman)
 pdf_method='python_silverman'
 
-levels=[1.5,1.65]
+levels=[1.5,1.68]
 
 # variables
 varin_dict={
