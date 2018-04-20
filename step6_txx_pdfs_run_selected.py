@@ -216,7 +216,6 @@ for change in levels:
 with open('data/varoutdict_cmip5_'+'rcp85'+'_TXx_models_merged.pkl', 'wb') as output:
 	pickle.dump(all_cmip5, output, pickle.HIGHEST_PROTOCOL)
 
-
 # get ensemble used# cmip5 envelopes overview
 ensemble=open('ensemble_TXx.txt','w')
 for model in sorted(cmip5_dict.keys()):
@@ -226,3 +225,14 @@ for model in sorted(cmip5_dict.keys()):
     except:
         pass
 ensemble.close()
+
+# write period table -used for TXx
+period_table=open('tables/model_period_table_used_for_Txx.txt','w')
+for model in sorted(cmip5_dict.keys()):
+    try:
+        a=cmip5_dict[model]['TXx']._distributions['global']['pdf']['xaxis']
+        period_table.write('\t'.join([model+' '+selected_runs[model].split('.')[-1],str(int(wlvls['rcp85',model,1.5])),str(int(wlvls['rcp85',model,1.68]))])+'\n')
+    except:
+        pass
+	
+period_table.close()
