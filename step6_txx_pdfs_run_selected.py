@@ -128,7 +128,7 @@ for model in wlvls.model:
         # combine datasets
         var_name=varin_dict[var]['nc_name']
 
-        scenario_file='/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_rcp85_'+selected_runs[model]+'_2006-2100.YEARMAX.nc'
+        scenario_file='/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_rcp85_'+selected_runs[model].split('.')[-1]+'_2006-2100.YEARMAX.nc'
         print(scenario_file)
         if os.path.isfile(scenario_file):
             print(scenario_file)
