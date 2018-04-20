@@ -8,7 +8,7 @@ import matplotlib
 from scipy import stats
 
 
-gmt_all=da.read_nc('data/gmt_model.nc')['gmt']
+gmt_all=da.read_nc('data/gmt_year_model.nc')['gmt']
 models=list(gmt_all.model)
 #models.remove('CESM1-CAM5')
 #models.remove('MIROC5')
