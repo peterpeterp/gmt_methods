@@ -91,7 +91,7 @@ varin_dict={
     'RX5':{'var_name':'RX5DAY','longname':'Cold extremes (RX5)','unit':'RX5DAY [$^\circ$ C]','cut_interval':[-30,45],'nc_name':'highest_five_day_precipitation_amount_per_time_period'}
     }
 
-gmt_all=da.read_nc('data/gmt_model.nc')['gmt']
+gmt_all=da.read_nc('data/gmt_year_model.nc')['gmt']
 models=list(gmt_all.model)
 # #models.remove('CESM1-CAM5')
 # #models.remove('MIROC5')
@@ -218,3 +218,35 @@ for change in levels:
 
 with open('data/varoutdict_cmip5_'+'rcp85'+'_TXx_models_merged.pkl', 'wb') as output:
 	pickle.dump(all_cmip5, output, pickle.HIGHEST_PROTOCOL)
+
+
+
+ACCESS1-0 r1i1p1	2025	2030
+ACCESS1-3 r1i1p1	2024	2030
+CCSM4 r1i1p1	2025	2031
+CESM1-BGC r1i1p1	2027	2033
+CMCC-CM r1i1p1	2029	2033
+CMCC-CMS r1i1p1	2027	2031
+CNRM-CM5 r1i1p1	2031	2037
+CSIRO-Mk3-6-0 r1i1p1	2031	2035
+CanESM2 r1i1p1	2019	2023
+EC-EARTH r1i1p1	2029	2034
+GFDL-CM3 r1i1p1	2018	2022
+GFDL-ESM2G r1i1p1	2040	2046
+GFDL-ESM2M r1i1p1	2038	2043
+GISS-E2-H	-	-
+GISS-E2-R	-	-
+HadGEM2-AO	-	-
+HadGEM2-CC r1i1p1	2020	2023
+HadGEM2-ES r1i1p1	2017	2023
+IPSL-CM5A-LR r1i1p1	2025	2030
+IPSL-CM5A-MR r1i1p1	2023	2028
+IPSL-CM5B-LR	-	-
+MIROC-ESM r1i1p1	2023	2026
+MIROC-ESM-CHEM r1i1p1	2019	2024
+MIROC5 r1i1p1	2029	2036
+MPI-ESM-LR r1i1p1	2029	2034
+MPI-ESM-MR r1i1p1	2031	2037
+MRI-CGCM3 r1i1p1	2036	2041
+NorESM1-M r1i1p1	2031	2037
+NorESM1-ME	-	-
