@@ -109,7 +109,7 @@ os.chdir('../pdf_processing/')
 
 print('number of models: '+str(len(wlvls.model)))
 
-period_table=open('tables/model_period_table_used_for_Txx.txt','w')
+period_table=open('../gmt/tables/model_period_table_used_for_Txx.txt','w')
 for model in wlvls.model:
 	success=False
 	print('__________'+model+'__________')
