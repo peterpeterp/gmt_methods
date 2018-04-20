@@ -53,9 +53,8 @@ for model in gmt_.model:
 				lvls=cmipdata.exceedance_tm
 				wlvls[scenario,model,:]=cmipdata.exceedance_tm
 				selected_runs[model]=cmipdata.selected_runs[0]
-			except, Exception(e):
+			except:
 				print '--------',model,'------'
-				print e
 				missing_gmt.write(model+scenario+'\n')
 
 
