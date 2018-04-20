@@ -39,6 +39,7 @@ for model in gmt_.model:
 		try:
 			cmipdata = CmipData.CmipData('CMIP5',[model.lower()],[scenario],cmip5_path='../../data/cmip5_ver003')
 			cmipdata.get_cmip()
+			#cmipdata.get_cmip(runs=['r6i1p1'])
 			cmipdata.compute_period( [1986,2006], [1850,1900], levels, window=21)
 			lvls=cmipdata.exceedance_tm
 			wlvls[scenario,model,:]=cmipdata.exceedance_tm
