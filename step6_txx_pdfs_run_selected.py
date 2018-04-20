@@ -111,7 +111,7 @@ print('number of models: '+str(len(wlvls.model)))
 
 period_table=open('tables/model_period_table_used_for_Txx.txt','w')
 for model in wlvls.model:
-	success=False
+    success=False
     print('__________'+model+'__________')
     if model not in cmip5_dict.keys(): cmip5_dict[model]={}
 
@@ -179,12 +179,13 @@ for model in wlvls.model:
                         print(cmip5_dict[model][var]._distributions['global'][str(change)]-cmip5_dict[model][var]._distributions['global']['ref'])
                         break
 
-				success=True
+               success=True
 
-	if success:
-        period_table.write('\t'.join([model+' '+selected_runs[model].split('.')[-1],str(int(wlvls['rcp85',model,1.5])),str(int(wlvls['rcp85',model,1.68]))])+'\n')
-    else:
-        period_table.write('\t'.join([model,'-','-'])+'\n')
+    if success:
+	      period_table.write('\t'.join([model+' '+selected_runs[model].split('.')[-1],str(int(wlvls['rcp85',model,1.5])),str(int(wlvls['rcp85',model,1.68]))])+'\n')
+	else:
+	      period_table.write('\t'.join([model,'-','-'])+'\n')
+
 
 period_table.close()
 
