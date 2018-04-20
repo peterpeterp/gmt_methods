@@ -1,4 +1,4 @@
-import os,sys,glob,time,collections,gc,pickle
+import os,sys,glob,time,collections,gc
 import numpy as np
 from netCDF4 import Dataset,netcdftime,num2date
 import matplotlib.pylab as plt
@@ -6,13 +6,69 @@ import dimarray as da
 import itertools
 import matplotlib
 from scipy import stats
-import pandas as pd
 
 
-#plt.style.use('ggplot')
-#plt.rcParams['figure.figsize'] = 8,6
-from matplotlib import rc
-rc('text', usetex=True)
+gmt_all=da.read_nc('data/gmt_model.nc')['gmt']
+models=list(gmt_all.model)
+#models.remove('CESM1-CAM5')
+#models.remove('MIROC5')
+#models.remove('BNU-ESM')
+#models.remove('bcc-csm1-1-m')
+
+gmt_=gmt_all[gmt_all.style,gmt_all.scenario,models,gmt_all.variable,gmt_all.time]
+
+levels=[1.5,1.68]
+
+wlvls=da.DimArray(axes=[['rcp26','rcp45','rcp85'],models,levels],dims=['scenario','model','level'])
+
+missing_gmt=open('data/missing_gmt_in_wlcalc.txt','w')
+
+try:
+	os.chdir('/p/projects/tumble/carls/shared_folder/wlcalculator/app/')
+	sys.path.append('/p/projects/tumble/carls/shared_folder/wlcalculator/app/')
+	os.chdir('../../gmt/')
+except:
+	sys.path.append('/Users/peterpfleiderer/Documents/Projects/wlcalculator/app/')
+
+os.system('ls')
+import wacalc.CmipData as CmipData; reload(CmipData)
+
+selected_runs={}
+for model in gmt_.model:
+	for scenario in ['rcp85']:
+		try:
+			cmipdata = CmipData.CmipData('CMIP5',[model.lower()],[scenario],cmip5_path='../../data/cmip5_ver003')
+			cmipdata.get_cmip()
+			cmipdata.compute_period( [1986,2006], [1850,1900], levels, window=21)
+			lvls=cmipdata.exceedance_tm
+			wlvls[scenario,model,:]=cmipdata.exceedance_tm
+			selected_runs[model]=cmipdata.selected_runs[0]
+		except Exception as e:
+			print '--------',model,'------'
+			print e
+			missing_gmt.write(model+scenario+'\n')
+
+
+missing_gmt.close()
+
+ds=da.Dataset({'wlvls':wlvls})
+ds.write_nc('data/wlvls.nc', mode='w')
+
+
+wlvls=da.read_nc('data/wlvls.nc')['wlvls']
+
+# write period table
+period_table=open('tables/model_period_table.txt','w')
+for model in wlvls.model:
+	if np.isfinite(wlvls['rcp85',model,1.5]):
+		period_table.write('\t'.join([model+' '+selected_runs[model].split('.')[-1],str(int(wlvls['rcp85',model,1.5])),str(int(wlvls['rcp85',model,1.68]))])+'\n')
+	else:
+		period_table.write('\t'.join([model,'-','-'])+'\n')
+
+period_table.close()
+
+
+# compute PDFs
 
 os.chdir('../pdf_processing/')
 sys.path.append('/p/projects/tumble/carls/shared_folder/pdf_processing/')
@@ -25,8 +81,6 @@ os.chdir('../gmt/')
 
 # PDF Method (currently defined: hist, python_silverman)
 pdf_method='python_silverman'
-
-levels=[1.5,1.68]
 
 # variables
 varin_dict={
@@ -74,17 +128,12 @@ for model in wlvls.model:
         # combine datasets
         var_name=varin_dict[var]['nc_name']
 
-        scenario_files=glob.glob('/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_rcp85_*_2006-2100.YEARMAX.nc')
-        if len(scenario_files)>0:
-            found=False
-            for scenario_file in scenario_files:
-                hist_files=glob.glob(scenario_file.replace('rcp85','historical').replace('_2006-2100.YEARMAX.nc','*YEARMAX*'))
-                if len(hist_files)>0:
-                    hist_file=hist_files[0]
-                    found=True
-                    break
+        scenario_file='/p/projects/ikiimp/tmp/cmip5_Xev_from_Erich_Fischer/tasmax_'+model+'_rcp85_'+selselected_runs[model]+'_2006-2100.YEARMAX.nc'
+        if os.path.isfile(scenario_file):
+            hist_files=glob.glob(scenario_file.replace('rcp85','historical').replace('_2006-2100.YEARMAX.nc','*YEARMAX*'))
+            if len(hist_files)>0:
+                hist_file=hist_files[0]
 
-            if found:
                 print(hist_file)
                 print(scenario_file)
                 nc_hist=Dataset(hist_file)
