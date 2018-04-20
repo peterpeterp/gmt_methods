@@ -37,7 +37,7 @@ selected_runs={}
 for model in gmt_.model:
 	for scenario in ['rcp85']:
 		try:
-			cmipdata = CmipData.CmipData('CMIP5',[model.lower()],[scenario],cmip5_path='../../data/cmip5_ver003')
+			cmipdata = CmipData.CmipData('CMIP5',[model.lower()],[scenario],cmip5_path='../../data/cmip5_ver002')
 			cmipdata.get_cmip()
 			#cmipdata.get_cmip(runs=['r6i1p1'])
 			cmipdata.compute_period( [1986,2006], [1850,1900], levels, window=21)
@@ -218,3 +218,57 @@ for change in levels:
 
 with open('data/varoutdict_cmip5_'+'rcp85'+'_TXx_models_merged.pkl', 'wb') as output:
 	pickle.dump(all_cmip5, output, pickle.HIGHEST_PROTOCOL)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				# ACCESS1-0 r1i1p1	2025	2030
+				# ACCESS1-3 r1i1p1	2024	2030
+				# CCSM4 r1i1p1	2025	2031
+				# CESM1-BGC r1i1p1	2027	2033
+				# CMCC-CM r1i1p1	2029	2033
+				# CMCC-CMS r1i1p1	2027	2031
+				# CNRM-CM5 r1i1p1	2031	2037
+				# CSIRO-Mk3-6-0 r1i1p1	2031	2035
+				# CanESM2 r1i1p1	2019	2023
+				# EC-EARTH r1i1p1	2029	2034
+				# GFDL-CM3 r1i1p1	2018	2022
+				# GFDL-ESM2G r1i1p1	2040	2046
+				# GFDL-ESM2M r1i1p1	2038	2043
+				# HadGEM2-CC r1i1p1	2020	2023
+				# HadGEM2-ES r1i1p1	2017	2023
+				# IPSL-CM5A-LR r1i1p1	2025	2030
+				# IPSL-CM5A-MR r1i1p1	2023	2028
+				# MIROC-ESM r1i1p1	2023	2026
+				# MIROC-ESM-CHEM r1i1p1	2019	2024
+				# MIROC5 r1i1p1	2029	2036
+				# MPI-ESM-LR r1i1p1	2029	2034
+				# MPI-ESM-MR r1i1p1	2031	2037
+				# MRI-CGCM3 r1i1p1	2036	2041
+				# NorESM1-M r1i1p1	2031	2037
+                #
+                #
+				# GISS-E2-H	-	-
+				# GISS-E2-H-CC	-	-
+				# GISS-E2-R	-	-
+				# GISS-E2-R-CC	-	-
+				# HadGEM2-AO	-	-
+				# IPSL-CM5B-LR	-	-
+				# MRI-ESM1	-	-
+				# NorESM1-ME	-	-
