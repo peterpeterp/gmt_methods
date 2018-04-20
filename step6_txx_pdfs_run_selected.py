@@ -109,7 +109,9 @@ os.chdir('../pdf_processing/')
 
 print('number of models: '+str(len(wlvls.model)))
 
+period_table=open('tables/model_period_table_used_for_Txx.txt','w')
 for model in wlvls.model:
+	success=False
     print('__________'+model+'__________')
     if model not in cmip5_dict.keys(): cmip5_dict[model]={}
 
@@ -177,12 +179,14 @@ for model in wlvls.model:
                         print(cmip5_dict[model][var]._distributions['global'][str(change)]-cmip5_dict[model][var]._distributions['global']['ref'])
                         break
 
-                # print(cmip5_dict[model][var])
-                # print(levels)
-                # for change in levels[-2:]:
-                #     print(change)
-                #     cmip5_dict[model][var].derive_pdf_difference(str(1.5),str(change),pdf_method=pdf_method,bin_range=varin_dict[var]['cut_interval'],relative_diff=False)
+				success=True
 
+	if success:
+        period_table.write('\t'.join([model+' '+selected_runs[model].split('.')[-1],str(int(wlvls['rcp85',model,1.5])),str(int(wlvls['rcp85',model,1.68]))])+'\n')
+    else:
+        period_table.write('\t'.join([model,'-','-'])+'\n')
+
+period_table.close()
 
 os.chdir('../gmt/')
 with open('data/varoutdict_cmip5_'+rcp+'_TXx.pkl', 'wb') as output:
@@ -215,24 +219,3 @@ for change in levels:
 
 with open('data/varoutdict_cmip5_'+'rcp85'+'_TXx_models_merged.pkl', 'wb') as output:
 	pickle.dump(all_cmip5, output, pickle.HIGHEST_PROTOCOL)
-
-# get ensemble used# cmip5 envelopes overview
-ensemble=open('ensemble_TXx.txt','w')
-for model in sorted(cmip5_dict.keys()):
-    try:
-        a=cmip5_dict[model]['TXx']._distributions['global']['pdf']['xaxis']
-        ensemble.write(model+'\n')
-    except:
-        pass
-ensemble.close()
-
-# write period table -used for TXx
-period_table=open('tables/model_period_table_used_for_Txx.txt','w')
-for model in sorted(cmip5_dict.keys()):
-    try:
-        a=cmip5_dict[model]['TXx']._distributions['global']['pdf']['xaxis']
-        period_table.write('\t'.join([model+' '+selected_runs[model].split('.')[-1],str(int(wlvls['rcp85',model,1.5])),str(int(wlvls['rcp85',model,1.68]))])+'\n')
-    except:
-        pass
-	
-period_table.close()
