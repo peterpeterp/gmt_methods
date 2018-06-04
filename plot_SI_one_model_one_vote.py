@@ -81,7 +81,7 @@ for model,color in zip(sorted(multiple_run.keys()),sns.hls_palette(len(multiple_
 
 for model,color in zip(sorted(single_run.keys()),sns.hls_palette(len(single_run.keys()))):
 	ax[1].plot(time_ax,running_mean_func(gmt['rcp85',model,method,:]-ens_mean,20),linewidth=1,linestyle='--',color=color)
-	ax[2].plot([-99,-9],linewidth=1,alpha=0.5,color=color,label=str(1)+' '+model)
+	ax[2].plot([-99,-9],linewidth=1,alpha=0.5,color=color,linestyle='--',label=str(1)+' '+model)
 
 ax[1].plot([1850,2035],[0,0],color='k')
 ax[1].set_xlim((1850,2016))

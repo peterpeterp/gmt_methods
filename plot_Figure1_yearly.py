@@ -87,5 +87,5 @@ for mod_style in ['model','runs']:
 			ax[1].set_ylabel('$\mathregular{GMT_{blend-mask} -GMT_{AR5}}$ $\mathregular{[^\circ C]}$')
 
 			plt.tight_layout()
-			plt.savefig('plots/Figure_SI_1_'+scenario+'_qu_'+av_style+'_'+mod_style+'_'+preind_name+'.png')
+			plt.savefig('plots/Figure_SI_1_'+scenario+'_qu_'+av_style+'_'+mod_style+'_'+preind_name+'.png',dpi=300)
 			plt.savefig('plots/Figure_SI_1_'+scenario+'_qu_'+av_style+'_'+mod_style+'_'+preind_name+'.pdf')
