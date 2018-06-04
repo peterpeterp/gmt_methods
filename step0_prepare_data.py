@@ -55,7 +55,10 @@ except:
 
 # there seems to be some issue with cdo/1.8.0 and this script
 # the command has to be executed outside the script?
-os.system('module load cdo/1.7.0')
+# os.system('module load cdo/1.7.0')
+
+# EC-EARTH:
+# setrtomiss,273.14,273.16 working with cdo/1.8.0
 
 
 Popen('mkdir data_models/'+model+'_'+run, shell=True).wait()
