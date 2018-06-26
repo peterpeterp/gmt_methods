@@ -48,4 +48,4 @@ for add_style in ['_remapbil_normal']:
 
 
 	ds=da.Dataset({'gmt':gmt})
-	ds.write_nc('data/gmt_all'+sftof_style+'.nc', mode='w')
+	ds.write_nc('data/gmt_all'+add_style+'.nc', mode='w')
