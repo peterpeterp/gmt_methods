@@ -39,6 +39,8 @@ for mod_style in ['model','runs']:
 					gmt[scenario,model,'gmt_1',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',2010:2019])+1
 					gmt[scenario,model,'gmt_1.1',:]=np.array(gmt_raw['xax',scenario,model,'air',:])-np.nanmean(gmt_raw['xax',scenario,model,'air',2010:2019])+1.1
 
+
+			print '********** '+preind_name+' ***** '+av_style+' ******* '+mod_style
 			print '2010-2019'
 			for style in gmt.style:
 				print style,np.nanmean(gmt['rcp85',:,style,2010:2019])
@@ -47,10 +49,23 @@ for mod_style in ['model','runs']:
 			for style in gmt.style:
 				print style,np.nanmean(gmt['rcp85',:,style,1986:2005])
 
+			print '2006-2015'
+			for style in gmt.style:
+				print style,np.nanmean(gmt['rcp85',:,style,2006:2015])
+
 			print '2000-2009'
 			for style in gmt.style:
 				print style,np.nanmean(gmt['rcp85',:,style,2000:2009])
 
 			ds=da.Dataset({'gmt':gmt})
 			ds.write_nc('data/gmt_plot_ready_'+av_style+'_'+mod_style+'_'+preind_name+'.nc', mode='w')
-			print 'done'
+
+
+print '__________________'
+print '1986-2005'
+for style in gmt.style:
+	print style,np.nanmean(gmt['rcp85',:,style,1986:2005])
+
+print '2006-2015'
+for style in gmt.style:
+	print style,np.nanmean(gmt['rcp85',:,style,2006:2015])
