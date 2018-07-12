@@ -8,7 +8,7 @@ import matplotlib
 
 os.chdir('/Users/peterpfleiderer/Documents/Projects/gmt')
 
-gmt_raw=da.read_nc('data/gmt_all.nc')['gmt']
+gmt_raw=da.read_nc('data/gmt_all_remapbil_normal.nc')['gmt']
 
 # remove special runs
 model_runs=sorted(gmt_raw.model_run)
@@ -20,10 +20,8 @@ for model_run in gmt_raw.model_run:
 		model_runs.remove(model_run)
 
 model_runs.remove('EC-EARTH_r7i1p1')
-model_runs.remove('EC-EARTH_r11i1p1')
 model_runs.remove('EC-EARTH_r12i1p1')
-model_runs.remove('EC-EARTH_r13i1p1')
-model_runs.remove('EC-EARTH_r14i1p1')
+
 
 gmt_all_clean=gmt_raw[gmt_raw.style,gmt_raw.scenario,model_runs,gmt_raw.variable,gmt_raw.time]
 
